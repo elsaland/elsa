@@ -1,29 +1,59 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"os"
+	"runtime"
 
 	"github.com/evanw/esbuild/pkg/api"
-	"github.com/robertkrimen/otto"
+	"github.com/lithdew/quickjs"
 )
 
+func check(err error) {
+	if err != nil {
+		var evalErr *quickjs.Error
+		if errors.As(err, &evalErr) {
+			fmt.Println(evalErr.Cause)
+			fmt.Println(evalErr.Stack)
+		}
+		panic(err)
+	}
+}
+
 func main() {
+
+	runtime.LockOSThread()
 	source := os.Args[1:][0]
 
-	vm := otto.New()
+	jsruntime := quickjs.NewRuntime()
+	defer jsruntime.Free()
 
+	context := jsruntime.NewContext()
+	defer context.Free()
+	globals := context.Globals()
+	globals.Set("__console_write", context.Function(Console))
+	r, _ := context.Eval(ConsoleJSInject())
+	defer r.Free()
 	bundle := api.Build(api.BuildOptions{
 		EntryPoints: []string{source},
 		Outfile:     "output.js",
-		Bundle:      true,
-		Target:      api.ES2015,
-		Write:       true,
-		LogLevel:    api.LogLevelInfo,
+		//Bundle:      true,
+		Target:   api.ES2015,
+		Write:    true,
+		LogLevel: api.LogLevelInfo,
 	})
 
-	result, _ := vm.Run(string(bundle.OutputFiles[0].Contents[:]))
-	fmt.Println(result.String())
-	fmt.Println()
+	result, e := context.EvalFile(string(bundle.OutputFiles[0].Contents[:]), "s")
 
+	defer result.Free()
+	if e != nil {
+		var evalErr *quickjs.Error
+		if errors.As(e, &evalErr) {
+			fmt.Println(evalErr.Cause)
+			fmt.Println(evalErr.Stack)
+		}
+		panic(e)
+	}
+	fmt.Println()
 }

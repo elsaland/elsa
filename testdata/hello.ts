@@ -1,3 +1,2 @@
 var x: string = "variable";
-
-x + " lol";
+console.log(1)
