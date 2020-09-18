@@ -6,7 +6,6 @@ import (
 	"os"
 	"runtime"
 
-	"github.com/evanw/esbuild/pkg/api"
 	"github.com/lithdew/quickjs"
 )
 
@@ -39,15 +38,9 @@ func main() {
 	check(e)
 	defer k.Free()
 
-	bundle := api.Build(api.BuildOptions{
-		EntryPoints: []string{source},
-		Outfile:     "output.js",
-		Bundle:      true,
-		Target:      api.ESNext,
-		LogLevel:    api.LogLevelInfo,
-	})
+	bundle := BundleModule(source)
 
-	result, e := context.EvalFile(string(bundle.OutputFiles[0].Contents[:]), source)
+	result, e := context.EvalFile(bundle, source)
 
 	defer result.Free()
 	if e != nil {
