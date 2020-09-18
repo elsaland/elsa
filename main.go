@@ -47,7 +47,7 @@ func main() {
 		LogLevel:    api.LogLevelInfo,
 	})
 
-	result, e := context.EvalFile(string(bundle.OutputFiles[0].Contents[:]), "s")
+	result, e := context.EvalFile(string(bundle.OutputFiles[0].Contents[:]), source)
 
 	defer result.Free()
 	if e != nil {
