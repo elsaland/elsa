@@ -9,7 +9,7 @@ import (
 	"github.com/lithdew/quickjs"
 )
 
-func check(err error) {
+func Check(err error) {
 	if err != nil {
 		var evalErr *quickjs.Error
 		if errors.As(err, &evalErr) {
@@ -35,11 +35,12 @@ func main() {
 	globals.Set("__dispatch", context.Function(DoneNS))
 
 	k, e := context.Eval(NSInject())
-	check(e)
+	Check(e)
 	defer k.Free()
 
 	bundle := BundleModule(source)
-
+	diagnostics := Compile(source)
+	fmt.Println(diagnostics)
 	result, e := context.EvalFile(bundle, source)
 
 	defer result.Free()
