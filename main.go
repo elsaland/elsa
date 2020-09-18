@@ -32,9 +32,13 @@ func main() {
 	context := jsruntime.NewContext()
 	defer context.Free()
 	globals := context.Globals()
-	globals.Set("__console_write", context.Function(Console))
-	r, _ := context.Eval(ConsoleJSInject())
-	defer r.Free()
+
+	globals.Set("__dispatch", context.Function(DoneNS))
+
+	k, e := context.Eval(NSInject())
+	check(e)
+	defer k.Free()
+
 	bundle := api.Build(api.BuildOptions{
 		EntryPoints: []string{source},
 		Outfile:     "output.js",
