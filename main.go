@@ -42,10 +42,9 @@ func main() {
 	bundle := api.Build(api.BuildOptions{
 		EntryPoints: []string{source},
 		Outfile:     "output.js",
-		//Bundle:      true,
-		Target:   api.ES2015,
-		Write:    true,
-		LogLevel: api.LogLevelInfo,
+		Bundle:      true,
+		Target:      api.ESNext,
+		LogLevel:    api.LogLevelInfo,
 	})
 
 	result, e := context.EvalFile(string(bundle.OutputFiles[0].Contents[:]), "s")
