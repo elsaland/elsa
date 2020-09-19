@@ -53,7 +53,7 @@ func main() {
 	if e != nil {
 		panic(e)
 	}
-	Compile(string(dat), a)
+	go Compile(string(dat), a)
 	result, e := context.EvalFile(bundle, source)
 
 	defer result.Free()
