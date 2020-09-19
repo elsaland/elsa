@@ -3,14 +3,14 @@ package main
 import (
 	"errors"
 	"fmt"
+	"io/ioutil"
 	"os"
 	"runtime"
 
-	"github.com/evanw/esbuild/pkg/api"
 	"github.com/lithdew/quickjs"
 )
 
-func check(err error) {
+func Check(err error) {
 	if err != nil {
 		var evalErr *quickjs.Error
 		if errors.As(err, &evalErr) {
@@ -31,23 +31,28 @@ func main() {
 
 	context := jsruntime.NewContext()
 	defer context.Free()
+
 	globals := context.Globals()
 
 	globals.Set("__dispatch", context.Function(DoneNS))
 
 	k, e := context.Eval(NSInject())
-	check(e)
+	Check(e)
 	defer k.Free()
 
-	bundle := api.Build(api.BuildOptions{
-		EntryPoints: []string{source},
-		Outfile:     "output.js",
-		Bundle:      true,
-		Target:      api.ESNext,
-		LogLevel:    api.LogLevelInfo,
-	})
-
-	result, e := context.EvalFile(string(bundle.OutputFiles[0].Contents[:]), source)
+	bundle := BundleModule(source)
+	a := func(val quickjs.Value) {
+		if !val.IsUndefined() {
+			return
+		}
+		fmt.Println(val)
+	}
+	dat, e := ioutil.ReadFile(source)
+	if e != nil {
+		panic(e)
+	}
+	Compile(string(dat), a)
+	result, e := context.EvalFile(bundle, source)
 
 	defer result.Free()
 	if e != nil {
@@ -58,5 +63,4 @@ func main() {
 		}
 		panic(e)
 	}
-	fmt.Println()
 }
