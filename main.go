@@ -42,6 +42,9 @@ func main() {
 
 	bundle := BundleModule(source)
 	a := func(val quickjs.Value) {
+		if !val.IsUndefined() {
+			return
+		}
 		fmt.Println(val)
 	}
 	dat, e := ioutil.ReadFile(source)
