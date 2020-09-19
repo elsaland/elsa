@@ -7,36 +7,6 @@ import (
 	"github.com/lithdew/quickjs"
 )
 
-func NSInject() string {
-	return `
-	globalThis.Done = {
-		readFile: (arg) => {
-			return globalThis.__dispatch("readFile", arg);
-		}
-	};
-	globalThis.console = {
-		trace: (...args) => {
-			globalThis.__dispatch("console", ...args);
-		},
-		debug: (...args) => {
-			globalThis.__dispatch("console", ...args);
-		},
-		log: (...args) => {
-			globalThis.__dispatch("console", ...args);
-		},
-		info: (...args) => {
-			globalThis.__dispatch("console", ...args);
-		},
-		warn: (...args) => {
-			globalThis.__dispatch("console", ...args);
-		},
-		error: (...args) => {
-			globalThis.__dispatch("console", ...args);
-		},
-	};
-`
-}
-
 func DoneNS(ctx *quickjs.Context, this quickjs.Value, args []quickjs.Value) quickjs.Value {
 	switch args[0].String() {
 	case "readFile":

@@ -36,7 +36,9 @@ func main() {
 
 	globals.Set("__dispatch", context.Function(DoneNS))
 
-	k, e := context.Eval(NSInject())
+	snap, _ := Asset("target/done.js")
+
+	k, e := context.Eval(string(snap))
 	Check(e)
 	defer k.Free()
 
