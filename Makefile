@@ -1,3 +1,3 @@
 build:
-	go-bindata -o data.go ./typescript
+	go run ./bootstrap
 	go build -o done .
