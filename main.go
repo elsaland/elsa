@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
+	"io/ioutil"
 	"os"
 	"runtime"
 
@@ -30,6 +31,7 @@ func main() {
 
 	context := jsruntime.NewContext()
 	defer context.Free()
+
 	globals := context.Globals()
 
 	globals.Set("__dispatch", context.Function(DoneNS))
@@ -39,8 +41,14 @@ func main() {
 	defer k.Free()
 
 	bundle := BundleModule(source)
-	diagnostics := Compile(source)
-	fmt.Println(diagnostics)
+	a := func(val quickjs.Value) {
+		fmt.Println(val)
+	}
+	dat, e := ioutil.ReadFile(source)
+	if e != nil {
+		panic(e)
+	}
+	Compile(string(dat), a)
 	result, e := context.EvalFile(bundle, source)
 
 	defer result.Free()
