@@ -6,7 +6,7 @@ import (
 	"github.com/lithdew/quickjs"
 )
 
-func Compile(source string, fn chan quickjs.Value) {
+func Compile(source string, fn func(val quickjs.Value)) {
 	data, err := Asset("typescript/typescript.js")
 	if err != nil {
 		panic("Asset was not found.")
@@ -27,7 +27,7 @@ func Compile(source string, fn chan quickjs.Value) {
 
 	globals := context.Globals()
 	report := func(ctx *quickjs.Context, this quickjs.Value, args []quickjs.Value) quickjs.Value {
-		fn <- args[0]
+		fn(args[0])
 		return ctx.Null()
 	}
 	d := func(ctx *quickjs.Context, this quickjs.Value, args []quickjs.Value) quickjs.Value {

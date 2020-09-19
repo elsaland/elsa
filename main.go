@@ -4,9 +4,9 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
-	"os"
 	"runtime"
 
+	"github.com/divy-work/done/cmd"
 	"github.com/lithdew/quickjs"
 )
 
@@ -22,10 +22,11 @@ func Check(err error) {
 }
 
 func main() {
-
 	runtime.LockOSThread()
-	source := os.Args[1:][0]
+	cmd.Execute(run)
+}
 
+func run(source string) {
 	jsruntime := quickjs.NewRuntime()
 	defer jsruntime.Free()
 
@@ -43,16 +44,14 @@ func main() {
 	defer k.Free()
 
 	bundle := BundleModule(source)
+	a := func(val quickjs.Value) {
+		fmt.Println(val)
+	}
 	dat, e := ioutil.ReadFile(source)
 	if e != nil {
 		panic(e)
 	}
-
-	val := make(chan quickjs.Value)
-	go Compile(string(dat), val)
-	diagnostics := <-val
-	fmt.Println(diagnostics)
-
+	Compile(string(dat), a)
 	result, e := context.EvalFile(bundle, source)
 
 	defer result.Free()

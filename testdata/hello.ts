@@ -1,2 +1,2 @@
-var x: number = "variable";
+var x: string = "variable";
 console.log(1)
