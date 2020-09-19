@@ -60,5 +60,4 @@ func main() {
 		}
 		panic(e)
 	}
-	fmt.Println()
 }
