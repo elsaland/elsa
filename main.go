@@ -43,17 +43,16 @@ func main() {
 	defer k.Free()
 
 	bundle := BundleModule(source)
-	a := func(val quickjs.Value) {
-		if !val.IsUndefined() {
-			return
-		}
-		fmt.Println(val)
-	}
 	dat, e := ioutil.ReadFile(source)
 	if e != nil {
 		panic(e)
 	}
-	go Compile(string(dat), a)
+
+	val := make(chan quickjs.Value)
+	go Compile(string(dat), val)
+	diagnostics := <-val
+	fmt.Println(diagnostics)
+
 	result, e := context.EvalFile(bundle, source)
 
 	defer result.Free()
