@@ -45,7 +45,7 @@ func Compile(source string, fn func(val quickjs.Value)) {
 
 func jsCheck(source string) string {
 	return (`
-__report(getDiagnosticsForText(` + "`" + source + "`" + `).map(d => d.messageText));
+getDiagnosticsForText(` + "`" + source + "`" + `);
 
 function getDiagnosticsForText(text) {
 	const dummyFilePath = "/file.ts";
@@ -71,9 +71,19 @@ function getDiagnosticsForText(text) {
         rootNames: [dummyFilePath],
         host
     });
-
-    return ts.getPreEmitDiagnostics(program);
+	
+	let diags = "";
+	ts.getPreEmitDiagnostics(program)
+	.forEach(diagnostic => {
+		if (diagnostic.file) {
+		  let { line, character } = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start);
+		  let message = ts.flattenDiagnosticMessageText(diagnostic.messageText, "\n");
+		  diags += (diagnostic.file.fileName + " " + (line + 1) + ", " + (character + 1) + ": " + message + "\n");
+		} else {
+		  diags += (ts.flattenDiagnosticMessageText(diagnostic.messageText, "\n"));
+		}
+	  });
+	__report(diags)
 }
-
 	`)
 }
