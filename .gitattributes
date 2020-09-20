@@ -1,0 +1,2 @@
+# ignore the bundled typescript source
+*.js linguist-vendored

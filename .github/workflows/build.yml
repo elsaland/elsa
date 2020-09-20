@@ -1,0 +1,48 @@
+name: Build
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    name: Build
+
+    runs-on: ${{ matrix.os }}
+    env:
+      GOPATH: ${{ github.workspace }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+
+    steps:
+      - name: Setup repo
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+          path: "./src/github.com/divy-work/done"
+
+      - name: Setup node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+
+      - name: Setup go
+        uses: actions/setup-go@v2
+
+      - name: Install xgo
+        run: go get github.com/karalabe/xgo
+
+      - name: Build
+        working-directory: ./src/github.com/divy-work/done
+        if: startsWith(matrix.os, 'ubuntu')
+        run: |
+          sudo apt install go-bindata
+          go run ./bootstrap/
+          go run github.com/karalabe/xgo --targets=windows/amd64,darwin/*,linux/* .
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: done
+          path: ./src/github.com/divy-work/done/done-linux-amd64
+  
