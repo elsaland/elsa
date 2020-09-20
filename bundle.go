@@ -19,6 +19,7 @@ func BundleModule(source string) string {
 		Bundle:      true,
 		Target:      api.ESNext,
 		LogLevel:    api.LogLevelInfo,
+		Write:       true,
 		Plugins: []func(api.Plugin){
 
 			func(plugin api.Plugin) {
