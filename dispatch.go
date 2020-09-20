@@ -17,7 +17,7 @@ func DoneNS(ctx *quickjs.Context, this quickjs.Value, args []quickjs.Value) quic
 		}
 		return ctx.String(string(dat))
 	case Log:
-		fmt.Println(args[1])
+		fmt.Println(args[1].String())
 		return ctx.Null()
 	default:
 		return ctx.Null()

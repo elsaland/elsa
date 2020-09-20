@@ -9,6 +9,8 @@ console.log("Done 2");
 
 console.log("Done 3");
 
+console.log({ a: { b: 1 }})
+
 const arrow = () => {
   return 1;
 }
