@@ -4428,3 +4428,9 @@ interface Console {
 }
 
 declare var console: Console;
+
+interface Done {
+    readFile(path: string): string
+}
+
+declare var Done: Done;
