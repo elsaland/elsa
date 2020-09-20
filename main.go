@@ -3,7 +3,6 @@ package main
 import (
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"runtime"
 
 	"github.com/divy-work/done/cmd"
@@ -44,14 +43,14 @@ func run(source string) {
 	defer k.Free()
 
 	bundle := BundleModule(source)
-	a := func(val quickjs.Value) {
-		fmt.Println(val)
-	}
-	dat, e := ioutil.ReadFile(source)
-	if e != nil {
-		panic(e)
-	}
-	Compile(string(dat), a)
+	// a := func(val quickjs.Value) {
+	// 	fmt.Println(val)
+	// }
+	// dat, e := ioutil.ReadFile(source)
+	// if e != nil {
+	// 	panic(e)
+	// }
+	// Compile(string(dat), a)
 	result, e := context.EvalFile(bundle, source)
 
 	defer result.Free()

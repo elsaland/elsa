@@ -4,6 +4,8 @@ github.com/OneOfOne/xxhash v1.2.2/go.mod h1:HSdplMjZKSmBqAxg5vPj2TmRDmfkzw+cTzAE
 github.com/alecthomas/template v0.0.0-20160405071501-a0175ee3bccc/go.mod h1:LOuyumcjzFXgccqObfd/Ljyb9UuFJ6TxHnclSeseNhc=
 github.com/alecthomas/units v0.0.0-20151022065526-2efee857e7cf/go.mod h1:ybxpYRFXyAe+OPACYpWeL0wqObRcbAqCMya13uyzqw0=
 github.com/armon/consul-api v0.0.0-20180202201655-eb2c6b5be1b6/go.mod h1:grANhF5doyWs3UAsr3K4I6qtAmlQcZDesFNEHPZAzj8=
+github.com/asaskevich/govalidator v0.0.0-20200907205600-7a23bdc65eef h1:46PFijGLmAjMPwCCCo7Jf0W6f9slllCkkv7vyc1yOSg=
+github.com/asaskevich/govalidator v0.0.0-20200907205600-7a23bdc65eef/go.mod h1:WaHUgvxTVq04UNunO+XhnAqY/wQc+bxr74GqbsZ/Jqw=
 github.com/beorn7/perks v0.0.0-20180321164747-3a771d992973/go.mod h1:Dwedo/Wpr24TaqPxmxbtue+5NUziq4I4S80YR8gNf3Q=
 github.com/beorn7/perks v1.0.0/go.mod h1:KWe93zE9D1o94FZ5RNwFwVgaQK1VOXiVxmqh+CedLV8=
 github.com/cespare/xxhash v1.1.0/go.mod h1:XrSqR1VqqWfGrhpAt58auRo0WTKS1nRRg3ghfAqPWnc=
@@ -23,6 +25,11 @@ github.com/divy-work/done v0.0.0-20200918152514-fb26db70501a h1:tHuE4/tNGOMwD7uU
 github.com/divy-work/done v0.0.0-20200919154406-6968fe8560f4 h1:mCbUZ0Kie4xYaGvrumPfXmrUchZqg0wRUC2uU+d2rT8=
 github.com/evanw/esbuild v0.7.1 h1:bkC9MpDxHPCLESOf3AQzK1QiyaxbnxFa3XLPnyARLSI=
 github.com/evanw/esbuild v0.7.1/go.mod h1:mptxmSXIzBIKKCe4jo9A5SToEd1G+AKZ9JmY85dYRJ0=
+github.com/evanw/esbuild v0.7.2 h1:LBY35Gw3fKs7jVpsbQwOmw7pJLDHdpliI1Mc/DqP0Hs=
+github.com/evanw/esbuild v0.7.3-0.20200919175204-3444fa6dadff h1:NX7iqhOhIiescK90mszhq3e+orr6rr7Sf9cevmIZssw=
+github.com/evanw/esbuild v0.7.3-0.20200919175204-3444fa6dadff/go.mod h1:mptxmSXIzBIKKCe4jo9A5SToEd1G+AKZ9JmY85dYRJ0=
+github.com/evanw/esbuild v0.7.3-0.20200919185132-ef34da4ee06e h1:irQfbEDTnkfl0mCYoldObYKn+EST+oiI283GJChzskA=
+github.com/evanw/esbuild v0.7.3-0.20200919185132-ef34da4ee06e/go.mod h1:mptxmSXIzBIKKCe4jo9A5SToEd1G+AKZ9JmY85dYRJ0=
 github.com/fsnotify/fsnotify v1.4.7/go.mod h1:jwhsz4b93w/PPRr/qN1Yymfu8t87LnFCMoQvtojpjFo=
 github.com/ghodss/yaml v1.0.0/go.mod h1:4dBDuWmgqj2HViK6kFavaiC9ZROes6MMH2rRYeMEF04=
 github.com/go-bindata/go-bindata v1.0.0 h1:DZ34txDXWn1DyWa+vQf7V9ANc2ILTtrEjtlsdJRF26M=
