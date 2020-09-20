@@ -1,3 +1,3 @@
-import css from "https://x.nest.land/denolus@0.0.4/mod.ts";
+import { hello } from "https://x.nest.land/arweave-hello@0.0.2/mod.ts";
 
-console.log(css)
+hello("Done")
