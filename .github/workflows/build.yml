@@ -13,7 +13,7 @@ jobs:
       GOPATH: ${{ github.workspace }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-latest]
 
     steps:
       - name: Setup repo
@@ -33,11 +33,10 @@ jobs:
       - name: Install xgo
         run: go get github.com/karalabe/xgo
 
-      - name: Build Linux Deb
+      - name: Build
         working-directory: ./src/github.com/divy-work/done
         if: startsWith(matrix.os, 'ubuntu')
-        run: |
-          go run github.com/karalabe/xgo github.com/divy-work/done
+        run: go run github.com/karalabe/xgo github.com/divy-work/done
 
       - uses: actions/upload-artifact@v2
         with:
