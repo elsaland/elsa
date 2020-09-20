@@ -26,7 +26,7 @@ func main() {
 	cmd.Execute(run)
 }
 
-func run(source string) {
+func run(source string, flags cmd.Perms) {
 	jsruntime := quickjs.NewRuntime()
 	defer jsruntime.Free()
 
@@ -35,7 +35,7 @@ func run(source string) {
 
 	globals := context.Globals()
 
-	globals.Set("__dispatch", context.Function(DoneNS))
+	globals.Set("__dispatch", context.Function(DoneNS(flags)))
 
 	snap, _ := Asset("target/done.js")
 
