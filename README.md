@@ -1,6 +1,6 @@
 # Done
 
-<img align="right" src=assets/logo.svg height="150px">
+<img align="right" src=assets/logo.svg height="100px">
 
 Done is a _minimal_, _fast_ and _secure_ runtime for Javascript and Typescript written in Go.
 
