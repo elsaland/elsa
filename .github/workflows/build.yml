@@ -39,7 +39,7 @@ jobs:
         run: |
           sudo apt install go-bindata
           go run ./bootstrap/
-          go run github.com/karalabe/xgo --targets=windows/*,darwin/*,linux/* github.com/divy-work/done
+          go run github.com/karalabe/xgo --targets=windows/*,darwin/*,linux/* .
 
       - uses: actions/upload-artifact@v2
         with:
