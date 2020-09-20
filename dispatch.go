@@ -8,15 +8,15 @@ import (
 )
 
 func DoneNS(ctx *quickjs.Context, this quickjs.Value, args []quickjs.Value) quickjs.Value {
-	switch args[0].String() {
-	case "readFile":
+	switch args[0].Int32() {
+	case FSRead:
 		file := args[1].String()
 		dat, e := ioutil.ReadFile(file)
 		if e != nil {
 			panic(e)
 		}
 		return ctx.String(string(dat))
-	case "console":
+	case Log:
 		fmt.Println(args[1])
 		return ctx.Null()
 	default:
