@@ -31,7 +31,9 @@ Try running a simple program:
 
 ```typescript
 // hello.ts
-console.log("Hello, Done!");
+import { hello } from "https://x.nest.land/arweave-hello@0.0.2/mod.ts";
+
+hello("Done")
 ```
 
 ```shell script
