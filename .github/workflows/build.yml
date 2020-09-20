@@ -38,7 +38,6 @@ jobs:
         if: startsWith(matrix.os, 'ubuntu')
         run: |
           sudo apt install go-bindata
-          go get github.com/divy-work/quickjs
           go run ./bootstrap/
           go run github.com/karalabe/xgo --targets=windows/amd64,darwin/*,linux/* .
 
