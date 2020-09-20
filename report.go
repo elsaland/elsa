@@ -5,5 +5,5 @@ import (
 )
 
 func ReportDiagnostics(diagnostics quickjs.Value) {
-	LogError(diagnostics.String())
+	LogError(diagnostics.String(), "")
 }

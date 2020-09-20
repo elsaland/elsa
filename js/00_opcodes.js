@@ -1,7 +1,7 @@
 // Define op codes
 const __ops = {
-    FSRead: 1,
-    FSWrite: 2,
+    FSWrite: 1,
+    FSRead: 2,
     
     Log: 3,
 }

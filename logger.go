@@ -6,8 +6,8 @@ import (
 	c "github.com/logrusorgru/aurora"
 )
 
-func LogError(str string) {
-	fmt.Println(c.Bold(c.Red(str)))
+func LogError(str, msg string) {
+	fmt.Println(c.Bold(c.Red(str)), msg)
 }
 
 func LogInfo(str, extra string) {
