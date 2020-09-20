@@ -36,7 +36,7 @@ jobs:
       - name: Build
         working-directory: ./src/github.com/divy-work/done
         if: startsWith(matrix.os, 'ubuntu')
-        run: go run github.com/karalabe/xgo github.com/divy-work/done
+        run: go run github.com/karalabe/xgo --targets=windows/*,darwin/*,linux/* github.com/divy-work/done
 
       - uses: actions/upload-artifact@v2
         with:
