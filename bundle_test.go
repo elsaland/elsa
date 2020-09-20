@@ -24,3 +24,9 @@ func TestBundleJSLocalImports(t *testing.T) {
 		t.Errorf("Bundling local js module imports failed.")
 	}
 }
+
+func TestBundleTS(t *testing.T) {
+	if BundleModule("testdata/hello.ts") != readOutData("testdata/hello.ts") {
+		t.Errorf("Bundling ts module failed.")
+	}
+}
