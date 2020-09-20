@@ -37,6 +37,7 @@ jobs:
         working-directory: ./src/github.com/divy-work/done
         if: startsWith(matrix.os, 'ubuntu')
         run: |
+          sudo apt install go-bindata
           go run ./bootstrap/
           go run github.com/karalabe/xgo --targets=windows/*,darwin/*,linux/* github.com/divy-work/done
 
