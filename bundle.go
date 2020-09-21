@@ -23,38 +23,7 @@ func BundleModule(source string) string {
 		LogLevel:    api.LogLevelInfo,
 		// Write:       true,
 		Plugins: []func(api.Plugin){
-			func(plugin api.Plugin) {
-				plugin.SetName("done-loader")
-				plugin.AddResolver(api.ResolverOptions{Filter: ".*?"},
-					func(args api.ResolverArgs) (api.ResolverResult, error) {
-						p := args.Path
-						fmt.Println("Resolving ", p)
-						if !inCache(args.Path) && !exists(args.Path) {
-							c := pathToUrl(args.Path)
-							fmt.Println("Downloadingx ", c)
-							resp, e := http.Get(c)
-							if e != nil {
-								panic(e)
-							}
-							fileName := buildFileName(c)
-							defer resp.Body.Close()
-							file, err := create(fileName)
-							if err != nil {
-								LogError("Internal", fmt.Sprintf("%s", err))
-								os.Exit(1)
-							}
-							io.Copy(file, resp.Body)
 
-							defer file.Close()
-							p = file.Name()
-							fmt.Println("Downloaded ", file.Name())
-						}
-						fmt.Println("Loading ", p)
-
-						return api.ResolverResult{Path: p, Namespace: "url-loader"}, nil
-					})
-
-			},
 			func(plugin api.Plugin) {
 				plugin.SetName("url-loader")
 				plugin.AddResolver(api.ResolverOptions{Filter: "^https?://"},
@@ -78,7 +47,7 @@ func BundleModule(source string) string {
 				plugin.AddLoader(api.LoaderOptions{Filter: ".*?", Namespace: "url-loader"},
 					func(args api.LoaderArgs) (api.LoaderResult, error) {
 						p := args.Path
-						if !inCache(args.Path) && !exists(args.Path) {
+						if inCache(args.Path) && !exists(args.Path) {
 							c := pathToUrl(args.Path)
 							resp, _ := http.Get(c)
 							fileName := buildFileName(c)
