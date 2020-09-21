@@ -19,6 +19,28 @@ Done is a _minimal_, _fast_ and _secure_ runtime for Javascript and Typescript w
 - Bundle your script into a single file
 - Create a standalone executable for your script
 
+### Benchmarks
+
+Benchmarks for testdata/console.js for Done (unreleased), Deno 1.4.1 and Node 14.4.0
+```sh
+Benchmark #1: deno run ./testdata/console.js
+  Time (mean ± σ):      30.3 ms ±   3.9 ms    [User: 18.8 ms, System: 8.9 ms]
+  Range (min … max):    25.7 ms …  45.6 ms    88 runs
+ 
+Benchmark #2: ./done ./testdata/console.js
+  Time (mean ± σ):      13.4 ms ±   4.2 ms    [User: 5.5 ms, System: 5.6 ms]
+  Range (min … max):     8.1 ms …  28.0 ms    212 runs
+ 
+Benchmark #3: node testdata/console.js
+  Time (mean ± σ):      79.5 ms ±  16.1 ms    [User: 53.8 ms, System: 13.6 ms]
+  Range (min … max):    63.5 ms … 135.0 ms    40 runs
+ 
+Summary
+  './done ./testdata/console.js' ran
+    2.27 ± 0.77 times faster than 'deno run ./testdata/console.js'
+    5.94 ± 2.23 times faster than 'node testdata/console.js'
+```
+
 ### Install
 
 Not yet released, [build from source](#build-from-source) instead.
