@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"io/ioutil"
 	"os"
 
@@ -26,8 +25,7 @@ func DoneNS(perms cmd.Perms) func(ctx *quickjs.Context, this quickjs.Value, args
 			defer val.Free()
 			return val
 		case Log:
-			fmt.Println(args[1].String())
-			return ctx.Null()
+			return ConsoleLog(ctx, args)
 		default:
 			return ctx.Null()
 		}
