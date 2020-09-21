@@ -11,7 +11,6 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/asaskevich/govalidator"
 	"github.com/evanw/esbuild/pkg/api"
 )
 
@@ -26,16 +25,33 @@ func BundleModule(source string) string {
 		Plugins: []func(api.Plugin){
 			func(plugin api.Plugin) {
 				plugin.SetName("done-loader")
-				plugin.AddLoader(api.LoaderOptions{Filter: ".*?", Namespace: "done-loader"},
-					func(args api.LoaderArgs) (api.LoaderResult, error) {
+				plugin.AddResolver(api.ResolverOptions{Filter: ".*?"},
+					func(args api.ResolverArgs) (api.ResolverResult, error) {
 						p := args.Path
-						if govalidator.IsURL(args.Path) {
-							p = pathToUrl(args.Path)
+						fmt.Println("Resolving ", p)
+						if !inCache(args.Path) && !exists(args.Path) {
+							c := pathToUrl(args.Path)
+							fmt.Println("Downloadingx ", c)
+							resp, e := http.Get(c)
+							if e != nil {
+								panic(e)
+							}
+							fileName := buildFileName(c)
+							defer resp.Body.Close()
+							file, err := create(fileName)
+							if err != nil {
+								LogError("Internal", fmt.Sprintf("%s", err))
+								os.Exit(1)
+							}
+							io.Copy(file, resp.Body)
+
+							defer file.Close()
+							p = file.Name()
+							fmt.Println("Downloaded ", file.Name())
 						}
 						fmt.Println("Loading ", p)
-						dat, _ := ioutil.ReadFile(p)
-						contents := string(dat)
-						return api.LoaderResult{Contents: &contents, Loader: api.LoaderTS}, nil
+
+						return api.ResolverResult{Path: p, Namespace: "url-loader"}, nil
 					})
 
 			},
@@ -63,10 +79,26 @@ func BundleModule(source string) string {
 					func(args api.LoaderArgs) (api.LoaderResult, error) {
 						p := args.Path
 						if !inCache(args.Path) && !exists(args.Path) {
-							p = pathToUrl(args.Path)
+							c := pathToUrl(args.Path)
+							resp, _ := http.Get(c)
+							fileName := buildFileName(c)
+							defer resp.Body.Close()
+							file, err := create(fileName)
+							if err != nil {
+								LogError("Internal", fmt.Sprintf("%s", err))
+								os.Exit(1)
+							}
+							io.Copy(file, resp.Body)
+
+							defer file.Close()
+							p = file.Name()
+							fmt.Println("Downloaded ", file.Name())
 						}
 						fmt.Println("Loading ", p)
-						dat, _ := ioutil.ReadFile(p)
+						dat, e := ioutil.ReadFile(p)
+						if e != nil {
+							panic(e)
+						}
 						contents := string(dat)
 						return api.LoaderResult{Contents: &contents, Loader: api.LoaderTS}, nil
 					})
