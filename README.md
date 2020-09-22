@@ -71,5 +71,5 @@ Start by creating an issue about your feature or bug! Then, create a PR and we'l
 
 [Build Status - Badge]: https://github.com/elsaland/elsa/workflows/Build/badge.svg
 [Build status]: https://github.com/elsaland/elsa/actions
-[Discord invite]: https://img.shields.io/discord/684898665143206084?color=697EC4&label=Discord&logo=discord&logoColor=FDFEFE&style=flat-square
+[Discord invite]: https://img.shields.io/discord/757562931725467709?color=697EC4&label=Discord&logo=discord&logoColor=FDFEFE&style=flat-square
 [Discord invite link]: https://discord.gg/Dw534ZY
