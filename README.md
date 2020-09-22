@@ -23,7 +23,7 @@ Elsa is a _minimal_, _fast_ and _secure_ runtime for Javascript and Typescript w
 
 ### Benchmarks
 
-Benchmarks for testdata/console.js for Elsa (unreleased), Deno 1.4.1 and Node 14.4.0
+Benchmarks for testdata/console.js for Elsa (unreleased), Deno 1.3.3 and Node 14.4.0
 ```sh
 Benchmark #1: deno run ./testdata/console.js
   Time (mean ± σ):      30.3 ms ±   3.9 ms    [User: 18.8 ms, System: 8.9 ms]
