@@ -4400,7 +4400,7 @@ interface Date {
     toLocaleTimeString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
 }
 
-/// Done APIS
+/// Elsa APIS
 
 interface Console {
     memory: any;
@@ -4429,8 +4429,8 @@ interface Console {
 
 declare var console: Console;
 
-interface Done {
+interface Elsa {
     readFile(path: string): string
 }
 
-declare var Done: Done;
+declare var Elsa: Elsa;

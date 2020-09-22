@@ -21,7 +21,7 @@ func main() {
 		finalSource += string(source)
 	}
 	os.Mkdir("target/", 0777)
-	ioutil.WriteFile("target/done.js", []byte(finalSource), 0644)
+	ioutil.WriteFile("target/elsa.js", []byte(finalSource), 0644)
 	cmd := exec.Command("go-bindata", binCmd...)
 	log.Printf("Running command and waiting for it to finish...")
 	err := cmd.Run()

@@ -4,11 +4,11 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/divy-work/done/cmd"
+	"github.com/divy-work/elsa/cmd"
 	"github.com/lithdew/quickjs"
 )
 
-func DoneNS(perms cmd.Perms) func(ctx *quickjs.Context, this quickjs.Value, args []quickjs.Value) quickjs.Value {
+func ElsaNS(perms cmd.Perms) func(ctx *quickjs.Context, this quickjs.Value, args []quickjs.Value) quickjs.Value {
 	return func(ctx *quickjs.Context, this quickjs.Value, args []quickjs.Value) quickjs.Value {
 		switch args[0].Int32() {
 		case FSRead:

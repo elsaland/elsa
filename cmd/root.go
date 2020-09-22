@@ -15,8 +15,8 @@ func Execute(cb func(file string, flags Perms)) {
 	var fsFlag bool
 
 	var rootCmd = &cobra.Command{
-		Use:   "done [file]",
-		Short: "Done is a simple Javascript and Typescript runtime written in Go",
+		Use:   "elsa [file]",
+		Short: "Elsa is a simple Javascript and Typescript runtime written in Go",
 		Run: func(cmd *cobra.Command, args []string) {
 			if len(args) >= 0 {
 				fmt.Printf("Running %v\n", args[0])

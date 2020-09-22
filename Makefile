@@ -1,3 +1,3 @@
 build:
 	go run ./bootstrap
-	go build -o done .
+	go build -o elsa .

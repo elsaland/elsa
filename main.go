@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"runtime"
 
-	"github.com/divy-work/done/cmd"
+	"github.com/divy-work/elsa/cmd"
 	"github.com/lithdew/quickjs"
 )
 
@@ -34,9 +34,9 @@ func run(source string, flags cmd.Perms) {
 
 	globals := context.Globals()
 
-	globals.Set("__dispatch", context.Function(DoneNS(flags)))
+	globals.Set("__dispatch", context.Function(ElsaNS(flags)))
 
-	snap, _ := Asset("target/done.js")
+	snap, _ := Asset("target/elsa.js")
 
 	k, e := context.Eval(string(snap))
 	Check(e)

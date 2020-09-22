@@ -20,7 +20,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           submodules: true
-          path: "./src/github.com/divy-work/done"
+          path: "./src/github.com/divy-work/elsa"
 
       - name: Setup node
         uses: actions/setup-node@v1
@@ -34,7 +34,7 @@ jobs:
         run: go get github.com/karalabe/xgo
 
       - name: Build
-        working-directory: ./src/github.com/divy-work/done
+        working-directory: ./src/github.com/divy-work/elsa
         if: startsWith(matrix.os, 'ubuntu')
         run: |
           sudo apt install go-bindata
@@ -43,6 +43,6 @@ jobs:
 
       - uses: actions/upload-artifact@v2
         with:
-          name: done
-          path: ./src/github.com/divy-work/done/done-linux-amd64
+          name: elsa
+          path: ./src/github.com/divy-work/elsa/elsa-linux-amd64
   
