@@ -11,7 +11,12 @@ type Perms struct {
 	Fs bool
 }
 
-func Execute(cb func(file string, flags Perms)) {
+type Elsa struct {
+	Run    func(file string, flags Perms)
+	Bundle func(file string) string
+}
+
+func Execute(elsa Elsa) {
 	var fsFlag bool
 
 	var rootCmd = &cobra.Command{
@@ -19,14 +24,28 @@ func Execute(cb func(file string, flags Perms)) {
 		Short: "Elsa is a simple Javascript and Typescript runtime written in Go",
 		Run: func(cmd *cobra.Command, args []string) {
 			if len(args) >= 0 {
-				cb(args[0], Perms{
+				elsa.Run(args[0], Perms{
 					fsFlag,
 				})
 			}
 		},
 	}
 
+	var bundleCmd = &cobra.Command{
+		Use:   "bundle [file]",
+		Short: "Bundle your script to a single javascript file",
+		Long:  `Bundle your script to a single javascript file. It utilises esbuild for super fast bundling.`,
+		Args:  cobra.MinimumNArgs(1),
+		Run: func(cmd *cobra.Command, args []string) {
+			if len(args) >= 0 {
+				out := elsa.Bundle(args[0])
+				fmt.Println(out)
+			}
+		},
+	}
+
 	rootCmd.Flags().BoolVarP(&fsFlag, "fs", "f", false, "Allow file system access")
+	rootCmd.AddCommand(bundleCmd)
 
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)

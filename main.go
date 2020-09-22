@@ -22,7 +22,7 @@ func Check(err error) {
 
 func main() {
 	runtime.LockOSThread()
-	cmd.Execute(run)
+	cmd.Execute(cmd.Elsa{run, BundleModule})
 }
 
 func run(source string, flags cmd.Perms) {
