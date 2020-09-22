@@ -1,4 +1,4 @@
-module github.com/divy-work/elsa
+module github.com/elsaland/elsa
 
 go 1.14
 

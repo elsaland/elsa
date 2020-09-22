@@ -5,13 +5,13 @@ import (
 	"fmt"
 	"runtime"
 
-	"github.com/divy-work/elsa/cmd"
+	"github.com/elsaland/elsa/cmd"
 	"github.com/lithdew/quickjs"
 )
 
 func main() {
 	runtime.LockOSThread()
-	cmd.Execute(cmd.Elsa{run, BundleModule})
+	cmd.Execute(cmd.Elsa{Run: run, Bundle: BundleModule})
 }
 
 func run(source string, flags cmd.Perms) {

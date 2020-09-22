@@ -10,7 +10,7 @@ import (
 	"github.com/evanw/esbuild/pkg/api"
 )
 
-var cache = ElsaCache{ os.TempDir() }
+var cache = ElsaCache{os.TempDir()}
 
 func BundleModule(source string) string {
 
@@ -29,23 +29,22 @@ func BundleModule(source string) string {
 						possibleCachePath := cache.UrlToPath(args.Path)
 						if cache.InCache(possibleCachePath) && cache.Exists(possibleCachePath) {
 							return api.ResolverResult{Path: possibleCachePath, Namespace: "url-loader"}, nil
-						} else {
-							LogInfo("Downloading", args.Path)
-							// Get the data
-							resp, _ := http.Get(args.Path)
-							fileName := cache.BuildFileName(args.Path)
-							defer resp.Body.Close()
-							file, err := cache.Create(fileName)
-							if err != nil {
-								LogError("Internal", fmt.Sprintf("%s", err))
-								os.Exit(1)
-							}
-							io.Copy(file, resp.Body)
-
-							defer file.Close()
-							LogInfo("Downloaded", file.Name())
-							return api.ResolverResult{Path: file.Name(), Namespace: "url-loader"}, nil
 						}
+						LogInfo("Downloading", args.Path)
+						// Get the data
+						resp, _ := http.Get(args.Path)
+						fileName := cache.BuildFileName(args.Path)
+						defer resp.Body.Close()
+						file, err := cache.Create(fileName)
+						if err != nil {
+							LogError("Internal", fmt.Sprintf("%s", err))
+							os.Exit(1)
+						}
+						io.Copy(file, resp.Body)
+
+						defer file.Close()
+						LogInfo("Downloaded", file.Name())
+						return api.ResolverResult{Path: file.Name(), Namespace: "url-loader"}, nil
 
 					})
 				plugin.AddLoader(api.LoaderOptions{Filter: ".*?", Namespace: "url-loader"},

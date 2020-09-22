@@ -4,7 +4,7 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/divy-work/elsa/cmd"
+	"github.com/elsaland/elsa/cmd"
 	"github.com/lithdew/quickjs"
 )
 
