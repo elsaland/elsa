@@ -34,6 +34,7 @@ jobs:
         run: go get github.com/go-bindata/go-bindata
 
       - name: Run bootstrap
+        working-directory: ./src/github.com/divy-work/elsa
         run: go run ./bootstrap/
 
       - name: Build
