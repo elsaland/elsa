@@ -1,5 +1,7 @@
 # Elsa
 
+[![Build Status - Badge][]][Build status] [![Discord invite][]][Discord invite link]
+
 <img align="right" src=assets/logo.svg height="120px">
 
 Elsa is a _minimal_, _fast_ and _secure_ runtime for Javascript and Typescript written in Go.
@@ -65,3 +67,9 @@ elsa hello.ts
 ### Contributing
 
 Start by creating an issue about your feature or bug! Then, create a PR and we'll land it :smile:
+
+
+[Build Status - Badge]: https://github.com/elsaland/elsa/workflows/Build/badge.svg
+[Build status]: https://github.com/elsaland/elsa/actions
+[Discord invite]: https://img.shields.io/discord/684898665143206084?color=697EC4&label=Discord&logo=discord&logoColor=FDFEFE&style=flat-square
+[Discord invite link]: https://discord.gg/Dw534ZY
