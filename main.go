@@ -9,17 +9,6 @@ import (
 	"github.com/lithdew/quickjs"
 )
 
-func Check(err error) {
-	if err != nil {
-		var evalErr *quickjs.Error
-		if errors.As(err, &evalErr) {
-			fmt.Println(evalErr.Cause)
-			fmt.Println(evalErr.Stack)
-		}
-		panic(err)
-	}
-}
-
 func main() {
 	runtime.LockOSThread()
 	cmd.Execute(cmd.Elsa{run, BundleModule})

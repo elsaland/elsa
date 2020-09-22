@@ -22,6 +22,11 @@ func Execute(elsa Elsa) {
 	var rootCmd = &cobra.Command{
 		Use:   "elsa [file]",
 		Short: "Elsa is a simple Javascript and Typescript runtime written in Go",
+	}
+
+	var runCmd = &cobra.Command{
+		Use:   "run [file]",
+		Short: "Run a Javascript and Typescript source file",
 		Run: func(cmd *cobra.Command, args []string) {
 			if len(args) >= 0 {
 				elsa.Run(args[0], Perms{
@@ -44,8 +49,8 @@ func Execute(elsa Elsa) {
 		},
 	}
 
-	rootCmd.Flags().BoolVarP(&fsFlag, "fs", "f", false, "Allow file system access")
-	rootCmd.AddCommand(bundleCmd)
+	runCmd.Flags().BoolVarP(&fsFlag, "fs", "f", false, "Allow file system access")
+	rootCmd.AddCommand(bundleCmd, runCmd)
 
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
