@@ -30,19 +30,19 @@ jobs:
       - name: Setup go
         uses: actions/setup-go@v2
 
-      - name: Install xgo
-        run: go get github.com/karalabe/xgo
+      - name: Install go-bindata
+        run: go get github.com/go-bindata/go-bindata
+
+      - name: Run bootstrap
+        run: go run ./bootstrap/
 
       - name: Build
         working-directory: ./src/github.com/divy-work/elsa
-        if: startsWith(matrix.os, 'ubuntu')
-        run: |
-          sudo apt install go-bindata
-          go run ./bootstrap/
-          go run github.com/karalabe/xgo --targets=windows/amd64,darwin/*,linux/* .
+        run: go build -o elsa-${{ matrix.os }} .
 
       - uses: actions/upload-artifact@v2
         with:
-          name: elsa
-          path: ./src/github.com/divy-work/elsa/elsa-linux-amd64
+          name: elsa-${{ matrix.os }}
+          path: ./src/github.com/divy-work/elsa/elsa-${{ matrix.os }}
+
   
