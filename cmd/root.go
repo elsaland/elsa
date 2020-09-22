@@ -19,7 +19,6 @@ func Execute(cb func(file string, flags Perms)) {
 		Short: "Elsa is a simple Javascript and Typescript runtime written in Go",
 		Run: func(cmd *cobra.Command, args []string) {
 			if len(args) >= 0 {
-				fmt.Printf("Running %v\n", args[0])
 				cb(args[0], Perms{
 					fsFlag,
 				})
