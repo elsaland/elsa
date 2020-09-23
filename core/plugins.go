@@ -4,20 +4,19 @@ package core
 
 import "plugin"
 
-type PluginFunction func(val interface{}) interface{}
-
-func OpenPlugin(path string) plugin.Symbol {
+func OpenPlugin(path string, arg interface{}) interface{} {
 	p, err := plugin.Open(path)
 	if err != nil {
 		panic(err)
 	}
+	v, err := p.Lookup("V")
+	if err != nil {
+		panic(err)
+	}
+	*v.(*interface{}) = arg
 	f, err := p.Lookup("ElsaPlugin")
 	if err != nil {
 		panic(err)
 	}
-	return f
-}
-
-func RunPlugin(symbol plugin.Symbol, arg interface{}) interface{} {
-	return symbol.(PluginFunction)(arg)
+	return f.(func() interface{})()
 }
