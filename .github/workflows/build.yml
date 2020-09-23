@@ -61,6 +61,7 @@ jobs:
 
       - name: Commit benchmarks
         if: startsWith(matrix.os, 'ubuntu') && github.ref == 'refs/heads/master' && github.event_name == 'push'
+        working-directory: ./src/github.com/elsaland/elsa
         # TODO: Elsa bot for pushing benchmarks
         run: |
           git config --global user.name 'Divy Srivastava'
