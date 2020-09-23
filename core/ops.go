@@ -11,3 +11,8 @@ const (
 const (
 	Log = 3
 )
+
+// plugin ops
+const (
+	Plugin = 4
+)
