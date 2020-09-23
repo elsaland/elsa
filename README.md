@@ -1,6 +1,6 @@
 # Elsa
 
-[![Build Status - Badge][]][Build status] [![Discord invite][]][Discord invite link]
+[![Travis Status](https://travis-ci.com/elsaland/elsa.svg?branch=master)](https://travis-ci.com/elsaland/elsa) [![Build Status - Badge][]][Build status] [![Discord invite][]][Discord invite link]
 
 <img align="right" src=assets/logo.svg height="120px">
 
@@ -28,15 +28,15 @@ Benchmarks for testdata/console.js for Elsa (unreleased), Deno 1.3.3 and Node 14
 Benchmark #1: deno run ./testdata/console.js
   Time (mean ± σ):      30.3 ms ±   3.9 ms    [User: 18.8 ms, System: 8.9 ms]
   Range (min … max):    25.7 ms …  45.6 ms    88 runs
- 
+
 Benchmark #2: ./elsa ./testdata/console.js
   Time (mean ± σ):      13.4 ms ±   4.2 ms    [User: 5.5 ms, System: 5.6 ms]
   Range (min … max):     8.1 ms …  28.0 ms    212 runs
- 
+
 Benchmark #3: node testdata/console.js
   Time (mean ± σ):      79.5 ms ±  16.1 ms    [User: 53.8 ms, System: 13.6 ms]
   Range (min … max):    63.5 ms … 135.0 ms    40 runs
- 
+
 Summary
   './elsa ./testdata/console.js' ran
     2.27 ± 0.77 times faster than 'deno run ./testdata/console.js'
