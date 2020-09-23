@@ -1,4 +1,4 @@
-// +build linux freebsd macos
+// +build !windows
 
 package core
 
