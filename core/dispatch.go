@@ -26,6 +26,13 @@ func ElsaNS(perms cmd.Perms) func(ctx *quickjs.Context, this quickjs.Value, args
 			return val
 		case Log:
 			return ConsoleLog(ctx, args)
+		case Plugin:
+			plugin := args[1].String()
+			input := args[2].String()
+			dat := (OpenPlugin(plugin, input)).(string)
+			val := ctx.String(dat)
+			defer val.Free()
+			return val
 		default:
 			return ctx.Null()
 		}

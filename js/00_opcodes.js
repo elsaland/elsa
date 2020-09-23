@@ -4,4 +4,6 @@ const __ops = {
     FSRead: 2,
     
     Log: 3,
+    
+    Plugin: 4
 }
