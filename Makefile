@@ -8,4 +8,4 @@ benchmark:
 	# bundle benchmarks
 	hyperfine './elsa bundle ./testing/console.js' 'deno bundle ./testing/console.js' -s full -r 100 --warmup 50 --export-json ./benchmarks/bundle.json -i
 	# readFile benchmarks
-	hyperfine './elsa run ./testing/bench_scripts/fs.js --fs' 'deno run --allow-read ./testing/bench_scripts/fs_deno.js' '.node ./testing/bench_scripts/fs_node.js' --warmup 100 -s full -r 100 --export-json ./benchmarks/fs.json
+	hyperfine './elsa run ./testing/bench_scripts/fs.js --fs' 'deno run --allow-read ./testing/bench_scripts/fs_deno.js' 'node ./testing/bench_scripts/fs_node.js' --warmup 100 -s full -r 100 --export-json ./benchmarks/fs.json

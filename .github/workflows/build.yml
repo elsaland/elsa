@@ -22,13 +22,18 @@ jobs:
           submodules: true
           path: "./src/github.com/elsaland/elsa"
 
-      - name: Setup node
+      - name: Setup node (for benchmarks)
         uses: actions/setup-node@v1
         with:
           node-version: 14.x
 
       - name: Setup go
         uses: actions/setup-go@v2
+
+      - name: Setup deno (for benchmarks)
+        uses: denolib/setup-deno@v2
+          with:
+            deno-version: v1.3.3
 
       - name: Install go-bindata
         run: go get github.com/go-bindata/go-bindata
@@ -41,9 +46,20 @@ jobs:
         working-directory: ./src/github.com/elsaland/elsa
         run: go build -o elsa-${{ matrix.os }} .
 
-      - uses: actions/upload-artifact@v2
+      - name: Benchmarks
+        working-directory: ./src/github.com/elsaland/elsa
+        if: startsWith(matrix.os, 'ubuntu')
+        run: make benchmark
+
+      - name: Upload Elsa executables
+        uses: actions/upload-artifact@v2
         with:
           name: elsa-${{ matrix.os }}
           path: ./src/github.com/elsaland/elsa/elsa-${{ matrix.os }}
 
-  
+      - name: Upload benchmark data
+        uses: actions/upload-artifact@v2
+        if: startsWith(matrix.os, 'ubuntu')
+        with:
+          name: benchmark-data
+          path: ./src/github.com/elsaland/elsa/benchmarks
