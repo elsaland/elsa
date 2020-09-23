@@ -1,0 +1,1 @@
+Elsa.readFile("main.go")
