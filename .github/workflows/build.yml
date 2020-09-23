@@ -57,7 +57,6 @@ jobs:
         if: startsWith(matrix.os, 'ubuntu')
         run: |
           make build
-          mkdir benchmarks
           make benchmark
 
       - name: Commit benchmarks
