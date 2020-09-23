@@ -12,36 +12,18 @@ Elsa is a _minimal_, _fast_ and _secure_ runtime for Javascript and Typescript w
 - No fs, net access unless specified
 - Compliant to web standards
 - Supports TypeScript.
+- Module caching
+- Bundle your script into a single file using `elsa bundle script.js`
+- Create a standalone executable for your script using `elsa pkg script.js`
 
 ### Coming up
 
-- Module caching
 - HTTP server, more Web APIs
 - Easy installation scripts
-- Bundle your script into a single file
-- Create a standalone executable for your script
 
 ### Benchmarks
 
-Benchmarks for testdata/console.js for Elsa (unreleased), Deno 1.3.3 and Node 14.4.0
-```sh
-Benchmark #1: deno run ./testdata/console.js
-  Time (mean ± σ):      30.3 ms ±   3.9 ms    [User: 18.8 ms, System: 8.9 ms]
-  Range (min … max):    25.7 ms …  45.6 ms    88 runs
-
-Benchmark #2: ./elsa ./testdata/console.js
-  Time (mean ± σ):      13.4 ms ±   4.2 ms    [User: 5.5 ms, System: 5.6 ms]
-  Range (min … max):     8.1 ms …  28.0 ms    212 runs
-
-Benchmark #3: node testdata/console.js
-  Time (mean ± σ):      79.5 ms ±  16.1 ms    [User: 53.8 ms, System: 13.6 ms]
-  Range (min … max):    63.5 ms … 135.0 ms    40 runs
-
-Summary
-  './elsa ./testdata/console.js' ran
-    2.27 ± 0.77 times faster than 'deno run ./testdata/console.js'
-    5.94 ± 2.23 times faster than 'node testdata/console.js'
-```
+Benchmark data for the master branch is available at `benchmarks/`
 
 ### Install
 

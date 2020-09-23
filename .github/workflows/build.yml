@@ -60,6 +60,16 @@ jobs:
           mkdir benchmarks
           make benchmark
 
+      - name: Commit benchmarks
+        if: startsWith(matrix.os, 'ubuntu') && github.ref == 'refs/heads/master' && github.event_name == 'push'
+        # TODO: Elsa bot for pushing benchmarks
+        run: |
+          git config --global user.name 'Divy Srivastava'
+          git config --global user.email 'divy-work@users.noreply.github.com'
+          git commit -am "chores(auto): update benchmarks"
+          git add ./benchmarks
+          git push
+
       - name: Upload Elsa executables
         uses: actions/upload-artifact@v2
         with:
