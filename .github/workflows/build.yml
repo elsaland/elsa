@@ -66,8 +66,8 @@ jobs:
         run: |
           git config --global user.name 'Divy Srivastava'
           git config --global user.email 'divy-work@users.noreply.github.com'
-          git commit -am "chores(auto): update benchmarks"
           git add ./benchmarks
+          git commit -am "chores(auto): update benchmarks"
           git push
 
       - name: Upload Elsa executables
