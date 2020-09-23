@@ -25,6 +25,7 @@ func PkgSource(source string) {
 
 	defer f.Close()
 	f.WriteString(entry)
+	ExecBuild("target/elsa-package")
 }
 
 func parseInput(path string) bindata.InputConfig {
