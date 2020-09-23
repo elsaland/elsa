@@ -20,7 +20,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           submodules: true
-          path: "./src/github.com/divy-work/elsa"
+          path: "./src/github.com/elsaland/elsa"
 
       - name: Setup node
         uses: actions/setup-node@v1
@@ -34,16 +34,16 @@ jobs:
         run: go get github.com/go-bindata/go-bindata
 
       - name: Run bootstrap
-        working-directory: ./src/github.com/divy-work/elsa
+        working-directory: ./src/github.com/elsaland/elsa
         run: go run ./bootstrap/
 
       - name: Build
-        working-directory: ./src/github.com/divy-work/elsa
+        working-directory: ./src/github.com/elsaland/elsa
         run: go build -o elsa-${{ matrix.os }} .
 
       - uses: actions/upload-artifact@v2
         with:
           name: elsa-${{ matrix.os }}
-          path: ./src/github.com/divy-work/elsa/elsa-${{ matrix.os }}
+          path: ./src/github.com/elsaland/elsa/elsa-${{ matrix.os }}
 
   
