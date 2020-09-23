@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/elsaland/elsa/core"
 	"github.com/evanw/esbuild/pkg/api"
 )
 
@@ -30,20 +31,20 @@ func BundleModule(source string) string {
 						if cache.InCache(possibleCachePath) && cache.Exists(possibleCachePath) {
 							return api.ResolverResult{Path: possibleCachePath, Namespace: "url-loader"}, nil
 						}
-						LogInfo("Downloading", args.Path)
+						core.LogInfo("Downloading", args.Path)
 						// Get the data
 						resp, _ := http.Get(args.Path)
 						fileName := cache.BuildFileName(args.Path)
 						defer resp.Body.Close()
 						file, err := cache.Create(fileName)
 						if err != nil {
-							LogError("Internal", fmt.Sprintf("%s", err))
+							core.LogError("Internal", fmt.Sprintf("%s", err))
 							os.Exit(1)
 						}
 						io.Copy(file, resp.Body)
 
 						defer file.Close()
-						LogInfo("Downloaded", file.Name())
+						core.LogInfo("Downloaded", file.Name())
 						return api.ResolverResult{Path: file.Name(), Namespace: "url-loader"}, nil
 
 					})
@@ -57,16 +58,16 @@ func BundleModule(source string) string {
 							defer resp.Body.Close()
 							file, err := cache.Create(fileName)
 							if err != nil {
-								LogError("Internal", fmt.Sprintf("%s", err))
+								core.LogError("Internal", fmt.Sprintf("%s", err))
 								os.Exit(1)
 							}
 							io.Copy(file, resp.Body)
 
 							defer file.Close()
 							p = file.Name()
-							LogInfo("Downloaded", file.Name())
+							core.LogInfo("Downloaded", file.Name())
 						}
-						LogInfo("Loading", p)
+						core.LogInfo("Loading", p)
 						dat, e := ioutil.ReadFile(p)
 						if e != nil {
 							panic(e)

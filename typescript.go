@@ -3,16 +3,17 @@ package main
 import (
 	"runtime"
 
+	"github.com/elsaland/elsa/core"
 	"github.com/lithdew/quickjs"
 )
 
 func Compile(source string, fn func(val quickjs.Value)) {
-	data, err := Asset("typescript/typescript.js")
+	data, err := core.Asset("typescript/typescript.js")
 	if err != nil {
 		panic("Asset was not found.")
 	}
 
-	dts, er := Asset("typescript/lib.es6.d.ts")
+	dts, er := core.Asset("typescript/lib.es6.d.ts")
 	if er != nil {
 		panic("Asset was not found.")
 	}
@@ -37,10 +38,10 @@ func Compile(source string, fn func(val quickjs.Value)) {
 	globals.Set("__getDTS", context.Function(d))
 	result, err := context.Eval(string(data))
 	defer result.Free()
-	Check(err)
+	core.Check(err)
 	result, err = context.Eval(jsCheck(source))
 	defer result.Free()
-	Check(err)
+	core.Check(err)
 }
 
 func jsCheck(source string) string {
@@ -71,7 +72,7 @@ function getDiagnosticsForText(text) {
         rootNames: [dummyFilePath],
         host
     });
-	
+
 	let diags = "";
 	ts.getPreEmitDiagnostics(program)
 	.forEach(diagnostic => {

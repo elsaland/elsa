@@ -1,5 +1,5 @@
 // Will be updated as an when new OPS are added
-package main
+package core
 
 // FileSystem OP IDs
 const (
