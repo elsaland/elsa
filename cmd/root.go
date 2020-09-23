@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/elsaland/elsa/packager"
 	"github.com/spf13/cobra"
 )
 
@@ -50,8 +51,20 @@ func Execute(elsa Elsa) {
 		},
 	}
 
+	var pkgCmd = &cobra.Command{
+		Use:   "pkg [file]",
+		Short: "Package your script to a standalone executable.",
+		Long:  `Package your script to a standalone executable.`,
+		Args:  cobra.MinimumNArgs(1),
+		Run: func(cmd *cobra.Command, args []string) {
+			if len(args) >= 0 {
+				packager.PkgSource(args[0])
+			}
+		},
+	}
+
 	runCmd.Flags().BoolVarP(&fsFlag, "fs", "f", false, "Allow file system access")
-	rootCmd.AddCommand(bundleCmd, runCmd)
+	rootCmd.AddCommand(bundleCmd, runCmd, pkgCmd)
 
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
