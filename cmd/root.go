@@ -12,7 +12,7 @@ type Perms struct {
 }
 
 type Elsa struct {
-	Run    func(file string, flags Perms)
+	Run    func(file string, bundle string, flags Perms)
 	Bundle func(file string) string
 }
 
@@ -29,7 +29,8 @@ func Execute(elsa Elsa) {
 		Short: "Run a Javascript and Typescript source file",
 		Run: func(cmd *cobra.Command, args []string) {
 			if len(args) >= 0 {
-				elsa.Run(args[0], Perms{
+				bundle := elsa.Bundle(args[0])
+				elsa.Run(args[0], bundle, Perms{
 					fsFlag,
 				})
 			}

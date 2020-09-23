@@ -13,7 +13,7 @@ func main() {
 
 	sort.Sort(ByNumericalFilename(files))
 
-	binCmd := []string{"run", "github.com/go-bindata/go-bindata/go-bindata", "-o", "data.go", "typescript/", "target/"}
+	binCmd := []string{"run", "github.com/go-bindata/go-bindata/go-bindata", "-pkg", "core", "-o", "./core/data.go", "typescript/", "target/"}
 	var finalSource string
 	for _, f := range files {
 		log.Printf("Bundling %s\n", f.Name())
