@@ -1,44 +1,19 @@
 language: go
+
+arch:
+  - amd64
+  - arm64  # please note arm64-graviton2 requires explicit virt: [lxd|vm] tag so it's recommended for jobs.include, see below
 os: linux  # different CPU architectures are only supported on Linux
+
+
+env:
+    - GO111MODULE=on
+
 go:
     - 1.14.6
+
 go_import_path: github.com/elsaland/elsa
-env:
-  global:
-    - GO111MODULE=on
-jobs:
-  include:
-    # Intel, 64-bit, Little-endian
-    - name: "amd64 (x86_64) - gcc"
-      arch: amd64
-    # ARM, 32-bit, Little-endian
-    - name: "arm32 (armv8l)"
-      arch: arm64
-      compiler: gcc
-      env:
-        # https://packages.ubuntu.com/xenial/crossbuild-essential-armhf
-        - CC=arm-linux-gnueabihf-gcc
-        - SETARCH="setarch linux32 --verbose --32bit"
-        - GOARCH=arm
-      before_install:
-        - sudo dpkg --add-architecture armhf
-        - sudo apt-get update -yq
-        # There is no gcc-multilib on arm64.
-        # https://packages.ubuntu.com/xenial/gcc-multilib
-        # To run bin/hello, we need libc6:armhf deb package.
-        # Check `ldd bin/hello`.
-        # https://askubuntu.com/questions/133389
-        - |-
-          sudo apt-get -yq install \
-            crossbuild-essential-armhf \
-            libc6:armhf
-  allow_failures:
-  fast_finish: true
-install: true
+
 script:
-  - go get github.com/go-bindata/go-bindata
-  - make build
-branches:
-  except:
-    # Enable branches except the working in progress branchs "wip/"
-    - /^wip\//
+    - go get github.com/go-bindata/go-bindata
+    - make build
