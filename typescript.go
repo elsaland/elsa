@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"runtime"
 
 	"github.com/elsaland/elsa/core"
@@ -58,5 +59,5 @@ func Compile(source string, fn func(val quickjs.Value)) {
 }
 
 func jsCheck(source string) string {
-	return (`getDiagnosticsForText(` + "`" + source + "`" + `);`)
+	return fmt.Sprintf("ee.emitEvent('typecheck', [`%s`]);", source)
 }

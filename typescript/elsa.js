@@ -1,3 +1,8 @@
+var ee = new EventEmitter();
+ee.defineEvents(['typecheck']);
+ee.addListener('typecheck', (x) => {
+  getDiagnosticsForText(x)
+});
 function getDiagnosticsForText(text) {
 	const dummyFilePath = "/file.ts";
 	const textAst = ts.createSourceFile(dummyFilePath, text, ts.ScriptTarget.ES6);
@@ -8,7 +13,7 @@ function getDiagnosticsForText(text) {
         fileExists: filePath => files[fileName] != null,
         directoryExists: dirPath => dirPath === "/",
         getCurrentDirectory: () => "/",
-		getDirectories: () => [],
+		    getDirectories: () => [],
         getCanonicalFileName: fileName => fileName,
         getNewLine: () => "\n",
         getDefaultLibFileName: () => "/lib.es6.d.ts",
