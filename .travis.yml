@@ -18,24 +18,23 @@ script:
     - make build
 
 - name: "arm32 (armv8l)"
-    arch: arm64
-    env:
-    # https://packages.ubuntu.com/xenial/crossbuild-essential-armhf
-    - CC=arm-linux-gnueabihf-gcc
-    - SETARCH="setarch linux32 --verbose --32bit"
-    before_install:
-    - sudo dpkg --add-architecture armhf
-    - sudo apt-get update -yq
-    # There is no gcc-multilib on arm64.
-    # https://packages.ubuntu.com/xenial/gcc-multilib
-    # To run bin/hello, we need libc6:armhf deb package.
-    # Check `ldd bin/hello`.
-    # https://askubuntu.com/questions/133389
-    - |-
-        sudo apt-get -yq install \
-        crossbuild-essential-armhf \
-        libc6:armhf
-
-    script:
-    - go get github.com/go-bindata/go-bindata
-    - make build
+  arch: arm64
+  env:
+  # https://packages.ubuntu.com/xenial/crossbuild-essential-armhf
+  - CC=arm-linux-gnueabihf-gcc
+  - SETARCH="setarch linux32 --verbose --32bit"
+  before_install:
+  - sudo dpkg --add-architecture armhf
+  - sudo apt-get update -yq
+  # There is no gcc-multilib on arm64.
+  # https://packages.ubuntu.com/xenial/gcc-multilib
+  # To run bin/hello, we need libc6:armhf deb package.
+  # Check `ldd bin/hello`.
+  # https://askubuntu.com/questions/133389
+  - |-
+      sudo apt-get -yq install \
+      crossbuild-essential-armhf \
+      libc6:armhf
+  script:
+  - go get github.com/go-bindata/go-bindata
+  - make build
