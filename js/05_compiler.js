@@ -1,24 +1,27 @@
 var ee = new EventEmitter();
 ee.defineEvents(['typecheck']);
+
 ee.addListener('typecheck', (x) => {
-  getDiagnosticsForText(x)
+  console.log(x)
+  getDiagnostics(x)
 });
-function getDiagnosticsForText(text) {
-	const dummyFilePath = "/file.ts";
-	const textAst = ts.createSourceFile(dummyFilePath, text, ts.ScriptTarget.ES6);
+
+function getDiagnostics(text) {
+	const dummyFilePath = text;
+	const textAst = ts.createSourceFile(dummyFilePath, Elsa.readFile(text), ts.ScriptTarget.ES6);
 	const dtsAST = ts.createSourceFile("/lib.es6.d.ts", __getDTS(), ts.ScriptTarget.ES6);
 	const files = {[dummyFilePath]: textAst, "/lib.es6.d.ts": dtsAST}
-    const options = {};
+    const options = { allowJs: true };
     const host = {
-        fileExists: filePath => files[fileName] != null,
-        directoryExists: dirPath => dirPath === "/",
+        fileExists: filePath => files[filePath] || Elsa.readFile(filePath),
+        directoryExists: dirPath => files[dirPath] || Elsa.readFile(dirPath),
         getCurrentDirectory: () => "/",
-		    getDirectories: () => [],
+		getDirectories: () => [],
         getCanonicalFileName: fileName => fileName,
         getNewLine: () => "\n",
         getDefaultLibFileName: () => "/lib.es6.d.ts",
-        getSourceFile: filePath => files[filePath],
-        readFile: filePath => filePath === dummyFilePath ? text : undefined,
+        getSourceFile: filePath => files[filePath] || Elsa.readFile(filePath),
+        readFile: filePath => files[filePath] || Elsa.readFile(filePath),
         useCaseSensitiveFileNames: () => true,
         writeFile: () => {}
     };

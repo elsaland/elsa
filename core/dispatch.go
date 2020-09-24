@@ -1,6 +1,7 @@
 package core
 
 import (
+	"fmt"
 	"io/ioutil"
 	"os"
 
@@ -16,12 +17,15 @@ func ElsaNS(perms cmd.Perms) func(ctx *quickjs.Context, this quickjs.Value, args
 				LogError("Perms Error: ", "Filesystem access is blocked.")
 				os.Exit(1)
 			}
+			defer ctx.Free()
 			file := args[1].String()
 			dat, e := ioutil.ReadFile(file)
 			if e != nil {
-				panic(e)
+				LogError("Error", fmt.Sprintf("%v", e))
+				os.Exit(1)
 			}
-			val := ctx.String(string(dat))
+			str := string(dat)
+			val := ctx.String(str)
 			defer val.Free()
 			return val
 		case Log:

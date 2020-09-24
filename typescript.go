@@ -4,16 +4,13 @@ import (
 	"fmt"
 	"runtime"
 
+	"github.com/elsaland/elsa/cmd"
 	"github.com/elsaland/elsa/core"
 	"github.com/lithdew/quickjs"
 )
 
-func Compile(source string, fn func(val quickjs.Value)) {
+func Compile(source string, fn func(val quickjs.Value), flags cmd.Perms) {
 	data, err := core.Asset("typescript/typescript.js")
-	if err != nil {
-		panic("Asset was not found.")
-	}
-	elsaTSIntegration, err := core.Asset("typescript/elsa.js")
 	if err != nil {
 		panic("Asset was not found.")
 	}
@@ -42,20 +39,15 @@ func Compile(source string, fn func(val quickjs.Value)) {
 	d := func(ctx *quickjs.Context, this quickjs.Value, args []quickjs.Value) quickjs.Value {
 		return ctx.String(string(dts))
 	}
+
+	globals.Set("__dispatch", context.Function(core.ElsaNS(flags)))
 	globals.Set("__report", context.Function(report))
 	globals.Set("__getDTS", context.Function(d))
-	result, err := context.Eval(string(data))
+	bundle := string(elsaEvt) + string(data) + jsCheck(source)
+	result, err := context.Eval(bundle)
 	defer result.Free()
 	core.Check(err)
-	result, err = context.Eval(string(elsaEvt))
-	defer result.Free()
-	core.Check(err)
-	result, err = context.Eval(string(elsaTSIntegration))
-	defer result.Free()
-	core.Check(err)
-	result, err = context.Eval(jsCheck(source))
-	defer result.Free()
-	core.Check(err)
+
 }
 
 func jsCheck(source string) string {
