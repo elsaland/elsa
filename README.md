@@ -20,16 +20,25 @@ Elsa is a _minimal_, _fast_ and _secure_ runtime for Javascript and Typescript w
 
 - HTTP server, more Web APIs
 - Easy installation scripts
+- Standard modules
+- Typechecking support with `dev` subcommand
 
 ### Benchmarks
 
 Benchmark data for the master branch is available at `benchmarks/`
 
+Also see [Comparison with Deno and Node](./COMPARISON.md)
 ### Install
 
 Not yet released, [build from source](#build-from-source) instead.
 
 ### Build from source
+
+You will need Go installed on your machine before building. 
+
+Install go-bindata using `go get github.com/go-bindata/go-bindata/...`
+
+Clone the repo on your `$GOPATH` and run `make build` to trigger the build process.
 
 ### Getting Started
 
@@ -43,13 +52,16 @@ hello("Elsa")
 ```
 
 ```shell script
-elsa hello.ts
+> elsa hello.ts
+Hello, Elsa
 ```
 
 ### Contributing
 
 Start by creating an issue about your feature or bug! Then, create a PR and we'll land it :smile:
 
+### License
+Elsa.land is licensed under MIT License.
 
 [Build Status - Badge]: https://github.com/elsaland/elsa/workflows/Build/badge.svg
 [Build status]: https://github.com/elsaland/elsa/actions
