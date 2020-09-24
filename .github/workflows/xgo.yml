@@ -1,0 +1,40 @@
+name: Build (xgo)
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    name: xgo
+    runs-on: ubuntu-latest
+    env:
+      GOPATH: ${{ github.workspace }}
+    steps:
+      - name: Setup repo
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+          path: "./src/github.com/elsaland/elsa"
+
+      - name: Setup node (for benchmarks)
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+
+      - name: Setup go
+        uses: actions/setup-go@v2
+      
+      - name: Setup xgo
+        run: go get github.com/karalabe/xgo
+      
+      - name: Install go-bindata
+        run: go get github.com/go-bindata/go-bindata
+
+      - name: Run bootstrap
+        working-directory: ./src/github.com/elsaland/elsa
+        run: go run ./bootstrap/
+      
+      - name: Build
+        working-directory: ./src/github.com/elsaland/elsa
+        run: go run github.com/karalabe/xgo --targets=linux/arm .
