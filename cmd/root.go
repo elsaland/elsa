@@ -15,6 +15,7 @@ type Perms struct {
 type Elsa struct {
 	Run    func(file string, bundle string, flags Perms)
 	Bundle func(file string) string
+	Dev    func(file string, bundle string, flags Perms)
 }
 
 func Execute(elsa Elsa) {
@@ -63,8 +64,23 @@ func Execute(elsa Elsa) {
 		},
 	}
 
+	var devCmd = &cobra.Command{
+		Use:   "dev [file]",
+		Short: "Run a script in development mode.",
+		Long:  `Run a script in development mode. It enables type-checking using the inbuilt typescript compiler.`,
+		Args:  cobra.MinimumNArgs(1),
+		Run: func(cmd *cobra.Command, args []string) {
+			if len(args) >= 0 {
+				bundle := elsa.Bundle(args[0])
+				elsa.Dev(args[0], bundle, Perms{
+					fsFlag,
+				})
+			}
+		},
+	}
+
 	runCmd.Flags().BoolVarP(&fsFlag, "fs", "f", false, "Allow file system access")
-	rootCmd.AddCommand(bundleCmd, runCmd, pkgCmd)
+	rootCmd.AddCommand(bundleCmd, runCmd, pkgCmd, devCmd)
 
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
