@@ -33,7 +33,9 @@ jobs:
 
       - name: Run bootstrap
         working-directory: ./src/github.com/elsaland/elsa
-        run: go run ./bootstrap/
+        run: |
+          go run ./bootstrap/
+          go build .
       
       - name: Build
         working-directory: ./src/github.com/elsaland/elsa
