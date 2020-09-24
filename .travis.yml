@@ -19,6 +19,7 @@ jobs:
         # https://packages.ubuntu.com/xenial/crossbuild-essential-armhf
         - CC=arm-linux-gnueabihf-gcc
         - SETARCH="setarch linux32 --verbose --32bit"
+        - GOARCH=arm
       before_install:
         - sudo dpkg --add-architecture armhf
         - sudo apt-get update -yq
