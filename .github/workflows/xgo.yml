@@ -26,7 +26,7 @@ jobs:
         uses: actions/setup-go@v2
       
       - name: Setup xgo
-        run: go get github.com/karalabe/xgo
+        run: go get src.techknowlogick.com/xgo
       
       - name: Install go-bindata
         run: go get github.com/go-bindata/go-bindata
@@ -39,4 +39,4 @@ jobs:
       
       - name: Build
         working-directory: ./src/github.com/elsaland/elsa
-        run: go run github.com/karalabe/xgo --targets=linux/arm .
+        run: go run src.techknowlogick.com/xgo --targets=linux/arm .
