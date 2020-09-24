@@ -1,38 +1,38 @@
-- name: "arm64"
-  language: go
-  arch: arm64
-  go:
-      - 1.14.6
-  go_import_path: github.com/elsaland/elsa
-  env:
-  - GO111MODULE=on
-  script:
-  - go get github.com/go-bindata/go-bindata
-  - make build
+language: go
 
-- name: "arm32 (armv8l)"
-  language: go
-  arch: arm64
-  go:
-      - 1.14.6
-  go_import_path: github.com/elsaland/elsa
-  env:
-  # https://packages.ubuntu.com/xenial/crossbuild-essential-armhf
-  - CC=arm-linux-gnueabihf-gcc
-  - SETARCH="setarch linux32 --verbose --32bit"
-  - GO111MODULE=on
-  before_install:
-  - sudo dpkg --add-architecture armhf
-  - sudo apt-get update -yq
-  # There is no gcc-multilib on arm64.
-  # https://packages.ubuntu.com/xenial/gcc-multilib
-  # To run bin/hello, we need libc6:armhf deb package.
-  # Check `ldd bin/hello`.
-  # https://askubuntu.com/questions/133389
-  - |-
-      sudo apt-get -yq install \
-      crossbuild-essential-armhf \
-      libc6:armhf
-  script:
-  - go get github.com/go-bindata/go-bindata
-  - make build
+os: linux  # different CPU architectures are only supported on Linux
+
+env:
+    global:
+        - GO111MODULE=on
+
+go:
+    - 1.14.6
+
+go_import_path: github.com/elsaland/elsa
+
+jobs:
+    include:
+        # ARM, 32-bit, Little-endian
+        - name: "arm32 (armv8l)"
+        arch: arm64
+        compiler: gcc
+        env:
+            # https://packages.ubuntu.com/xenial/crossbuild-essential-armhf
+            - CC=arm-linux-gnueabihf-gcc
+            - SETARCH="setarch linux32 --verbose --32bit"
+        before_install:
+            - sudo dpkg --add-architecture armhf
+            - sudo apt-get update -yq
+            # There is no gcc-multilib on arm64.
+            # https://packages.ubuntu.com/xenial/gcc-multilib
+            # To run bin/hello, we need libc6:armhf deb package.
+            # Check `ldd bin/hello`.
+            # https://askubuntu.com/questions/133389
+            - |-
+            sudo apt-get -yq install \
+                crossbuild-essential-armhf \
+                libc6:armhf
+script:
+    - go get github.com/go-bindata/go-bindata
+    - make build
