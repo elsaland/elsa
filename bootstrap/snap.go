@@ -26,7 +26,6 @@ func main() {
 	for _, f := range files {
 		log.Printf("Bundling %s\n", f.Name())
 
-		// source, _ := ioutil.ReadFile("js/" + f.Name())
 		file, err := os.Open(filepath.Join("js", f.Name()))
 		if err != nil {
 			log.Fatalf("Got error opening %s: %v", f.Name(), err)
@@ -36,8 +35,6 @@ func main() {
 		if err := m.Minify("text/javascript", buf, file); err != nil {
 			log.Fatalf("Got error minifying %s: %v", f.Name(), err)
 		}
-
-		log.Printf(buf.String())
 
 		finalSource += buf.String() + "\n"
 	}

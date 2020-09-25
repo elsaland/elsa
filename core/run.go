@@ -6,8 +6,14 @@ import (
 	"io"
 
 	"github.com/elsaland/elsa/cmd"
-	"github.com/lithdew/quickjs"
+	"github.com/elsaland/quickjs"
 )
+
+type Recv func(id quickjs.Value, val quickjs.Value)
+type Elsa struct {
+	flags cmd.Perms
+	recv  Recv
+}
 
 func Run(source string, bundle string, flags cmd.Perms) {
 	jsruntime := quickjs.NewRuntime()
@@ -16,9 +22,12 @@ func Run(source string, bundle string, flags cmd.Perms) {
 	context := jsruntime.NewContext()
 	defer context.Free()
 
+	elsa := &Elsa{flags: flags}
+
 	globals := context.Globals()
 
-	globals.Set("__dispatch", context.Function(ElsaNS(flags)))
+	globals.SetFunction("__send", ElsaSendNS(elsa))
+	globals.SetFunction("__recv", ElsaRecvNS(elsa))
 
 	snap, _ := Asset("target/elsa.js")
 

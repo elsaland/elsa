@@ -1,6 +1,6 @@
 globalThis.Elsa = {
   readFile: (arg) => {
-    return globalThis.__dispatch(__ops.FSRead, arg);
+    return globalThis.__send(__ops.FSRead, arg);
   },
   writeFile: (file, content) => {
     return globalThis.__dispatch(__ops.FSWrite, file, content);
@@ -9,6 +9,6 @@ globalThis.Elsa = {
     return globalThis.__dispatch(__ops.FSExists, arg);
   },
   runPlugin: (dylib, arg) => {
-    return globalThis.__dispatch(__ops.Plugin, dylib, arg);
+    return globalThis.__send(__ops.Plugin, dylib, arg);
   },
 };

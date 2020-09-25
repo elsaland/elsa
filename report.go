@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/elsaland/elsa/core"
-	"github.com/lithdew/quickjs"
+	"github.com/elsaland/quickjs"
 )
 
 func ReportDiagnostics(diagnostics quickjs.Value) {

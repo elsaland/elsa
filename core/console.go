@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/lithdew/quickjs"
+	"github.com/elsaland/quickjs"
 )
 
 var f = NewFormatter()
