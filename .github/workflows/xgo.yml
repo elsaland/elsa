@@ -35,7 +35,6 @@ jobs:
         working-directory: ./src/github.com/elsaland/elsa
         run: |
           go run ./bootstrap/
-          go mod vendor
           go build .
       
       - name: Build
