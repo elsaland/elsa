@@ -1,7 +1,7 @@
 package ops
 
 import (
-	"encoding/binary"
+	"fmt"
 	"io"
 	"os"
 
@@ -22,18 +22,20 @@ func (fs *FsDriver) CreateFS(path string) afero.Fs {
 	return appfs
 }
 
-func (fs *FsDriver) ReadFile(ctx quickjs.Context, path quickjs.Value) quickjs.Value {
+func (fs *FsDriver) ReadFile(ctx *quickjs.Context, path quickjs.Value) quickjs.Value {
 	data, err := afero.ReadFile(fs.Fs, path.String())
 	if err != nil {
-		return ctx.ThrowError(err)
+		fmt.Println("%v", err)
+		os.Exit(1)
 	}
-	return ctx.Uint32(binary.LittleEndian.Uint32(data))
+	return ctx.String(string(data))
 }
 
-func (fs *FsDriver) Exists(ctx quickjs.Context, path quickjs.Value) quickjs.Value {
+func (fs *FsDriver) Exists(ctx *quickjs.Context, path quickjs.Value) quickjs.Value {
 	data, err := afero.Exists(fs.Fs, path.String())
 	if err != nil {
-		return ctx.ThrowError(err)
+		fmt.Println("%v", err)
+		os.Exit(1)
 	}
 	return ctx.Bool(data)
 }
@@ -41,7 +43,8 @@ func (fs *FsDriver) Exists(ctx quickjs.Context, path quickjs.Value) quickjs.Valu
 func (fs *FsDriver) DirExists(ctx quickjs.Context, path quickjs.Value) quickjs.Value {
 	data, err := afero.DirExists(fs.Fs, path.String())
 	if err != nil {
-		return ctx.ThrowError(err)
+		fmt.Println("%v", err)
+		os.Exit(1)
 	}
 	return ctx.Bool(data)
 }
