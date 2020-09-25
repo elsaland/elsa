@@ -17,7 +17,6 @@ func ElsaNS(perms cmd.Perms) func(ctx *quickjs.Context, this quickjs.Value, args
 				LogError("Perms Error: ", "Filesystem access is blocked.")
 				os.Exit(1)
 			}
-			defer ctx.Free()
 			file := args[1].String()
 			dat, e := ioutil.ReadFile(file)
 			if e != nil {

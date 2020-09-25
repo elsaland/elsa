@@ -16,7 +16,7 @@ function getDiagnostics(text) {
         fileExists: filePath => files[filePath] || Elsa.readFile(filePath),
         directoryExists: dirPath => files[dirPath] || Elsa.readFile(dirPath),
         getCurrentDirectory: () => "/",
-		getDirectories: () => [],
+		    getDirectories: () => [],
         getCanonicalFileName: fileName => fileName,
         getNewLine: () => "\n",
         getDefaultLibFileName: () => "/lib.es6.d.ts",

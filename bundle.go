@@ -70,7 +70,7 @@ func BundleModule(source string) string {
 						core.LogInfo("Loading", p)
 						dat, e := ioutil.ReadFile(p)
 						if e != nil {
-							panic(e)
+							core.Panic(e)
 						}
 						contents := string(dat)
 						return api.LoaderResult{Contents: &contents, Loader: api.LoaderTS}, nil
