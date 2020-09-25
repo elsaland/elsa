@@ -13,5 +13,8 @@ require (
 	github.com/robertkrimen/otto v0.0.0-20191219234010-c382bd3c16ff
 	github.com/spf13/cobra v1.0.0
 	github.com/spf13/pflag v1.0.5 // indirect
+	github.com/tdewolff/minify v2.3.6+incompatible
+	github.com/tdewolff/minify/v2 v2.9.5
+	github.com/tdewolff/parse v2.3.4+incompatible // indirect
 	gopkg.in/sourcemap.v1 v1.0.5 // indirect
 )
