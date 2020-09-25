@@ -1,14 +1,20 @@
 package core
 
 import (
-	"io/ioutil"
 	"os"
+
+	"github.com/elsaland/elsa/core/ops"
+	"github.com/spf13/afero"
 
 	"github.com/elsaland/elsa/cmd"
 	"github.com/lithdew/quickjs"
 )
 
 func ElsaNS(perms cmd.Perms) func(ctx *quickjs.Context, this quickjs.Value, args []quickjs.Value) quickjs.Value {
+	var fs = ops.FsDriver{
+		Fs:    afero.NewOsFs(),
+		Perms: perms,
+	}
 	return func(ctx *quickjs.Context, this quickjs.Value, args []quickjs.Value) quickjs.Value {
 		switch args[0].Int32() {
 		case FSRead:
@@ -16,13 +22,8 @@ func ElsaNS(perms cmd.Perms) func(ctx *quickjs.Context, this quickjs.Value, args
 				LogError("Perms Error: ", "Filesystem access is blocked.")
 				os.Exit(1)
 			}
-			file := args[1].String()
-			dat, e := ioutil.ReadFile(file)
-			if e != nil {
-				panic(e)
-			}
-			val := ctx.String(string(dat))
-			defer val.Free()
+			file := args[1]
+			val := fs.ReadFile(ctx, file)
 			return val
 		case Log:
 			return ConsoleLog(ctx, args)

@@ -3,8 +3,10 @@ package core
 
 // FileSystem OP IDs
 const (
-	FSWrite = 1
-	FSRead  = 2
+	FSWrite     = 1
+	FSRead      = 2
+	FSExists    = 4
+	FSDirExists = 5
 )
 
 // console binding ops
