@@ -6,7 +6,7 @@ import (
 	"io"
 
 	"github.com/elsaland/elsa/cmd"
-	"github.com/lithdew/quickjs"
+	"github.com/elsaland/quickjs"
 )
 
 func Run(source string, bundle string, flags cmd.Perms) {

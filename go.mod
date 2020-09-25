@@ -5,6 +5,7 @@ go 1.14
 require (
 	github.com/asaskevich/govalidator v0.0.0-20200907205600-7a23bdc65eef
 	github.com/asticode/go-bindata v1.0.0
+	github.com/elsaland/quickjs v0.0.0-20200925155809-0246a93f1a32
 	github.com/evanw/esbuild v0.7.3-0.20200919185132-ef34da4ee06e
 	github.com/fatih/color v1.9.0
 	github.com/go-bindata/go-bindata v3.1.2+incompatible
@@ -15,5 +16,3 @@ require (
 	github.com/spf13/pflag v1.0.5 // indirect
 	gopkg.in/sourcemap.v1 v1.0.5 // indirect
 )
-
-replace github.com/lithdew/quickjs => ./quickjs

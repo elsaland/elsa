@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"github.com/elsaland/elsa/cmd"
-	"github.com/lithdew/quickjs"
+	"github.com/elsaland/quickjs"
 )
 
 func ElsaNS(perms cmd.Perms) func(ctx *quickjs.Context, this quickjs.Value, args []quickjs.Value) quickjs.Value {

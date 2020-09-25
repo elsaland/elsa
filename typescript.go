@@ -4,7 +4,7 @@ import (
 	"runtime"
 
 	"github.com/elsaland/elsa/core"
-	"github.com/lithdew/quickjs"
+	"github.com/elsaland/quickjs"
 )
 
 func Compile(source string, fn func(val quickjs.Value)) {
