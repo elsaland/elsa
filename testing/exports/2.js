@@ -1,1 +1,3 @@
-export default function () { console.log(1) }
+export default function () {
+  console.log(1);
+}
