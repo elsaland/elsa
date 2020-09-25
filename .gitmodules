@@ -1,0 +1,3 @@
+[submodule "quickjs"]
+	path = quickjs
+	url = https://github.com/elsaland/quickjs
