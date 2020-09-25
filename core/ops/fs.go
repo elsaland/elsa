@@ -31,6 +31,15 @@ func (fs *FsDriver) ReadFile(ctx *quickjs.Context, path quickjs.Value) quickjs.V
 	return ctx.String(string(data))
 }
 
+func (fs *FsDriver) WriteFile(ctx *quickjs.Context, path quickjs.Value, content quickjs.Value) quickjs.Value {
+	err := afero.WriteFile(fs.Fs, path.String(), []byte(content.String()), 0777)
+	if err != nil {
+		fmt.Println("%v", err)
+		os.Exit(1)
+	}
+	return ctx.Bool(true)
+}
+
 func (fs *FsDriver) Exists(ctx *quickjs.Context, path quickjs.Value) quickjs.Value {
 	data, err := afero.Exists(fs.Fs, path.String())
 	if err != nil {

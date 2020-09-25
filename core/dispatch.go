@@ -27,6 +27,12 @@ func ElsaNS(perms cmd.Perms) func(ctx *quickjs.Context, this quickjs.Value, args
 			file := args[1]
 			val := fs.Exists(ctx, file)
 			return val
+		case FSWrite:
+			CheckFs(perms)
+			file := args[1]
+			contents := args[2]
+			val := fs.WriteFile(ctx, file, contents)
+			return val
 		case Log:
 			return ConsoleLog(ctx, args)
 		case Plugin:
