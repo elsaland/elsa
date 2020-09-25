@@ -3,6 +3,7 @@ package core
 import (
 	"errors"
 	"fmt"
+	"io"
 
 	"github.com/elsaland/elsa/cmd"
 	"github.com/lithdew/quickjs"
@@ -21,14 +22,23 @@ func Run(source string, bundle string, flags cmd.Perms) {
 
 	snap, _ := Asset("target/elsa.js")
 
-	k, e := context.Eval(string(snap))
-	Check(e)
+	k, err := context.Eval(string(snap))
+	Check(err)
 	defer k.Free()
 
 	result, e := context.EvalFile(bundle, source)
 
+	for {
+		_, err = jsruntime.ExecutePendingJob()
+		if err == io.EOF {
+			err = nil
+			break
+		}
+		Check(err)
+	}
+
 	defer result.Free()
-	if e != nil {
+	if err != nil {
 		var evalErr *quickjs.Error
 		if errors.As(e, &evalErr) {
 			fmt.Println(evalErr.Cause)

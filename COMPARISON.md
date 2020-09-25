@@ -1,6 +1,6 @@
 ## Comparison
 
-Benchmarks are available at `/bencmarks/`
+Benchmarks are available at `/benchmarks/`
 
 | Features | Elsa (unreleased)| Deno v1.3.3 | Node.js v14.4.0 | 
 | --- | --- | --- | --- |
