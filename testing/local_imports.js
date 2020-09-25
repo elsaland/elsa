@@ -1,1 +1,1 @@
-import Default, { hello, Name } from "./export.js"
+import Default, { hello, Name } from "./export.js";
