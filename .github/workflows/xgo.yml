@@ -40,4 +40,4 @@ jobs:
       
       - name: Build
         working-directory: ./src/github.com/elsaland/elsa
-        run: go run src.techknowlogick.com/xgo --targets=linux/arm github.com/elsaland/elsa
+        run: go run src.techknowlogick.com/xgo --targets=linux/arm .
