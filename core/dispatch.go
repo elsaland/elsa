@@ -18,12 +18,14 @@ func ElsaNS(perms cmd.Perms) func(ctx *quickjs.Context, this quickjs.Value, args
 	return func(ctx *quickjs.Context, this quickjs.Value, args []quickjs.Value) quickjs.Value {
 		switch args[0].Int32() {
 		case FSRead:
-			if !perms.Fs {
-				LogError("Perms Error: ", "Filesystem access is blocked.")
-				os.Exit(1)
-			}
+			CheckFs(perms)
 			file := args[1]
 			val := fs.ReadFile(ctx, file)
+			return val
+		case FSExists:
+			CheckFs(perms)
+			file := args[1]
+			val := fs.Exists(ctx, file)
 			return val
 		case Log:
 			return ConsoleLog(ctx, args)
@@ -37,5 +39,12 @@ func ElsaNS(perms cmd.Perms) func(ctx *quickjs.Context, this quickjs.Value, args
 		default:
 			return ctx.Null()
 		}
+	}
+}
+
+func CheckFs(perms cmd.Perms) {
+	if !perms.Fs {
+		LogError("Perms Error: ", "Filesystem access is blocked.")
+		os.Exit(1)
 	}
 }

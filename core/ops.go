@@ -5,16 +5,16 @@ package core
 const (
 	FSWrite     = 1
 	FSRead      = 2
-	FSExists    = 4
-	FSDirExists = 5
+	FSExists    = 3
+	FSDirExists = 4
 )
 
 // console binding ops
 const (
-	Log = 3
+	Log = 10
 )
 
 // plugin ops
 const (
-	Plugin = 4
+	Plugin = 15
 )
