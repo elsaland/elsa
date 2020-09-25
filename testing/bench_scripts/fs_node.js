@@ -1,3 +1,3 @@
-const fs = require("fs")
+const fs = require("fs");
 
-fs.readFile('main.go', 'utf8', function(err, data){}); 
+fs.readFile("main.go", "utf8", function (err, data) {});

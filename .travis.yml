@@ -2,18 +2,17 @@ language: go
 
 arch:
   - amd64
-  - arm64  # please note arm64-graviton2 requires explicit virt: [lxd|vm] tag so it's recommended for jobs.include, see below
-os: linux  # different CPU architectures are only supported on Linux
-
+  - arm64 # please note arm64-graviton2 requires explicit virt: [lxd|vm] tag so it's recommended for jobs.include, see below
+os: linux # different CPU architectures are only supported on Linux
 
 env:
-    - GO111MODULE=on
+  - GO111MODULE=on
 
 go:
-    - 1.14.6
+  - 1.14.6
 
 go_import_path: github.com/elsaland/elsa
 
 script:
-    - go get github.com/go-bindata/go-bindata
-    - make build
+  - go get github.com/go-bindata/go-bindata
+  - make build

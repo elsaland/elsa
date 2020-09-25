@@ -1,3 +1,3 @@
 while (true) {
-    console.log("Elsa")
+  console.log("Elsa");
 }
