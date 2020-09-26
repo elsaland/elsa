@@ -4,6 +4,7 @@ const __ops = {
   FSRead: 2,
   FSExists: 3,
   FSDirExists: 4,
+  FSCwd: 5,
   Log: 10,
   Plugin: 15,
 };

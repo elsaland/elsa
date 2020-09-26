@@ -9,5 +9,5 @@ import (
 
 func main() {
 	runtime.LockOSThread()
-	cmd.Execute(cmd.Elsa{Run: core.Run, Bundle: BundleModule})
+	cmd.Execute(cmd.Elsa{Run: core.Run, Bundle: BundleModule, Dev: RunDev})
 }

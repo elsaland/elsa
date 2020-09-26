@@ -49,11 +49,20 @@ func (fs *FsDriver) Exists(ctx *quickjs.Context, path quickjs.Value) quickjs.Val
 	return ctx.Bool(data)
 }
 
-func (fs *FsDriver) DirExists(ctx quickjs.Context, path quickjs.Value) quickjs.Value {
+func (fs *FsDriver) DirExists(ctx *quickjs.Context, path quickjs.Value) quickjs.Value {
 	data, err := afero.DirExists(fs.Fs, path.String())
 	if err != nil {
 		fmt.Println("%v", err)
 		os.Exit(1)
 	}
 	return ctx.Bool(data)
+}
+
+func (fs *FsDriver) Cwd(ctx *quickjs.Context) quickjs.Value {
+	dir, err := os.Getwd()
+	if err != nil {
+		fmt.Println("%v", err)
+		os.Exit(1)
+	}
+	return ctx.String(dir)
 }
