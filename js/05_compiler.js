@@ -13,15 +13,15 @@ function getDiagnostics(text) {
 	const files = {[dummyFilePath]: textAst, "/lib.es6.d.ts": dtsAST}
     const options = { allowJs: true };
     const host = {
-        fileExists: filePath => files[filePath] || Elsa.readFile(filePath),
-        directoryExists: dirPath => files[dirPath] || Elsa.readFile(dirPath),
+        fileExists: filePath => { console.log(filePath); return files[filePath] || Elsa.readFile(filePath) },
+        directoryExists: dirPath => { console.log(dirPath); return files[dirPath] || Elsa.readFile(dirPath) },
         getCurrentDirectory: () => "/",
 		    getDirectories: () => [],
         getCanonicalFileName: fileName => fileName,
         getNewLine: () => "\n",
         getDefaultLibFileName: () => "/lib.es6.d.ts",
-        getSourceFile: filePath => files[filePath] || Elsa.readFile(filePath),
-        readFile: filePath => files[filePath] || Elsa.readFile(filePath),
+        getSourceFile: filePath => { console.log(filePath); return files[filePath] || Elsa.readFile(filePath) },
+        readFile: filePath => { console.log(filePath); return files[filePath] || Elsa.readFile(filePath) },
         useCaseSensitiveFileNames: () => true,
         writeFile: () => {}
     };
@@ -31,6 +31,7 @@ function getDiagnostics(text) {
         host
     });
 
+    program.emit();
 	let diags = "";
 	ts.getPreEmitDiagnostics(program)
 	.forEach(diagnostic => {
