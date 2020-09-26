@@ -33,41 +33,13 @@ func BundleModule(source string) string {
 					func(args api.ResolverArgs) (api.ResolverResult, error) {
 						possibleCachePath := cache.UrlToPath(args.Path)
 						if cache.InCache(possibleCachePath) && cache.Exists(possibleCachePath) {
-							return api.ResolverResult{Path: possibleCachePath, Namespace: "url-loader"}, nil
+							return api.ResolverResult{Path: possibleCachePath, Namespace: ""}, nil
 						}
 						// Get the data
 						f := BundleURL(args.Path)
-						return api.ResolverResult{Path: f, Namespace: "url-loader"}, nil
+						return api.ResolverResult{Path: f, Namespace: ""}, nil
 
 					})
-				plugin.AddLoader(api.LoaderOptions{Filter: ".*?", Namespace: "url-loader"},
-					func(args api.LoaderArgs) (api.LoaderResult, error) {
-						p := args.Path
-						if cache.InCache(args.Path) && !cache.Exists(args.Path) {
-							c := cache.PathToUrl(args.Path)
-							resp, _ := http.Get(c)
-							fileName := cache.BuildFileName(c)
-							defer resp.Body.Close()
-							file, err := cache.Create(fileName)
-							if err != nil {
-								core.LogError("Internal", fmt.Sprintf("%s", err))
-								os.Exit(1)
-							}
-							io.Copy(file, resp.Body)
-
-							defer file.Close()
-							p = file.Name()
-							core.LogInfo("Downloaded", file.Name())
-						}
-						core.LogInfo("Loading", p)
-						dat, e := ioutil.ReadFile(p)
-						if e != nil {
-							panic(e)
-						}
-						contents := string(dat)
-						return api.LoaderResult{Contents: &contents, Loader: api.LoaderTS}, nil
-					})
-
 			},
 		},
 	})
