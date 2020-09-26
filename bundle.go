@@ -3,10 +3,13 @@ package main
 import (
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
+	"net/url"
 	"os"
+	"path"
+	"path/filepath"
 
+	"github.com/asaskevich/govalidator"
 	"github.com/elsaland/elsa/core"
 	"github.com/evanw/esbuild/pkg/api"
 )
@@ -29,12 +32,64 @@ func BundleModule(source string) string {
 					func(args api.ResolverArgs) (api.ResolverResult, error) {
 						possibleCachePath := cache.UrlToPath(args.Path)
 						if cache.InCache(possibleCachePath) && cache.Exists(possibleCachePath) {
-							return api.ResolverResult{Path: possibleCachePath, Namespace: "url-loader"}, nil
+							return api.ResolverResult{Path: possibleCachePath, Namespace: ""}, nil
 						}
-						core.LogInfo("Downloading", args.Path)
 						// Get the data
-						resp, _ := http.Get(args.Path)
-						fileName := cache.BuildFileName(args.Path)
+						f := BundleURL(args.Path)
+						return api.ResolverResult{Path: f, Namespace: ""}, nil
+
+					})
+			},
+		},
+	})
+	return string(bundle.OutputFiles[0].Contents[:])
+}
+
+func BundleURL(uri string) string {
+	resp, _ := http.Get(uri)
+	fileName := cache.BuildFileName(uri)
+	core.LogInfo("Downloading", fmt.Sprintf("%s => %s", uri, fileName))
+	defer resp.Body.Close()
+	file, err := cache.Create(fileName)
+	if err != nil {
+		core.LogError("Internal", fmt.Sprintf("%s", err))
+		os.Exit(1)
+	}
+	io.Copy(file, resp.Body)
+	defer file.Close()
+	api.Build(api.BuildOptions{
+		EntryPoints: []string{file.Name()},
+		Outfile:     "output.js",
+		Bundle:      true,
+		Target:      api.ES2015,
+		LogLevel:    api.LogLevelInfo,
+		Plugins: []func(api.Plugin){
+
+			func(plugin api.Plugin) {
+				plugin.SetName("url-loader2")
+				plugin.AddResolver(api.ResolverOptions{Filter: ".*?"},
+					func(args api.ResolverArgs) (api.ResolverResult, error) {
+						dir := filepath.Dir(file.Name())
+						possibleCachePath := path.Join(dir, args.Path)
+						if cache.InCache(possibleCachePath) && cache.Exists(possibleCachePath) {
+							return api.ResolverResult{Path: possibleCachePath, Namespace: ""}, nil
+						}
+						if govalidator.IsURL(args.Path) {
+							uri = args.Path
+							cha := make(chan string)
+							go func(url string, u chan string) {
+								u <- BundleURL(url)
+							}(args.Path, cha)
+							bundle := <-cha
+							return api.ResolverResult{Path: bundle, Namespace: ""}, nil
+						}
+						base, err := url.Parse(uri)
+						pth, err := url.Parse(args.Path)
+						loc := base.ResolveReference(pth).String()
+						fileName := cache.BuildFileName(loc)
+						core.LogInfo("Downloading", fmt.Sprintf("%s => %s", loc, file.Name()))
+						// Get the data
+						resp, _ := http.Get(loc)
 						defer resp.Body.Close()
 						file, err := cache.Create(fileName)
 						if err != nil {
@@ -44,40 +99,12 @@ func BundleModule(source string) string {
 						io.Copy(file, resp.Body)
 
 						defer file.Close()
-						core.LogInfo("Downloaded", file.Name())
-						return api.ResolverResult{Path: file.Name(), Namespace: "url-loader"}, nil
+
+						return api.ResolverResult{Path: file.Name(), Namespace: ""}, nil
 
 					})
-				plugin.AddLoader(api.LoaderOptions{Filter: ".*?", Namespace: "url-loader"},
-					func(args api.LoaderArgs) (api.LoaderResult, error) {
-						p := args.Path
-						if cache.InCache(args.Path) && !cache.Exists(args.Path) {
-							c := cache.PathToUrl(args.Path)
-							resp, _ := http.Get(c)
-							fileName := cache.BuildFileName(c)
-							defer resp.Body.Close()
-							file, err := cache.Create(fileName)
-							if err != nil {
-								core.LogError("Internal", fmt.Sprintf("%s", err))
-								os.Exit(1)
-							}
-							io.Copy(file, resp.Body)
-
-							defer file.Close()
-							p = file.Name()
-							core.LogInfo("Downloaded", file.Name())
-						}
-						core.LogInfo("Loading", p)
-						dat, e := ioutil.ReadFile(p)
-						if e != nil {
-							core.Panic(e)
-						}
-						contents := string(dat)
-						return api.LoaderResult{Contents: &contents, Loader: api.LoaderTS}, nil
-					})
-
 			},
 		},
 	})
-	return string(bundle.OutputFiles[0].Contents[:])
+	return file.Name()
 }

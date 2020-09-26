@@ -65,7 +65,7 @@ jobs:
         # TODO: Elsa bot for pushing benchmarks
         run: |
           git config --global user.name 'Divy Srivastava'
-          git config --global user.email 'divy-work@users.noreply.github.com'
+          git config --global user.email 'littledivy@users.noreply.github.com'
           git add ./benchmarks
           git commit -am "chores(auto): update benchmarks"
           git push
