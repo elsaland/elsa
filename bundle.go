@@ -48,6 +48,7 @@ func BundleModule(source string) string {
 func BundleURL(uri string) string {
 	resp, _ := http.Get(uri)
 	fileName := cache.BuildFileName(uri)
+	core.LogInfo("Downloading", fmt.Sprintf("%s => %s", uri, fileName))
 	defer resp.Body.Close()
 	file, err := cache.Create(fileName)
 	if err != nil {
@@ -56,7 +57,6 @@ func BundleURL(uri string) string {
 	}
 	io.Copy(file, resp.Body)
 	defer file.Close()
-	core.LogInfo("Downloaded", fmt.Sprintf("%s => %s", uri, file.Name()))
 	api.Build(api.BuildOptions{
 		EntryPoints: []string{file.Name()},
 		Outfile:     "output.js",
@@ -84,12 +84,12 @@ func BundleURL(uri string) string {
 							return api.ResolverResult{Path: bundle, Namespace: ""}, nil
 						}
 						base, err := url.Parse(uri)
-						fmt.Println(uri, args.Path)
 						pth, err := url.Parse(args.Path)
 						loc := base.ResolveReference(pth).String()
+						fileName := cache.BuildFileName(loc)
+						core.LogInfo("Downloading", fmt.Sprintf("%s => %s", loc, file.Name()))
 						// Get the data
 						resp, _ := http.Get(loc)
-						fileName := cache.BuildFileName(loc)
 						defer resp.Body.Close()
 						file, err := cache.Create(fileName)
 						if err != nil {
@@ -99,7 +99,7 @@ func BundleURL(uri string) string {
 						io.Copy(file, resp.Body)
 
 						defer file.Close()
-						core.LogInfo("Downloaded", fmt.Sprintf("%s => %s", loc, file.Name()))
+
 						return api.ResolverResult{Path: file.Name(), Namespace: ""}, nil
 
 					})
