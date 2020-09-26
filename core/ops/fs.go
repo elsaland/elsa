@@ -1,9 +1,12 @@
 package ops
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"os"
+	"time"
 
 	"github.com/elsaland/elsa/cmd"
 	"github.com/lithdew/quickjs"
@@ -65,4 +68,41 @@ func (fs *FsDriver) Cwd(ctx *quickjs.Context) quickjs.Value {
 		os.Exit(1)
 	}
 	return ctx.String(dir)
+}
+
+type FileInfo struct {
+	Name    string
+	Size    int64
+	Mode    os.FileMode
+	ModTime time.Time
+	IsDir   bool
+}
+
+func (fs *FsDriver) Stats(ctx *quickjs.Context, path quickjs.Value) quickjs.Value {
+	entry, err := fs.Fs.Stat(path.String())
+	if err != nil {
+		fmt.Println("%v", err)
+		os.Exit(1)
+	}
+	f := FileInfo{
+		Name:    entry.Name(),
+		Size:    entry.Size(),
+		Mode:    entry.Mode(),
+		ModTime: entry.ModTime(),
+		IsDir:   entry.IsDir(),
+	}
+	output, err := json.Marshal(f)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return ctx.String(string(output))
+}
+
+func (fs *FsDriver) Remove(ctx *quickjs.Context, path quickjs.Value) quickjs.Value {
+	err := fs.Fs.Remove(path.String())
+	if err != nil {
+		fmt.Println("%v", err)
+		os.Exit(1)
+	}
+	return ctx.Bool(true)
 }
