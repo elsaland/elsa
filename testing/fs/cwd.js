@@ -1,1 +1,1 @@
-console.log(Elsa.cwd())
+console.log(Elsa.cwd());
