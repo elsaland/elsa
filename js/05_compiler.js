@@ -1,27 +1,25 @@
 var ee = new EventEmitter();
 ee.defineEvents(['typecheck']);
-
 ee.addListener('typecheck', (x) => {
-  console.log(x)
-  getDiagnostics(x)
+  getDiagnosticsForText(Elsa.readFile(x))
 });
 
-function getDiagnostics(text) {
-	const dummyFilePath = text;
-	const textAst = ts.createSourceFile(dummyFilePath, Elsa.readFile(text), ts.ScriptTarget.ES6);
+function getDiagnosticsForText(text) {
+	const dummyFilePath = "/file.ts";
+	const textAst = ts.createSourceFile(dummyFilePath, text, ts.ScriptTarget.ES6);
 	const dtsAST = ts.createSourceFile("/lib.es6.d.ts", __getDTS(), ts.ScriptTarget.ES6);
 	const files = {[dummyFilePath]: textAst, "/lib.es6.d.ts": dtsAST}
-    const options = { allowJs: true };
+    const options = {};
     const host = {
-        fileExists: filePath => { console.log(filePath); return files[filePath] || Elsa.readFile(filePath) },
-        directoryExists: dirPath => { console.log(dirPath); return files[dirPath] || Elsa.readFile(dirPath) },
-        getCurrentDirectory: () => "/",
+        fileExists: filePath => files[filePath] != null || Elsa.exists(filePath),
+        directoryExists: dirPath => dirPath === "/",
+        getCurrentDirectory: () => Elsa.cwd(),
 		    getDirectories: () => [],
         getCanonicalFileName: fileName => fileName,
         getNewLine: () => "\n",
         getDefaultLibFileName: () => "/lib.es6.d.ts",
-        getSourceFile: filePath => { console.log(filePath); return files[filePath] || Elsa.readFile(filePath) },
-        readFile: filePath => { console.log(filePath); return files[filePath] || Elsa.readFile(filePath) },
+        getSourceFile: filePath => files[filePath] != null ? files[filePath] : Elsa.readFile(filePath),
+        readFile: filePath => filePath === dummyFilePath ? text : Elsa.readFile(filePath),
         useCaseSensitiveFileNames: () => true,
         writeFile: () => {}
     };
@@ -30,8 +28,6 @@ function getDiagnostics(text) {
         rootNames: [dummyFilePath],
         host
     });
-
-    program.emit();
 	let diags = "";
 	ts.getPreEmitDiagnostics(program)
 	.forEach(diagnostic => {

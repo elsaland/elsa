@@ -8,6 +8,9 @@ globalThis.Elsa = {
   exists: (arg) => {
     return globalThis.__dispatch(__ops.FSExists, arg);
   },
+  cwd: () => {
+    return globalThis.__dispatch(__ops.FSCwd);
+  },
   runPlugin: (dylib, arg) => {
     return globalThis.__dispatch(__ops.Plugin, dylib, arg);
   },
