@@ -37,6 +37,11 @@ func ElsaNS(perms cmd.Perms) func(ctx *quickjs.Context, this quickjs.Value, args
 			CheckFs(perms)
 			val := fs.Cwd(ctx)
 			return val
+		case FSStats:
+			CheckFs(perms)
+			file := args[1]
+			val := fs.Stats(ctx, file)
+			return val
 		case Log:
 			return ConsoleLog(ctx, args)
 		case Plugin:
