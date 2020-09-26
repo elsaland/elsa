@@ -1,1 +1,1 @@
-console.log(Elsa.stats("testing/console.js"))
+console.log(Elsa.stats("testing/console.js"));
