@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"net/url"
 	"os"
@@ -63,7 +62,7 @@ func BundleURL(uri string) string {
 		EntryPoints: []string{file.Name()},
 		Outfile:     "output.js",
 		Bundle:      true,
-		Target:      api.ESNext,
+		Target:      api.ES2015,
 		LogLevel:    api.LogLevelInfo,
 		Plugins: []func(api.Plugin){
 
@@ -74,11 +73,11 @@ func BundleURL(uri string) string {
 						dir := filepath.Dir(file.Name())
 						possibleCachePath := path.Join(dir, args.Path)
 						if cache.InCache(possibleCachePath) && cache.Exists(possibleCachePath) {
-							return api.ResolverResult{Path: possibleCachePath, Namespace: "url-loader2"}, nil
+							return api.ResolverResult{Path: possibleCachePath, Namespace: ""}, nil
 						}
 						if govalidator.IsURL(args.Path) {
 							bundle := BundleURL(args.Path)
-							return api.ResolverResult{Path: bundle, Namespace: "url-loader2"}, nil
+							return api.ResolverResult{Path: bundle, Namespace: ""}, nil
 						}
 						base, err := url.Parse(uri)
 
@@ -99,37 +98,9 @@ func BundleURL(uri string) string {
 
 						defer file.Close()
 						core.LogInfo("Downloaded", file.Name())
-						return api.ResolverResult{Path: file.Name(), Namespace: "url-loader2"}, nil
+						return api.ResolverResult{Path: file.Name(), Namespace: ""}, nil
 
 					})
-				plugin.AddLoader(api.LoaderOptions{Filter: ".*?", Namespace: "url-loader2"},
-					func(args api.LoaderArgs) (api.LoaderResult, error) {
-						p := args.Path
-						if cache.InCache(args.Path) && !cache.Exists(args.Path) {
-							c := cache.PathToUrl(args.Path)
-							resp, _ := http.Get(c)
-							fileName := cache.BuildFileName(c)
-							defer resp.Body.Close()
-							file, err := cache.Create(fileName)
-							if err != nil {
-								core.LogError("Internal", fmt.Sprintf("%s", err))
-								os.Exit(1)
-							}
-							io.Copy(file, resp.Body)
-
-							defer file.Close()
-							p = file.Name()
-							core.LogInfo("Downloaded", file.Name())
-						}
-						core.LogInfo("Loading", p)
-						dat, e := ioutil.ReadFile(p)
-						if e != nil {
-							panic(e)
-						}
-						contents := string(dat)
-						return api.LoaderResult{Contents: &contents, Loader: api.LoaderTS}, nil
-					})
-
 			},
 		},
 	})

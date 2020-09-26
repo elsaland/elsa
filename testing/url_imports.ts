@@ -1,4 +1,3 @@
-console.log(1)
-import { assertEquals } from "https://deno.land/std@0.50.0/testing/asserts.ts";
+import { expect } from "https://x.nest.land/expect@0.2.4/mod.ts";
 
-console.log(assertEquals(true, false));
+console.log(expect);
