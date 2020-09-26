@@ -46,7 +46,6 @@ func BundleModule(source string) string {
 }
 
 func BundleURL(uri string) string {
-	core.LogInfo("Downloading", uri)
 	resp, _ := http.Get(uri)
 	fileName := cache.BuildFileName(uri)
 	defer resp.Body.Close()
@@ -57,7 +56,7 @@ func BundleURL(uri string) string {
 	}
 	io.Copy(file, resp.Body)
 	defer file.Close()
-
+	core.LogInfo("Downloaded", fmt.Sprintf("%s => %s", uri, file.Name()))
 	api.Build(api.BuildOptions{
 		EntryPoints: []string{file.Name()},
 		Outfile:     "output.js",
@@ -76,15 +75,18 @@ func BundleURL(uri string) string {
 							return api.ResolverResult{Path: possibleCachePath, Namespace: ""}, nil
 						}
 						if govalidator.IsURL(args.Path) {
-							bundle := BundleURL(args.Path)
+							uri = args.Path
+							cha := make(chan string)
+							go func(url string, u chan string) {
+								u <- BundleURL(url)
+							}(args.Path, cha)
+							bundle := <-cha
 							return api.ResolverResult{Path: bundle, Namespace: ""}, nil
 						}
 						base, err := url.Parse(uri)
-
+						fmt.Println(uri, args.Path)
 						pth, err := url.Parse(args.Path)
 						loc := base.ResolveReference(pth).String()
-
-						core.LogInfo("Downloading", loc)
 						// Get the data
 						resp, _ := http.Get(loc)
 						fileName := cache.BuildFileName(loc)
@@ -97,7 +99,7 @@ func BundleURL(uri string) string {
 						io.Copy(file, resp.Body)
 
 						defer file.Close()
-						core.LogInfo("Downloaded", file.Name())
+						core.LogInfo("Downloaded", fmt.Sprintf("%s => %s", loc, file.Name()))
 						return api.ResolverResult{Path: file.Name(), Namespace: ""}, nil
 
 					})
