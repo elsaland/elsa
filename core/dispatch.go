@@ -42,6 +42,11 @@ func ElsaNS(perms cmd.Perms) func(ctx *quickjs.Context, this quickjs.Value, args
 			file := args[1]
 			val := fs.Stats(ctx, file)
 			return val
+		case FSRemove:
+			CheckFs(perms)
+			file := args[1]
+			val := fs.Remove(ctx, file)
+			return val
 		case Log:
 			return ConsoleLog(ctx, args)
 		case Plugin:

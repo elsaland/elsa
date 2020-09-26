@@ -97,3 +97,12 @@ func (fs *FsDriver) Stats(ctx *quickjs.Context, path quickjs.Value) quickjs.Valu
 	}
 	return ctx.String(string(output))
 }
+
+func (fs *FsDriver) Remove(ctx *quickjs.Context, path quickjs.Value) quickjs.Value {
+	err := fs.Fs.Remove(path.String())
+	if err != nil {
+		fmt.Println("%v", err)
+		os.Exit(1)
+	}
+	return ctx.Bool(true)
+}
