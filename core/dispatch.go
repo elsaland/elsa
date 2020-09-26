@@ -1,33 +1,33 @@
 package core
 
 import (
-	"os"
+  "os"
 
-	"github.com/elsaland/elsa/core/ops"
-	"github.com/spf13/afero"
-	"github.com/elsaland/elsa/cmd"
+  "github.com/elsaland/elsa/cmd"
+  "github.com/elsaland/elsa/core/ops"
   "github.com/elsaland/quickjs"
+  "github.com/spf13/afero"
 )
 
 func ElsaSendNS(elsa *Elsa) func(ctx *quickjs.Context, this quickjs.Value, args []quickjs.Value) quickjs.Value {
 	var fs = ops.FsDriver{
 		Fs:    afero.NewOsFs(),
-		Perms: elsa.flags,
+		Perms: elsa.perms,
 	}
 	return func(ctx *quickjs.Context, this quickjs.Value, args []quickjs.Value) quickjs.Value {
 		switch args[0].Int32() {
 		case FSRead:
-			CheckFs(perms)
+			CheckFs(elsa.perms)
 			file := args[1]
 			val := fs.ReadFile(ctx, file)
 			return val
 		case FSExists:
-			CheckFs(perms)
+			CheckFs(elsa.perms)
 			file := args[1]
 			val := fs.Exists(ctx, file)
 			return val
 		case FSWrite:
-			CheckFs(perms)
+			CheckFs(elsa.perms)
 			file := args[1]
 			contents := args[2]
 			val := fs.WriteFile(ctx, file, contents)

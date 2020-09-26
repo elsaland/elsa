@@ -1,17 +1,14 @@
 package core
 
 import (
-	"errors"
-	"fmt"
-	"io"
-
-	"github.com/elsaland/elsa/cmd"
-	"github.com/elsaland/quickjs"
+  "github.com/elsaland/elsa/cmd"
+  "github.com/elsaland/quickjs"
+  "io"
 )
 
 type Recv func(id quickjs.Value, val quickjs.Value)
 type Elsa struct {
-	flags cmd.Perms
+	perms cmd.Perms
 	recv  Recv
 }
 
@@ -22,7 +19,7 @@ func Run(source string, bundle string, flags cmd.Perms) {
 	context := jsruntime.NewContext()
 	defer context.Free()
 
-	elsa := &Elsa{flags: flags}
+	elsa := &Elsa{perms: flags}
 
 	globals := context.Globals()
 
@@ -35,7 +32,9 @@ func Run(source string, bundle string, flags cmd.Perms) {
 	Check(err)
 	defer k.Free()
 
-	result, e := context.EvalFile(bundle, source)
+	result, err := context.EvalFile(bundle, source)
+	Check(err)
+  defer result.Free()
 
 	for {
 		_, err = jsruntime.ExecutePendingJob()
@@ -46,13 +45,8 @@ func Run(source string, bundle string, flags cmd.Perms) {
 		Check(err)
 	}
 
-	defer result.Free()
-	if err != nil {
-		var evalErr *quickjs.Error
-		if errors.As(e, &evalErr) {
-			fmt.Println(evalErr.Cause)
-			fmt.Println(evalErr.Stack)
-		}
-		panic(e)
-	}
+	if result.IsException() {
+	  err = context.Exception()
+	  Check(err)
+  }
 }

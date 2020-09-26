@@ -14,7 +14,6 @@ import (
 var cache = ElsaCache{os.TempDir()}
 
 func BundleModule(source string) string {
-
 	bundle := api.Build(api.BuildOptions{
 		EntryPoints: []string{source},
 		Outfile:     "output.js",
@@ -22,7 +21,6 @@ func BundleModule(source string) string {
 		Target:      api.ESNext,
 		LogLevel:    api.LogLevelInfo,
 		Plugins: []func(api.Plugin){
-
 			func(plugin api.Plugin) {
 				plugin.SetName("url-loader")
 				plugin.AddResolver(api.ResolverOptions{Filter: "^https?://"},
