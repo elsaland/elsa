@@ -1,4 +1,4 @@
-package main
+package bundler
 
 import (
 	"fmt"
