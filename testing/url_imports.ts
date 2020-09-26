@@ -1,3 +1,3 @@
-import { excpect } from "https://x.nest.land/expect@0.2.4/mod.ts";
+import { assert } from "https://deno.land/std@0.50.0/testing/asserts.ts";
 
-console.log(excpect);
+console.log(assert());
