@@ -40,7 +40,7 @@ func Compile(source string, fn func(val quickjs.Value), flags cmd.Perms) {
 		return ctx.String(string(dts))
 	}
 	elsa := &core.Elsa{Perms: flags}
-	globals.Set("__dispatch", context.Function(core.ElsaSendNS(elsa)))
+	globals.Set("__send", context.Function(core.ElsaSendNS(elsa)))
 	globals.Set("__report", context.Function(report))
 	globals.Set("__getDTS", context.Function(d))
 	bundle := string(elsaEvt) + string(data) + jsCheck(source)
