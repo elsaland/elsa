@@ -1,18 +1,23 @@
 package main
 
 import (
+	"fmt"
 	"runtime"
 
+	"github.com/elsaland/elsa/cmd"
 	"github.com/elsaland/elsa/core"
 	"github.com/elsaland/quickjs"
 )
 
-func Compile(source string, fn func(val quickjs.Value)) {
+func Compile(source string, fn func(val quickjs.Value), flags cmd.Perms) {
 	data, err := core.Asset("typescript/typescript.js")
 	if err != nil {
 		panic("Asset was not found.")
 	}
-
+	elsaEvt, err := core.Asset("target/elsa.js")
+	if err != nil {
+		panic("Asset was not found.")
+	}
 	dts, er := core.Asset("typescript/lib.es6.d.ts")
 	if er != nil {
 		panic("Asset was not found.")
@@ -34,57 +39,17 @@ func Compile(source string, fn func(val quickjs.Value)) {
 	d := func(ctx *quickjs.Context, this quickjs.Value, args []quickjs.Value) quickjs.Value {
 		return ctx.String(string(dts))
 	}
+	elsa := &core.Elsa{Perms: flags}
+	globals.Set("__dispatch", context.Function(core.ElsaSendNS(elsa)))
 	globals.Set("__report", context.Function(report))
 	globals.Set("__getDTS", context.Function(d))
-	result, err := context.Eval(string(data))
+	bundle := string(elsaEvt) + string(data) + jsCheck(source)
+	result, err := context.Eval(bundle)
 	defer result.Free()
 	core.Check(err)
-	result, err = context.Eval(jsCheck(source))
-	defer result.Free()
-	core.Check(err)
+
 }
 
 func jsCheck(source string) string {
-	return `
-  getDiagnosticsForText(` + "`" + source + "`" + `);
-  
-  function getDiagnosticsForText(text) {
-    const dummyFilePath = "/file.ts";
-    const textAst = ts.createSourceFile(dummyFilePath, text, ts.ScriptTarget.ES6);
-    const dtsAST = ts.createSourceFile("/lib.es6.d.ts", __getDTS(), ts.ScriptTarget.ES6);
-    const files = {[dummyFilePath]: textAst, "/lib.es6.d.ts": dtsAST}
-      const options = {};
-      const host = {
-          fileExists: filePath => files[fileName] != null,
-          directoryExists: dirPath => dirPath === "/",
-          getCurrentDirectory: () => "/",
-      getDirectories: () => [],
-          getCanonicalFileName: fileName => fileName,
-          getNewLine: () => "\n",
-          getDefaultLibFileName: () => "/lib.es6.d.ts",
-          getSourceFile: filePath => files[filePath],
-          readFile: filePath => filePath === dummyFilePath ? text : undefined,
-          useCaseSensitiveFileNames: () => true,
-          writeFile: () => {}
-      };
-      const program = ts.createProgram({
-          options,
-          rootNames: [dummyFilePath],
-          host
-      });
-  
-    let diags = "";
-    ts.getPreEmitDiagnostics(program)
-    .forEach(diagnostic => {
-      if (diagnostic.file) {
-        let { line, character } = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start);
-        let message = ts.flattenDiagnosticMessageText(diagnostic.messageText, "\n");
-        diags += (diagnostic.file.fileName + " " + (line + 1) + ", " + (character + 1) + ": " + message + "\n");
-      } else {
-        diags += (ts.flattenDiagnosticMessageText(diagnostic.messageText, "\n"));
-      }
-      });
-    __report(diags)
-  }
-    `
+	return fmt.Sprintf("ee.emitEvent('typecheck', [`%s`]);", source)
 }
