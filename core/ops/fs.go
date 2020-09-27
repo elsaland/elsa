@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"github.com/elsaland/elsa/cmd"
-	"github.com/lithdew/quickjs"
+	"github.com/elsaland/quickjs"
 	"github.com/spf13/afero"
 )
 

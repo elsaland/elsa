@@ -24,6 +24,8 @@ github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSs
 github.com/dgrijalva/jwt-go v3.2.0+incompatible/go.mod h1:E3ru+11k8xSBh+hMPgOLZmtrrCbhqsmaPHjLKYnJCaQ=
 github.com/dgryski/go-sip13 v0.0.0-20181026042036-e10d5fee7954/go.mod h1:vAd38F8PWV+bWy6jNmig1y/TA+kYO4g3RSRF0IAv0no=
 github.com/dustin/go-humanize v1.0.0/go.mod h1:HtrtbFcZ19U5GC7JDqmcUSB87Iq5E25KnS6fMYU6eOk=
+github.com/elsaland/quickjs v0.0.0-20200925155809-0246a93f1a32 h1:2hh/qoU8Efx7teaPaivIWzdX/nrRh9cjYeCs//GlNx4=
+github.com/elsaland/quickjs v0.0.0-20200925155809-0246a93f1a32/go.mod h1:Oir28Ht8N+2yM+qT2fyDbJ/+7+TNtRxD7tk32T6lgD8=
 github.com/evanw/esbuild v0.7.3-0.20200919185132-ef34da4ee06e h1:irQfbEDTnkfl0mCYoldObYKn+EST+oiI283GJChzskA=
 github.com/evanw/esbuild v0.7.3-0.20200919185132-ef34da4ee06e/go.mod h1:mptxmSXIzBIKKCe4jo9A5SToEd1G+AKZ9JmY85dYRJ0=
 github.com/evanw/esbuild v0.7.6 h1:VQRwErIQXVsvj+WAJ2P0NqhvGbBVB1d0rpeub29u7H0=

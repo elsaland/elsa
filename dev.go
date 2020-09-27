@@ -3,7 +3,7 @@ package main
 import (
 	"github.com/elsaland/elsa/cmd"
 	"github.com/elsaland/elsa/core"
-	"github.com/lithdew/quickjs"
+	"github.com/elsaland/quickjs"
 )
 
 func TypeCheck(source string) {
