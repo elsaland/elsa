@@ -1,11 +1,5 @@
-// TODO(@qu4k): remove when tla is supported
-(async () => {
-  try {
-    const res = await fetch("Hello World")
-    console.log(res)
-  } catch (err) {
-    console.error(err.message)
-  }
-})();
+// TODO(@qu4k): TLA!
+fetch("https://google.com").then(res => {
+  console.log(res)
+})
 
-throw "ERROR";
