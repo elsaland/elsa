@@ -4,7 +4,7 @@
  *
  * @class EventEmitter Manages event registering and emitting.
  */
-function EventEmitter() { }
+function EventEmitter() {}
 
 /**
  * Finds the index of the listener for the event in its storage array.
@@ -15,14 +15,14 @@ function EventEmitter() { }
  * @api private
  */
 function indexOfListener(listeners, listener) {
-    var i = listeners.length;
-    while (i--) {
-        if (listeners[i].listener === listener) {
-            return i;
-        }
+  var i = listeners.length;
+  while (i--) {
+    if (listeners[i].listener === listener) {
+      return i;
     }
+  }
 
-    return -1;
+  return -1;
 }
 
 /**
@@ -33,9 +33,9 @@ function indexOfListener(listeners, listener) {
  * @api private
  */
 function alias(name) {
-    return function aliasClosure() {
-        return this[name].apply(this, arguments);
-    };
+  return function aliasClosure() {
+    return this[name].apply(this, arguments);
+  };
 }
 
 /**
@@ -48,25 +48,24 @@ function alias(name) {
  * @return {Function[]|Object} All listener functions for the event.
  */
 EventEmitter.prototype.getListeners = function getListeners(evt) {
-    var events = this._getEvents();
-    var response;
-    var key;
+  var events = this._getEvents();
+  var response;
+  var key;
 
-    // Return a concatenated array of all matching events if
-    // the selector is a regular expression.
-    if (evt instanceof RegExp) {
-        response = {};
-        for (key in events) {
-            if (events.hasOwnProperty(key) && evt.test(key)) {
-                response[key] = events[key];
-            }
-        }
+  // Return a concatenated array of all matching events if
+  // the selector is a regular expression.
+  if (evt instanceof RegExp) {
+    response = {};
+    for (key in events) {
+      if (events.hasOwnProperty(key) && evt.test(key)) {
+        response[key] = events[key];
+      }
     }
-    else {
-        response = events[evt] || (events[evt] = []);
-    }
+  } else {
+    response = events[evt] || (events[evt] = []);
+  }
 
-    return response;
+  return response;
 };
 
 /**
@@ -76,14 +75,14 @@ EventEmitter.prototype.getListeners = function getListeners(evt) {
  * @return {Function[]} Just the listener functions.
  */
 EventEmitter.prototype.flattenListeners = function flattenListeners(listeners) {
-    var flatListeners = [];
-    var i;
+  var flatListeners = [];
+  var i;
 
-    for (i = 0; i < listeners.length; i += 1) {
-        flatListeners.push(listeners[i].listener);
-    }
+  for (i = 0; i < listeners.length; i += 1) {
+    flatListeners.push(listeners[i].listener);
+  }
 
-    return flatListeners;
+  return flatListeners;
 };
 
 /**
@@ -92,26 +91,28 @@ EventEmitter.prototype.flattenListeners = function flattenListeners(listeners) {
  * @param {String|RegExp} evt Name of the event to return the listeners from.
  * @return {Object} All listener functions for an event in an object.
  */
-EventEmitter.prototype.getListenersAsObject = function getListenersAsObject(evt) {
-    var listeners = this.getListeners(evt);
-    var response;
+EventEmitter.prototype.getListenersAsObject = function getListenersAsObject(
+  evt
+) {
+  var listeners = this.getListeners(evt);
+  var response;
 
-    if (listeners instanceof Array) {
-        response = {};
-        response[evt] = listeners;
-    }
+  if (listeners instanceof Array) {
+    response = {};
+    response[evt] = listeners;
+  }
 
-    return response || listeners;
+  return response || listeners;
 };
 
 function isValidListener(listener) {
-    if (typeof listener === 'function' || listener instanceof RegExp) {
-        return true
-    } else if (listener && typeof listener === 'object') {
-        return isValidListener(listener.listener)
-    } else {
-        return false
-    }
+  if (typeof listener === "function" || listener instanceof RegExp) {
+    return true;
+  } else if (listener && typeof listener === "object") {
+    return isValidListener(listener.listener);
+  } else {
+    return false;
+  }
 }
 
 /**
@@ -125,30 +126,37 @@ function isValidListener(listener) {
  * @return {Object} Current instance of EventEmitter for chaining.
  */
 EventEmitter.prototype.addListener = function addListener(evt, listener) {
-    if (!isValidListener(listener)) {
-        throw new TypeError('listener must be a function');
+  if (!isValidListener(listener)) {
+    throw new TypeError("listener must be a function");
+  }
+
+  var listeners = this.getListenersAsObject(evt);
+  var listenerIsWrapped = typeof listener === "object";
+  var key;
+
+  for (key in listeners) {
+    if (
+      listeners.hasOwnProperty(key) &&
+      indexOfListener(listeners[key], listener) === -1
+    ) {
+      listeners[key].push(
+        listenerIsWrapped
+          ? listener
+          : {
+              listener: listener,
+              once: false,
+            }
+      );
     }
+  }
 
-    var listeners = this.getListenersAsObject(evt);
-    var listenerIsWrapped = typeof listener === 'object';
-    var key;
-
-    for (key in listeners) {
-        if (listeners.hasOwnProperty(key) && indexOfListener(listeners[key], listener) === -1) {
-            listeners[key].push(listenerIsWrapped ? listener : {
-                listener: listener,
-                once: false
-            });
-        }
-    }
-
-    return this;
+  return this;
 };
 
 /**
  * Alias of addListener
  */
-EventEmitter.prototype.on = alias('addListener');
+EventEmitter.prototype.on = alias("addListener");
 
 /**
  * Semi-alias of addListener. It will add a listener that will be
@@ -158,17 +166,20 @@ EventEmitter.prototype.on = alias('addListener');
  * @param {Function} listener Method to be called when the event is emitted. If the function returns true then it will be removed after calling.
  * @return {Object} Current instance of EventEmitter for chaining.
  */
-EventEmitter.prototype.addOnceListener = function addOnceListener(evt, listener) {
-    return this.addListener(evt, {
-        listener: listener,
-        once: true
-    });
+EventEmitter.prototype.addOnceListener = function addOnceListener(
+  evt,
+  listener
+) {
+  return this.addListener(evt, {
+    listener: listener,
+    once: true,
+  });
 };
 
 /**
  * Alias of addOnceListener.
  */
-EventEmitter.prototype.once = alias('addOnceListener');
+EventEmitter.prototype.once = alias("addOnceListener");
 
 /**
  * Defines an event name. This is required if you want to use a regex to add a listener to multiple events at once. If you don't do this then how do you expect it to know what event to add to? Should it just add to every possible match for a regex? No. That is scary and bad.
@@ -178,8 +189,8 @@ EventEmitter.prototype.once = alias('addOnceListener');
  * @return {Object} Current instance of EventEmitter for chaining.
  */
 EventEmitter.prototype.defineEvent = function defineEvent(evt) {
-    this.getListeners(evt);
-    return this;
+  this.getListeners(evt);
+  return this;
 };
 
 /**
@@ -189,10 +200,10 @@ EventEmitter.prototype.defineEvent = function defineEvent(evt) {
  * @return {Object} Current instance of EventEmitter for chaining.
  */
 EventEmitter.prototype.defineEvents = function defineEvents(evts) {
-    for (var i = 0; i < evts.length; i += 1) {
-        this.defineEvent(evts[i]);
-    }
-    return this;
+  for (var i = 0; i < evts.length; i += 1) {
+    this.defineEvent(evts[i]);
+  }
+  return this;
 };
 
 /**
@@ -204,27 +215,27 @@ EventEmitter.prototype.defineEvents = function defineEvents(evts) {
  * @return {Object} Current instance of EventEmitter for chaining.
  */
 EventEmitter.prototype.removeListener = function removeListener(evt, listener) {
-    var listeners = this.getListenersAsObject(evt);
-    var index;
-    var key;
+  var listeners = this.getListenersAsObject(evt);
+  var index;
+  var key;
 
-    for (key in listeners) {
-        if (listeners.hasOwnProperty(key)) {
-            index = indexOfListener(listeners[key], listener);
+  for (key in listeners) {
+    if (listeners.hasOwnProperty(key)) {
+      index = indexOfListener(listeners[key], listener);
 
-            if (index !== -1) {
-                listeners[key].splice(index, 1);
-            }
-        }
+      if (index !== -1) {
+        listeners[key].splice(index, 1);
+      }
     }
+  }
 
-    return this;
+  return this;
 };
 
 /**
  * Alias of removeListener
  */
-EventEmitter.prototype.off = alias('removeListener');
+EventEmitter.prototype.off = alias("removeListener");
 
 /**
  * Adds listeners in bulk using the manipulateListeners method.
@@ -237,8 +248,8 @@ EventEmitter.prototype.off = alias('removeListener');
  * @return {Object} Current instance of EventEmitter for chaining.
  */
 EventEmitter.prototype.addListeners = function addListeners(evt, listeners) {
-    // Pass through to manipulateListeners
-    return this.manipulateListeners(false, evt, listeners);
+  // Pass through to manipulateListeners
+  return this.manipulateListeners(false, evt, listeners);
 };
 
 /**
@@ -251,9 +262,12 @@ EventEmitter.prototype.addListeners = function addListeners(evt, listeners) {
  * @param {Function[]} [listeners] An optional array of listener functions to remove.
  * @return {Object} Current instance of EventEmitter for chaining.
  */
-EventEmitter.prototype.removeListeners = function removeListeners(evt, listeners) {
-    // Pass through to manipulateListeners
-    return this.manipulateListeners(true, evt, listeners);
+EventEmitter.prototype.removeListeners = function removeListeners(
+  evt,
+  listeners
+) {
+  // Pass through to manipulateListeners
+  return this.manipulateListeners(true, evt, listeners);
 };
 
 /**
@@ -268,38 +282,40 @@ EventEmitter.prototype.removeListeners = function removeListeners(evt, listeners
  * @param {Function[]} [listeners] An optional array of listener functions to add/remove.
  * @return {Object} Current instance of EventEmitter for chaining.
  */
-EventEmitter.prototype.manipulateListeners = function manipulateListeners(remove, evt, listeners) {
-    var i;
-    var value;
-    var single = remove ? this.removeListener : this.addListener;
-    var multiple = remove ? this.removeListeners : this.addListeners;
+EventEmitter.prototype.manipulateListeners = function manipulateListeners(
+  remove,
+  evt,
+  listeners
+) {
+  var i;
+  var value;
+  var single = remove ? this.removeListener : this.addListener;
+  var multiple = remove ? this.removeListeners : this.addListeners;
 
-    // If evt is an object then pass each of its properties to this method
-    if (typeof evt === 'object' && !(evt instanceof RegExp)) {
-        for (i in evt) {
-            if (evt.hasOwnProperty(i) && (value = evt[i])) {
-                // Pass the single listener straight through to the singular method
-                if (typeof value === 'function') {
-                    single.call(this, i, value);
-                }
-                else {
-                    // Otherwise pass back to the multiple function
-                    multiple.call(this, i, value);
-                }
-            }
+  // If evt is an object then pass each of its properties to this method
+  if (typeof evt === "object" && !(evt instanceof RegExp)) {
+    for (i in evt) {
+      if (evt.hasOwnProperty(i) && (value = evt[i])) {
+        // Pass the single listener straight through to the singular method
+        if (typeof value === "function") {
+          single.call(this, i, value);
+        } else {
+          // Otherwise pass back to the multiple function
+          multiple.call(this, i, value);
         }
+      }
     }
-    else {
-        // So evt must be a string
-        // And listeners must be an array of listeners
-        // Loop over it and pass each one to the multiple method
-        i = listeners.length;
-        while (i--) {
-            single.call(this, evt, listeners[i]);
-        }
+  } else {
+    // So evt must be a string
+    // And listeners must be an array of listeners
+    // Loop over it and pass each one to the multiple method
+    i = listeners.length;
+    while (i--) {
+      single.call(this, evt, listeners[i]);
     }
+  }
 
-    return this;
+  return this;
 };
 
 /**
@@ -312,29 +328,27 @@ EventEmitter.prototype.manipulateListeners = function manipulateListeners(remove
  * @return {Object} Current instance of EventEmitter for chaining.
  */
 EventEmitter.prototype.removeEvent = function removeEvent(evt) {
-    var type = typeof evt;
-    var events = this._getEvents();
-    var key;
+  var type = typeof evt;
+  var events = this._getEvents();
+  var key;
 
-    // Remove different things depending on the state of evt
-    if (type === 'string') {
-        // Remove all listeners for the specified event
-        delete events[evt];
+  // Remove different things depending on the state of evt
+  if (type === "string") {
+    // Remove all listeners for the specified event
+    delete events[evt];
+  } else if (evt instanceof RegExp) {
+    // Remove all events matching the regex.
+    for (key in events) {
+      if (events.hasOwnProperty(key) && evt.test(key)) {
+        delete events[key];
+      }
     }
-    else if (evt instanceof RegExp) {
-        // Remove all events matching the regex.
-        for (key in events) {
-            if (events.hasOwnProperty(key) && evt.test(key)) {
-                delete events[key];
-            }
-        }
-    }
-    else {
-        // Remove all listeners in all events
-        delete this._events;
-    }
+  } else {
+    // Remove all listeners in all events
+    delete this._events;
+  }
 
-    return this;
+  return this;
 };
 
 /**
@@ -342,7 +356,7 @@ EventEmitter.prototype.removeEvent = function removeEvent(evt) {
  *
  * Added to mirror the node API.
  */
-EventEmitter.prototype.removeAllListeners = alias('removeEvent');
+EventEmitter.prototype.removeAllListeners = alias("removeEvent");
 
 /**
  * Emits an event of your choice.
@@ -357,42 +371,42 @@ EventEmitter.prototype.removeAllListeners = alias('removeEvent');
  * @return {Object} Current instance of EventEmitter for chaining.
  */
 EventEmitter.prototype.emitEvent = function emitEvent(evt, args) {
-    var listenersMap = this.getListenersAsObject(evt);
-    var listeners;
-    var listener;
-    var i;
-    var key;
-    var response;
+  var listenersMap = this.getListenersAsObject(evt);
+  var listeners;
+  var listener;
+  var i;
+  var key;
+  var response;
 
-    for (key in listenersMap) {
-        if (listenersMap.hasOwnProperty(key)) {
-            listeners = listenersMap[key].slice(0);
+  for (key in listenersMap) {
+    if (listenersMap.hasOwnProperty(key)) {
+      listeners = listenersMap[key].slice(0);
 
-            for (i = 0; i < listeners.length; i++) {
-                // If the listener returns true then it shall be removed from the event
-                // The function is executed either with a basic call or an apply if there is an args array
-                listener = listeners[i];
+      for (i = 0; i < listeners.length; i++) {
+        // If the listener returns true then it shall be removed from the event
+        // The function is executed either with a basic call or an apply if there is an args array
+        listener = listeners[i];
 
-                if (listener.once === true) {
-                    this.removeListener(evt, listener.listener);
-                }
-
-                response = listener.listener.apply(this, args || []);
-
-                if (response === this._getOnceReturnValue()) {
-                    this.removeListener(evt, listener.listener);
-                }
-            }
+        if (listener.once === true) {
+          this.removeListener(evt, listener.listener);
         }
-    }
 
-    return this;
+        response = listener.listener.apply(this, args || []);
+
+        if (response === this._getOnceReturnValue()) {
+          this.removeListener(evt, listener.listener);
+        }
+      }
+    }
+  }
+
+  return this;
 };
 
 /**
  * Alias of emitEvent
  */
-EventEmitter.prototype.trigger = alias('emitEvent');
+EventEmitter.prototype.trigger = alias("emitEvent");
 
 /**
  * Subtly different from emitEvent in that it will pass its arguments on to the listeners, as opposed to taking a single array of arguments to pass on.
@@ -403,8 +417,8 @@ EventEmitter.prototype.trigger = alias('emitEvent');
  * @return {Object} Current instance of EventEmitter for chaining.
  */
 EventEmitter.prototype.emit = function emit(evt) {
-    var args = Array.prototype.slice.call(arguments, 1);
-    return this.emitEvent(evt, args);
+  var args = Array.prototype.slice.call(arguments, 1);
+  return this.emitEvent(evt, args);
 };
 
 /**
@@ -416,8 +430,8 @@ EventEmitter.prototype.emit = function emit(evt) {
  * @return {Object} Current instance of EventEmitter for chaining.
  */
 EventEmitter.prototype.setOnceReturnValue = function setOnceReturnValue(value) {
-    this._onceReturnValue = value;
-    return this;
+  this._onceReturnValue = value;
+  return this;
 };
 
 /**
@@ -429,12 +443,11 @@ EventEmitter.prototype.setOnceReturnValue = function setOnceReturnValue(value) {
  * @api private
  */
 EventEmitter.prototype._getOnceReturnValue = function _getOnceReturnValue() {
-    if (this.hasOwnProperty('_onceReturnValue')) {
-        return this._onceReturnValue;
-    }
-    else {
-        return true;
-    }
+  if (this.hasOwnProperty("_onceReturnValue")) {
+    return this._onceReturnValue;
+  } else {
+    return true;
+  }
 };
 
 /**
@@ -444,7 +457,7 @@ EventEmitter.prototype._getOnceReturnValue = function _getOnceReturnValue() {
  * @api private
  */
 EventEmitter.prototype._getEvents = function _getEvents() {
-    return this._events || (this._events = {});
+  return this._events || (this._events = {});
 };
 
 globalThis.EventEmitter = EventEmitter;

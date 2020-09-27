@@ -44,6 +44,6 @@ func Run(source string, bundle string, flags cmd.Perms) {
 			fmt.Println(evalErr.Cause)
 			fmt.Println(evalErr.Stack)
 		}
-		panic(e)
+		Panic(e)
 	}
 }

@@ -1,1 +1,1 @@
-await Deno.readTextFile("main.go")
+await Deno.readTextFile("main.go");

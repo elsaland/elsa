@@ -1,7 +1,18 @@
+# IDE
+.vscode
+
+# testing files
 output.js
 
-done
+# executable
 elsa
 
+# build cache
 data.go
 target
+
+# third-party tools
+node_modules
+
+# macOS specific files
+.DS_Store
