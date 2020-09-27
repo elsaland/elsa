@@ -1,3 +1,3 @@
 globalThis.fetch = async function (...args) {
-  return globalThis.__dispatchAsync(__ops.Fetch, ...args);
+  return globalThis.__sendAsync(__ops.Fetch, ...args);
 };

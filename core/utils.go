@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/lithdew/quickjs"
+	"github.com/elsaland/quickjs"
 )
 
 // Check whether

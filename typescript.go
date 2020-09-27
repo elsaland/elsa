@@ -6,7 +6,7 @@ import (
 
 	"github.com/elsaland/elsa/cmd"
 	"github.com/elsaland/elsa/core"
-	"github.com/lithdew/quickjs"
+	"github.com/elsaland/quickjs"
 )
 
 func Compile(source string, fn func(val quickjs.Value), flags cmd.Perms) {
@@ -39,8 +39,8 @@ func Compile(source string, fn func(val quickjs.Value), flags cmd.Perms) {
 	d := func(ctx *quickjs.Context, this quickjs.Value, args []quickjs.Value) quickjs.Value {
 		return ctx.String(string(dts))
 	}
-
-	globals.Set("__dispatch", context.Function(core.ElsaNS(flags)))
+	elsa := &core.Elsa{Perms: flags}
+	globals.Set("__send", context.Function(core.ElsaSendNS(elsa)))
 	globals.Set("__report", context.Function(report))
 	globals.Set("__getDTS", context.Function(d))
 	bundle := string(elsaEvt) + string(data) + jsCheck(source)
