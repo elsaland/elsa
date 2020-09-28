@@ -53,7 +53,7 @@ hello("Elsa");
 ```
 
 ```shell script
-> elsa hello.ts
+> elsa run hello.ts
 Hello, Elsa
 ```
 
