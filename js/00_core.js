@@ -15,20 +15,38 @@ const __ops = {
 
 ((window) => {
   let initialized = false;
-
+  let ee = new EventEmitter();
   let promiseTable = {};
   let promiseNextId = 1;
-
+  let eventNextId = 1;
   function init() {
     if (initialized) return;
     initialized = true;
     globalThis.__recv(__recvAsync);
   }
 
+  function initIter() {
+    if (initialized) return;
+    initialized = true;
+    globalThis.__recv(function(id, val) {
+      if (!id) return;
+      ee.emitEvent(id, [val])
+    });
+  }
+
   function __recvAsync(id, val) {
-    console.log({ id, val });
     if (!id) return;
     promiseTable[id].resolve(val);
+  }
+  
+  async function __sendEvent(op, cb, ...args) {
+    initIter();
+    const id = eventNextId++;
+    ee.defineEvent(id);
+    ee.addListener(id, (v) => {
+      cb(v);
+    });
+    globalThis.__send(op, ...[id, ...args]);
   }
 
   async function __sendAsync(op, ...args) {
@@ -44,7 +62,6 @@ const __ops = {
     promise.reject = reject;
 
     promiseTable[id] = promise;
-    console.log(promiseTable);
 
     globalThis.__send(op, ...[id, ...args]);
 
@@ -56,5 +73,6 @@ const __ops = {
 
   Object.assign(window, {
     __sendAsync,
+    __sendEvent
   });
 })(globalThis);

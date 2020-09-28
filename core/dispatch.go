@@ -1,12 +1,12 @@
 package core
 
 import (
-  "os"
+	"os"
 
-  "github.com/elsaland/elsa/cmd"
-  "github.com/elsaland/elsa/core/ops"
-  "github.com/elsaland/quickjs"
-  "github.com/spf13/afero"
+	"github.com/elsaland/elsa/cmd"
+	"github.com/elsaland/elsa/core/ops"
+	"github.com/elsaland/quickjs"
+	"github.com/spf13/afero"
 )
 
 func ElsaSendNS(elsa *Elsa) func(ctx *quickjs.Context, this quickjs.Value, args []quickjs.Value) quickjs.Value {
@@ -68,9 +68,9 @@ func ElsaSendNS(elsa *Elsa) func(ctx *quickjs.Context, this quickjs.Value, args 
 			id := args[1]
 			url := args[2]
 			cb := func(res quickjs.Value) {
-        obj := ctx.Object()
-        defer obj.Free()
-        obj.Set("ok", res)
+				obj := ctx.Object()
+				defer obj.Free()
+				obj.Set("ok", res)
 				elsa.Recv(id, res)
 			}
 			ops.Serve(ctx, cb, id, url)

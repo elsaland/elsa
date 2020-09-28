@@ -11,8 +11,8 @@ globalThis.Elsa = {
   stats: (arg) => {
     return JSON.parse(globalThis.__send(__ops.FSStats, arg));
   },
-  serve: async function (host) {
-    return globalThis.__sendAsync(__ops.Serve, host);
+  serve: async function (host, cb) {
+    return globalThis.__sendEvent(__ops.Serve, cb, host);
   },
   remove: (arg) => {
     return globalThis.__send(__ops.FSRemove, arg);
