@@ -7,6 +7,7 @@ const __ops = {
   FSCwd: 5,
   FSStats: 6,
   FSRemove: 7,
+  Fetch: 20,
   Log: 10,
   Plugin: 15,
 };
