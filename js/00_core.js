@@ -26,9 +26,9 @@ const __ops = {
   }
 
   function __recvAsync(id, val) {
-    console.log({id, val})
+    console.log({ id, val });
     if (!id) return;
-    promiseTable[id].resolve(val)
+    promiseTable[id].resolve(val);
   }
 
   async function __sendAsync(op, ...args) {
@@ -44,16 +44,17 @@ const __ops = {
     promise.reject = reject;
 
     promiseTable[id] = promise;
+    console.log(promiseTable);
 
     globalThis.__send(op, ...[id, ...args]);
 
     const res = await promise;
-    if (res.ok) return res;
-    else throw new Error("error");
+    if (res.ok) return res.ok;
+    else if (res.err) return res.err;
+    else throw new Error("Unknown error");
   }
 
   Object.assign(window, {
-    __sendAsync
-  })
-})(globalThis)
-
+    __sendAsync,
+  });
+})(globalThis);

@@ -9,7 +9,7 @@ import (
 
 func Serve(ctx *quickjs.Context, cb func(val quickjs.Value), id quickjs.Value, host quickjs.Value) {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Println(fmt.Fprintf(w, "Hello, %s!", r.URL.Path[1:]))
+		fmt.Fprintf(w, "Hello, %s!", r.URL.Path[1:])
 		cb(ctx.String("recv back"))
 	})
 	http.ListenAndServe(host.String(), nil)
