@@ -59,6 +59,11 @@ func ElsaSendNS(elsa *Elsa) func(ctx *quickjs.Context, this quickjs.Value, args 
 			one := args[1]
 			elsa.Recv(one, ctx.String("Hello World"))
 			return ctx.Null()
+		case Serve:
+			id := args[1]
+			url := args[2]
+			ops.Serve(ctx, elsa.Recv, id, url)
+			return ctx.Null()
 		default:
 			return ctx.Null()
 		}

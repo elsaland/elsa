@@ -461,3 +461,4 @@ EventEmitter.prototype._getEvents = function _getEvents() {
 };
 
 globalThis.EventEmitter = EventEmitter;
+

@@ -6,6 +6,7 @@ const __ops = {
   FSDirExists: 4,
   FSCwd: 5,
   FSStats: 6,
+  Serve: 25,
   FSRemove: 7,
   Log: 10,
   Plugin: 15,
