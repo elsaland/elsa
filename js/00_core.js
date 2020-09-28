@@ -8,6 +8,7 @@ const __ops = {
   FSStats: 6,
   Serve: 25,
   FSRemove: 7,
+  Fetch: 20,
   Log: 10,
   Plugin: 15,
 };
