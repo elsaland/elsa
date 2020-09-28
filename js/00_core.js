@@ -26,6 +26,7 @@ const __ops = {
   }
 
   function __recvAsync(id, val) {
+    console.log({id, val})
     if (!id) return;
     promiseTable[id].resolve(val)
   }
