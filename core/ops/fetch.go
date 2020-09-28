@@ -12,7 +12,7 @@ func Fetch(ctx *quickjs.Context, url quickjs.Value) quickjs.Value {
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Printf("%+v", r) // print info (try it, you may surprise)
+
 	resp, err := r.ToString()
 	if err != nil {
 		log.Fatal(err)
