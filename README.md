@@ -4,7 +4,7 @@
 
 <img align="right" src=assets/logo.svg height="120px">
 
-Elsa is a _minimal_, _fast_ and _secure_ runtime for Javascript and Typescript written in Go.
+Elsa is a _minimal_, _fast_ and _secure_ runtime for Javascript and Typescript written in Go, leveraging the power from the awesome [QuickJS engine](https://bellard.org/quickjs/).
 
 ### Features
 
@@ -60,6 +60,10 @@ Hello, Elsa
 ### Contributing
 
 Start by creating an issue about your feature or bug! Then, create a PR and we'll land it :smile:
+
+### Related
+
+-  [QuickJS engine](https://bellard.org/quickjs/) - created and maintained by bellard
 
 ### License
 
