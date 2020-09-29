@@ -9,4 +9,4 @@ while (x > 0) {
 }
 
 const dg = pi / (10n ** 20n);
-console.log(dg.length)
+console.log(dg)
