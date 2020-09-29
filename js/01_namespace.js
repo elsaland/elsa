@@ -20,4 +20,7 @@ globalThis.Elsa = {
   runPlugin: (dylib, arg) => {
     return globalThis.__send(__ops.Plugin, dylib, arg);
   },
+  mkdir: (arg) => {
+    return globalThis.__send(__ops.FSMkdir, arg)
+  }
 };

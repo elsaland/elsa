@@ -97,3 +97,14 @@ func (fs *FsDriver) Remove(ctx *quickjs.Context, path quickjs.Value) quickjs.Val
 	}
 	return ctx.Bool(true)
 }
+
+func (fs *FsDriver) Mkdir(ctx *quickjs.Context, path quickjs.Value) quickjs.Value {
+	err := fs.Fs.Mkdir(path.String(), os.FileMode(0777))
+
+	if err != nil {
+		fmt.Printf("%v", err)
+		os.Exit(1)
+	}
+
+	return ctx.Bool(true)
+}
