@@ -9,7 +9,6 @@ require (
 	github.com/fatih/color v1.9.0
 	github.com/go-bindata/go-bindata v3.1.2+incompatible
 	github.com/imroc/req v0.3.0
-	github.com/lithdew/quickjs v0.0.0-20200714182134-aaa42285c9d2
 	github.com/logrusorgru/aurora v2.0.3+incompatible
 	github.com/spf13/afero v1.4.0
 	github.com/spf13/cobra v1.0.0

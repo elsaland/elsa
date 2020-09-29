@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/elsaland/elsa/dev"
 	"runtime"
 
 	"github.com/elsaland/elsa/bundler"
@@ -10,5 +11,9 @@ import (
 
 func main() {
 	runtime.LockOSThread()
-	cmd.Execute(cmd.Elsa{Run: core.Run, Bundle: bundler.BundleModule, Dev: RunDev})
+	cmd.Execute(cmd.Elsa{
+		Run:    core.Run,
+		Bundle: bundler.BundleModule,
+		Dev:    dev.RunDev,
+	})
 }

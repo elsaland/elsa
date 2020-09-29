@@ -26,7 +26,7 @@ const __ops = {
 
   function __recvAsync(id, val) {
     if (!id) return;
-    promiseTable[id].resolve(val)
+    promiseTable[id].resolve(val);
   }
 
   async function __sendAsync(op, ...args) {
@@ -51,7 +51,6 @@ const __ops = {
   }
 
   Object.assign(window, {
-    __sendAsync
-  })
-})(globalThis)
-
+    __sendAsync,
+  });
+})(globalThis);
