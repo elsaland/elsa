@@ -1,4 +1,4 @@
-package main
+package dev
 
 import (
 	"github.com/elsaland/elsa/cmd"
@@ -15,7 +15,7 @@ func TypeCheck(source string) {
 	})
 }
 
-func RunDev(source string, bundle string, flags cmd.Perms) {
+func RunDev(source string, bundle string, flags cmd.Perms, args []string) {
 	TypeCheck(source)
-	core.Run(source, bundle, flags)
+	core.Run(source, bundle, flags, args)
 }

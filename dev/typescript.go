@@ -1,4 +1,4 @@
-package main
+package dev
 
 import (
 	"fmt"
@@ -45,9 +45,8 @@ func Compile(source string, fn func(val quickjs.Value), flags cmd.Perms) {
 	globals.Set("__getDTS", context.Function(d))
 	bundle := string(elsaEvt) + string(data) + jsCheck(source)
 	result, err := context.Eval(bundle)
-	defer result.Free()
 	core.Check(err)
-
+	defer result.Free()
 }
 
 func jsCheck(source string) string {

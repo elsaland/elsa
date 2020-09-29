@@ -13,27 +13,34 @@ type Elsa struct {
 	Recv  Recv
 }
 
-func Run(source string, bundle string, flags cmd.Perms) {
+func Run(source string, bundle string, flags cmd.Perms, args []string) {
 	jsruntime := quickjs.NewRuntime()
 	defer jsruntime.Free()
 
-	context := jsruntime.NewContext()
-	defer context.Free()
+	cxt := jsruntime.NewContext()
+	defer cxt.Free()
 
 	elsa := &Elsa{Perms: flags}
 
-	globals := context.Globals()
+	globals := cxt.Globals()
 
 	globals.SetFunction("__send", ElsaSendNS(elsa))
 	globals.SetFunction("__recv", ElsaRecvNS(elsa))
 
+	__args := cxt.Array()
+	for i, arg := range args {
+		__arg := cxt.String(arg)
+		__args.SetByUint32(uint32(i), __arg)
+	}
+	globals.Set("__args", __args)
+
 	snap, _ := Asset("target/elsa.js")
 
-	k, err := context.Eval(string(snap))
+	k, err := cxt.Eval(string(snap))
 	Check(err)
 	defer k.Free()
 
-	result, err := context.EvalFile(bundle, source)
+	result, err := cxt.EvalFile(bundle, source)
 	Check(err)
 	defer result.Free()
 
@@ -47,7 +54,7 @@ func Run(source string, bundle string, flags cmd.Perms) {
 	}
 
 	if result.IsException() {
-		err = context.Exception()
+		err = cxt.Exception()
 		Check(err)
 	}
 }

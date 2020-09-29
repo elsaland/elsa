@@ -1,4 +1,4 @@
-package main
+package dev
 
 import (
 	"github.com/elsaland/elsa/core"
