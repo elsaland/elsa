@@ -39,3 +39,5 @@ console.log([
   },
   ["umm", "nested", ["arrays"]],
 ]);
+
+console.log(console.log)

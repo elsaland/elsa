@@ -1,21 +1,27 @@
 // DOM console bindings
 globalThis.console = {
   trace: (...args) => {
-    globalThis.__send(__ops.Log, JSON.stringify(...args));
+    val = args[0];
+    globalThis.__send(__ops.Log, typeof val, typeof val == "object" ? JSON.stringify(val) : val);
   },
   debug: (...args) => {
-    globalThis.__send(__ops.Log, JSON.stringify(...args));
+    val = args[0];
+    globalThis.__send(__ops.Log, typeof val, typeof val == "object" ? JSON.stringify(val) : val);
   },
   log: (...args) => {
-    globalThis.__send(__ops.Log, JSON.stringify(...args));
+    val = args[0];
+    globalThis.__send(__ops.Log, typeof val, typeof val == "object" ? JSON.stringify(val) : val);
   },
   info: (...args) => {
-    globalThis.__send(__ops.Log, JSON.stringify(...args));
+    val = args[0];
+    globalThis.__send(__ops.Log, typeof val, typeof val == "object" ? JSON.stringify(val) : val);
   },
   warn: (...args) => {
-    globalThis.__send(__ops.Log, JSON.stringify(...args));
+    val = args[0];
+    globalThis.__send(__ops.Log, typeof val, typeof val == "object" ? JSON.stringify(val) : val);
   },
   error: (...args) => {
-    globalThis.__send(__ops.Log, JSON.stringify(...args));
+    val = args[0];
+    globalThis.__send(__ops.Log, typeof val, typeof val == "object" ? JSON.stringify(val) : val);
   },
 };
