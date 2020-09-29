@@ -1,5 +1,4 @@
 globalThis.Elsa = {
-  args: __args,
   readFile: (arg) => {
     return globalThis.__send(__ops.FSRead, arg);
   },
