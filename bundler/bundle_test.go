@@ -4,9 +4,33 @@ import (
 	"github.com/elsaland/elsa/module"
 	"io/ioutil"
 	"testing"
+
+	. "github.com/franela/goblin"
 )
 
-var dummy = &module.Config{}
+type bundleTestDesc struct {
+	name     string
+	path     string
+	category string
+}
+
+var TestDesc = []bundleTestDesc{
+	{
+		"Bundle no-import js module",
+		"../testing/basics.js",
+		"vanilla",
+	},
+	{
+		"Bundle local js module",
+		"../testing/local_imports.js",
+		"es",
+	},
+	{
+		"Bundle no-import ts modules",
+		"../testing/hello.ts",
+		"ts",
+	},
+}
 
 func readOutData(sourceFile string) string {
 	dat, e := ioutil.ReadFile(sourceFile + ".out")
@@ -16,20 +40,15 @@ func readOutData(sourceFile string) string {
 	return string(dat)
 }
 
-func TestBundleVanillaJS(t *testing.T) {
-	if BundleModule("testdata/basics.js", dummy) != readOutData("testdata/basics.js") {
-		t.Errorf("Bundling vanilla js module failed.")
-	}
-}
+func TestBundle(t *testing.T) {
+	g := Goblin(t)
+	g.Describe("Bundle no-import js modules", func() {
+		for _, tst := range TestDesc {
+			// Passing Test
+			g.It(tst.name, func() {
+				g.Assert(BundleModule(tst.path)).Equal(readOutData(tst.path))
+			})
+		}
 
-func TestBundleJSLocalImports(t *testing.T) {
-	if BundleModule("testdata/local_imports.js", dummy) != readOutData("testdata/local_imports.js") {
-		t.Errorf("Bundling local js module imports failed.")
-	}
-}
-
-func TestBundleTS(t *testing.T) {
-	if BundleModule("testdata/hello.ts", dummy) != readOutData("testdata/hello.ts") {
-		t.Errorf("Bundling ts module failed.")
-	}
+	})
 }
