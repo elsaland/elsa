@@ -22,6 +22,6 @@ globalThis.Elsa = {
     return globalThis.__send(__ops.Plugin, dylib, arg);
   },
   mkdir: (arg) => {
-    return globalThis.__send(__ops.FSMkdir, arg)
-  }
+    return globalThis.__send(__ops.FSMkdir, arg);
+  },
 };

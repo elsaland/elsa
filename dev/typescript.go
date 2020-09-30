@@ -9,12 +9,8 @@ import (
 	"github.com/elsaland/quickjs"
 )
 
-func Compile(source string, fn func(val quickjs.Value), flags cmd.Perms) {
+func Compile(source string, fn func(val quickjs.Value), flags cmd.Perms, args []string) {
 	data, err := core.Asset("typescript/typescript.js")
-	if err != nil {
-		panic("Asset was not found.")
-	}
-	elsaEvt, err := core.Asset("target/elsa.js")
 	if err != nil {
 		panic("Asset was not found.")
 	}
@@ -24,12 +20,13 @@ func Compile(source string, fn func(val quickjs.Value), flags cmd.Perms) {
 	}
 
 	runtime.LockOSThread()
-
 	jsruntime := quickjs.NewRuntime()
 	defer jsruntime.Free()
 
 	context := jsruntime.NewContext()
 	defer context.Free()
+
+	core.PrepareRuntimeContext(context, jsruntime, flags, args)
 
 	globals := context.Globals()
 	report := func(ctx *quickjs.Context, this quickjs.Value, args []quickjs.Value) quickjs.Value {
@@ -39,11 +36,9 @@ func Compile(source string, fn func(val quickjs.Value), flags cmd.Perms) {
 	d := func(ctx *quickjs.Context, this quickjs.Value, args []quickjs.Value) quickjs.Value {
 		return ctx.String(string(dts))
 	}
-	elsa := &core.Elsa{Perms: flags}
-	globals.Set("__send", context.Function(core.ElsaSendNS(elsa)))
 	globals.Set("__report", context.Function(report))
 	globals.Set("__getDTS", context.Function(d))
-	bundle := string(elsaEvt) + string(data) + jsCheck(source)
+	bundle := string(data) + jsCheck(source)
 	result, err := context.Eval(bundle)
 	core.Check(err)
 	defer result.Free()

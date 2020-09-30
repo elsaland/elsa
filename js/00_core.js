@@ -10,7 +10,7 @@ const __ops = {
   Fetch: 20,
   Log: 10,
   Plugin: 15,
-  FSMkdir: 9
+  FSMkdir: 9,
 };
 
 ((window) => {
