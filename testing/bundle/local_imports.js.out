@@ -1,6 +1,6 @@
 (() => {
-  // testing/export.js
+  // testing/bundle/export.js
 
-  // testing/local_imports.js
+  // testing/bundle/local_imports.js
 })();
 

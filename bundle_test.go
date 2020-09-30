@@ -19,17 +19,17 @@ type bundleTestDesc struct {
 var TestDesc = []bundleTestDesc{
 	{
 		"Bundle no-import js module",
-		"testing/basics.js",
+		"testing/bundle/basics.js",
 		"vanilla",
 	},
 	{
 		"Bundle local js module",
-		"testing/local_imports.js",
+		"testing/bundle/local_imports.js",
 		"es",
 	},
 	{
 		"Bundle no-import ts modules",
-		"testing/hello.ts",
+		"testing/bundle/hello.ts",
 		"ts",
 	},
 }

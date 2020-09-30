@@ -1,5 +1,5 @@
 (() => {
-  // testing/basics.js
+  // testing/bundle/basics.js
   function test() {
     return "test";
   }
