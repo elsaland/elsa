@@ -28,12 +28,18 @@ var TestDesc = []bundleTestDesc{
 		"es",
 	},
 	{
-		"Bundle no-import ts modules",
+		"Bundle no-import ts module",
 		"testing/bundle/hello.ts",
 		"ts",
 	},
+	{
+		"Bundle URL import",
+		"testing/bundle/url.ts",
+		"url",
+	},
 }
 
+// utility method to read the expected output for a particular test file
 func readOutData(sourceFile string) string {
 	dat, e := ioutil.ReadFile(sourceFile + ".out")
 	if e != nil {
@@ -48,9 +54,18 @@ func TestBundle(t *testing.T) {
 		for _, tst := range TestDesc {
 			// Passing Test
 			g.It(tst.name, func() {
-				bundle := strings.ReplaceAll(bundler.BundleModule(tst.path), "\n", "")
-				expected := strings.ReplaceAll(readOutData(tst.path), "\n", "")
-				g.Assert(bundle).Equal(expected)
+				// Since URL bundle outputs may differ depending upon the if the import is cached or not
+				// therefore, we only check whether it didn't exit with a bad status code.
+				// TODO: we might want to do wildcard based assertion
+				if tst.category == "url" {
+					bundle := bundler.BundleModule(tst.path)
+					g.Assert(bundle)
+				} else {
+					// Remove newlines from the out data and bundle and assert
+					bundle := strings.ReplaceAll(bundler.BundleModule(tst.path), "\n", "")
+					expected := strings.ReplaceAll(readOutData(tst.path), "\n", "")
+					g.Assert(bundle).Equal(expected)
+				}
 			})
 		}
 	})
