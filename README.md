@@ -62,14 +62,14 @@ Start by creating an issue about your feature or bug! Then, create a PR and we'l
 
 ### Credits
 
--  [QuickJS](https://bellard.org/quickjs/) - by [Fabrice Bellard](https://bellard.org/) and Charlie Gordon. 
+- [QuickJS](https://bellard.org/quickjs/) - by [Fabrice Bellard](https://bellard.org/) and Charlie Gordon.
 - [Esbuild](https://github.com/evanw/esbuild/) - by [Evan Wallace](https://github.com/evanw)
 
 ### FAQs
 
 **Why choose QuickJS over V8?**
 
-QuickJS is a small and embeddable Javascript engine but it lacks V8's JIT for fast JavaScript execution. Although, it doesn't mean you cannot use Elsa on backends and CPU intensive tasks. 
+QuickJS is a small and embeddable Javascript engine but it lacks V8's JIT for fast JavaScript execution. Although, it doesn't mean you cannot use Elsa on backends and CPU intensive tasks.
 
 QuickJS has a better startup time than V8 so it would be a strong alternative for CLI apps and short-lived runs.
 
@@ -90,7 +90,7 @@ It is in it's _very early stages_ of development i.e. nothing should be consider
 
 The goal is to fullfil the _bare minimum_ requirements needed for development of a project. Elsa, although aims to be extendable via _plugins_. A few examples of features that are not likely to be included in Elsa are tools for formatting, linting and analysis.
 
-In short, develop - package - ship 
+In short, develop - package - ship
 
 ### License
 

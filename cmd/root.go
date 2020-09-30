@@ -14,7 +14,7 @@ type Perms struct {
 
 type Elsa struct {
 	Run    func(file string, bundle string, flags Perms, args []string)
-	Dev    func(file string, bundle string, flags Perms, args []string)
+	Dev    func(file string, bundle string, args []string)
 	Bundle func(file string) string
 }
 
@@ -48,9 +48,7 @@ func Execute(elsa Elsa) {
 		Run: func(cmd *cobra.Command, args []string) {
 			if len(args) >= 0 {
 				bundle := elsa.Bundle(args[0])
-				elsa.Dev(args[0], bundle, Perms{
-					fsFlag,
-				}, args[1:])
+				elsa.Dev(args[0], bundle, args[1:])
 			}
 		},
 	}
