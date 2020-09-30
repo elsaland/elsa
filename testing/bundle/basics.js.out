@@ -1,5 +1,5 @@
 (() => {
-  // testdata/basics.js
+  // testing/basics.js
   function test() {
     return "test";
   }
@@ -13,3 +13,4 @@
   arrow();
   test();
 })();
+

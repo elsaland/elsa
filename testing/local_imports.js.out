@@ -1,5 +1,0 @@
-(() => {
-  // testdata/export.js
-
-  // testdata/local_imports.js
-})();

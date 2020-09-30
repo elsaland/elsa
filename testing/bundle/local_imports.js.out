@@ -1,0 +1,6 @@
+(() => {
+  // testing/export.js
+
+  // testing/local_imports.js
+})();
+

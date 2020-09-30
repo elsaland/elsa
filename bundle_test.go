@@ -1,10 +1,12 @@
-package bundler
+package main
 
 import (
 	"github.com/elsaland/elsa/module"
 	"io/ioutil"
+	"strings"
 	"testing"
 
+	"github.com/elsaland/elsa/bundler"
 	. "github.com/franela/goblin"
 )
 
@@ -17,17 +19,17 @@ type bundleTestDesc struct {
 var TestDesc = []bundleTestDesc{
 	{
 		"Bundle no-import js module",
-		"../testing/basics.js",
+		"testing/basics.js",
 		"vanilla",
 	},
 	{
 		"Bundle local js module",
-		"../testing/local_imports.js",
+		"testing/local_imports.js",
 		"es",
 	},
 	{
 		"Bundle no-import ts modules",
-		"../testing/hello.ts",
+		"testing/hello.ts",
 		"ts",
 	},
 }
@@ -42,13 +44,14 @@ func readOutData(sourceFile string) string {
 
 func TestBundle(t *testing.T) {
 	g := Goblin(t)
-	g.Describe("Bundle no-import js modules", func() {
+	g.Describe("Bundle tests", func() {
 		for _, tst := range TestDesc {
 			// Passing Test
 			g.It(tst.name, func() {
-				g.Assert(BundleModule(tst.path)).Equal(readOutData(tst.path))
+				bundle := strings.ReplaceAll(bundler.BundleModule(tst.path), "\n", "")
+				expected := strings.ReplaceAll(readOutData(tst.path), "\n", "")
+				g.Assert(bundle).Equal(expected)
 			})
 		}
-
 	})
 }

@@ -12,6 +12,9 @@ benchmark:
 	# PI benchmarks
 	hyperfine 'deno run testing/pi.js' './elsa run testing/pi.js' 'node testing/pi.js' -s full -r 100 --warmup 50 --export-json ./benchmarks/pi.json -i
 
+test:
+	go test
+
 clean-cache:
 	rm -rf /tmp/x.nest.land/
 	rm -rf /tmp/deno.land/
