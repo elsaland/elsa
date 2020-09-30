@@ -4,7 +4,7 @@ build:
 
 benchmark:
 	# console benchmarks
-	hyperfine './elsa run ./testing/web/console.js' 'deno run ./testing/console.js' 'node ./testing/console.js' -s full -r 100 --warmup 50 --export-json ./benchmarks/console.json
+	hyperfine './elsa run ./testing/web/console.js' 'deno run ./testing/web/console.js' 'node ./testing/console.js' -s full -r 100 --warmup 50 --export-json ./benchmarks/console.json
 	# bundle benchmarks
 	hyperfine './elsa bundle ./testing/web/console.js' 'deno bundle ./testing/web/console.js' -s full -r 100 --warmup 50 --export-json ./benchmarks/bundle.json -i
 	# readFile benchmarks
