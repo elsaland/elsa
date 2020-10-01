@@ -12,7 +12,7 @@ function getDiagnosticsForText(text) {
     __getDTS(),
     ts.ScriptTarget.ES6
   );
-  const files = {[dummyFilePath]: textAst, "/lib.es6.d.ts": dtsAST};
+  const files = { [dummyFilePath]: textAst, "/lib.es6.d.ts": dtsAST };
   const options = {};
   const host = {
     fileExists: (filePath) => files[filePath] != null || Elsa.exists(filePath),
@@ -30,8 +30,7 @@ function getDiagnosticsForText(text) {
     readFile: (filePath) =>
       filePath === dummyFilePath ? text : Elsa.readFile(filePath),
     useCaseSensitiveFileNames: () => true,
-    writeFile: () => {
-    },
+    writeFile: () => {},
   };
   const program = ts.createProgram({
     options,
@@ -41,7 +40,7 @@ function getDiagnosticsForText(text) {
   let diags = "";
   ts.getPreEmitDiagnostics(program).forEach((diagnostic) => {
     if (diagnostic.file) {
-      let {line, character} = diagnostic.file.getLineAndCharacterOfPosition(
+      let { line, character } = diagnostic.file.getLineAndCharacterOfPosition(
         diagnostic.start
       );
       let message = ts.flattenDiagnosticMessageText(

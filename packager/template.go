@@ -1,8 +1,8 @@
 package packager
 
 import (
-  "fmt"
-  "github.com/elsaland/elsa/module"
+	"fmt"
+	"github.com/elsaland/elsa/module"
 )
 
 const source string = `package main
@@ -24,5 +24,5 @@ func main() {
 `
 
 func GeneratePkgSource(path string) string {
-  return fmt.Sprintf(source, path, module.DefaultConfigPath)
+	return fmt.Sprintf(source, path, module.DefaultConfigPath)
 }
