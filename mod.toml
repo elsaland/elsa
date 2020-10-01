@@ -1,0 +1,8 @@
+[module]
+name = "elsa"
+version = "0.0.0"
+authors = ["the elsaland team"]
+license = "MIT"
+
+[options]
+no_color = false

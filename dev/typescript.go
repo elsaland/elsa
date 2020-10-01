@@ -2,6 +2,7 @@ package dev
 
 import (
 	"fmt"
+	"github.com/elsaland/elsa/util"
 	"runtime"
 
 	"github.com/elsaland/elsa/cmd"
@@ -9,7 +10,7 @@ import (
 	"github.com/elsaland/quickjs"
 )
 
-func Compile(source string, fn func(val quickjs.Value), flags cmd.Perms, args []string) {
+func Compile(source string, fn func(val quickjs.Value), flags *cmd.Perms, args []string) {
 	data, err := core.Asset("typescript/typescript.js")
 	if err != nil {
 		panic("Asset was not found.")
@@ -26,7 +27,7 @@ func Compile(source string, fn func(val quickjs.Value), flags cmd.Perms, args []
 	context := jsruntime.NewContext()
 	defer context.Free()
 
-	core.PrepareRuntimeContext(context, jsruntime, flags, args)
+	core.PrepareRuntimeContext(context, jsruntime, args, flags)
 
 	globals := context.Globals()
 	report := func(ctx *quickjs.Context, this quickjs.Value, args []quickjs.Value) quickjs.Value {
@@ -40,7 +41,7 @@ func Compile(source string, fn func(val quickjs.Value), flags cmd.Perms, args []
 	globals.Set("__getDTS", context.Function(d))
 	bundle := string(data) + jsCheck(source)
 	result, err := context.Eval(bundle)
-	core.Check(err)
+	util.Check(err)
 	defer result.Free()
 }
 
