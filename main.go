@@ -1,8 +1,9 @@
 package main
 
 import (
-	"github.com/elsaland/elsa/dev"
 	"runtime"
+
+	"github.com/elsaland/elsa/dev"
 
 	"github.com/elsaland/elsa/bundler"
 	"github.com/elsaland/elsa/cmd"

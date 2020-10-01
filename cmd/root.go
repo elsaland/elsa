@@ -15,11 +15,16 @@ type Perms struct {
 type Elsa struct {
 	Run    func(file string, bundle string, flags Perms, args []string)
 	Dev    func(file string, bundle string, args []string)
-	Bundle func(file string) string
+	Bundle func(file string, opts ...*BundleOpts) string
+}
+
+type BundleOpts struct {
+	Minify bool
 }
 
 func Execute(elsa Elsa) {
 	var fsFlag bool
+	var minifyFlag bool
 
 	var rootCmd = &cobra.Command{
 		Use:   "elsa [file]",
@@ -56,15 +61,16 @@ func Execute(elsa Elsa) {
 	var bundleCmd = &cobra.Command{
 		Use:   "bundle [file]",
 		Short: "Bundle your script to a single javascript file",
-		Long:  `Bundle your script to a single javascript file. It utilises esbuild for super fast bundling.`,
+		Long:  `Bundle your script to a single javascript file. It utilizes esbuild for super fast bundling.`,
 		Args:  cobra.MinimumNArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			if len(args) >= 0 {
-				out := elsa.Bundle(args[0])
+				out := elsa.Bundle(args[0], &BundleOpts{Minify: minifyFlag})
 				fmt.Println(out)
 			}
 		},
 	}
+	bundleCmd.Flags().BoolVarP(&minifyFlag, "minify", "m", false, "Minify the output bundle")
 
 	var pkgCmd = &cobra.Command{
 		Use:   "pkg [file]",
