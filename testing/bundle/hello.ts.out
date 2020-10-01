@@ -1,4 +1,5 @@
 (() => {
-  // testdata/hello.ts
+  // testing/bundle/hello.ts
   console.log(1);
 })();
+
