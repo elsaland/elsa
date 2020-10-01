@@ -22,12 +22,6 @@ Elsa is a _minimal_, _fast_ and _secure_ runtime for Javascript and Typescript w
 - Easy installation scripts
 - Standard modules
 
-### Benchmarks
-
-Benchmark data for the master branch is available at `benchmarks/`
-
-Also see [Comparison with Deno and Node](./COMPARISON.md)
-
 ### Install
 
 Not yet released, [build from source](#build-from-source) instead.
@@ -72,11 +66,6 @@ Start by creating an issue about your feature or bug! Then, create a PR and we'l
 QuickJS is a small and embeddable Javascript engine but it lacks V8's JIT for fast JavaScript execution. Although, it doesn't mean you cannot use Elsa on backends and CPU intensive tasks.
 
 QuickJS has a better startup time than V8 so it would be a strong alternative for CLI apps and short-lived runs.
-
-**Benchmarks are all in favour of Elsa. Why is that?**
-
-The benchmarks currently cover only the startup, bundling and op dispatch speed. These are CLI benchmarks and not of the runtime itself.
-We're working on getting benchmarks for the runtime execution.
 
 **Looks like a QuickJS wrapper to me?**
 
