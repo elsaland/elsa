@@ -2,6 +2,8 @@ package bundler
 
 import (
 	"fmt"
+	"github.com/elsaland/elsa/module"
+	"github.com/elsaland/elsa/util"
 	"io"
 	"net/http"
 	"net/url"
@@ -10,16 +12,14 @@ import (
 	"path/filepath"
 
 	"github.com/asaskevich/govalidator"
-	"github.com/elsaland/elsa/core"
 	"github.com/evanw/esbuild/pkg/api"
 )
 
 var cache = ElsaCache{os.TempDir()}
 
-func BundleModule(source string) string {
-
+func BundleModule(path string, config *module.Config) string {
 	bundle := api.Build(api.BuildOptions{
-		EntryPoints: []string{source},
+		EntryPoints: []string{path},
 		Outfile:     "output.js",
 		Bundle:      true,
 		Target:      api.ESNext,
@@ -48,14 +48,18 @@ func BundleModule(source string) string {
 func BundleURL(uri string) string {
 	resp, _ := http.Get(uri)
 	fileName := cache.BuildFileName(uri)
-	core.LogInfo("Downloading", fmt.Sprintf("%s => %s", uri, fileName))
+	util.LogInfo("Downloading", fmt.Sprintf("%s => %s", uri, fileName))
 	defer resp.Body.Close()
 	file, err := cache.Create(fileName)
 	if err != nil {
-		core.LogError("Internal", fmt.Sprintf("%s", err))
+		util.LogError("Internal", fmt.Sprintf("%s", err))
 		os.Exit(1)
 	}
-	io.Copy(file, resp.Body)
+	_, err = io.Copy(file, resp.Body)
+	if err != nil {
+		util.LogError("Internal", fmt.Sprintf("%s", err))
+		os.Exit(1)
+	}
 	defer file.Close()
 	api.Build(api.BuildOptions{
 		EntryPoints: []string{file.Name()},
@@ -87,16 +91,20 @@ func BundleURL(uri string) string {
 						pth, err := url.Parse(args.Path)
 						loc := base.ResolveReference(pth).String()
 						fileName := cache.BuildFileName(loc)
-						core.LogInfo("Downloading", fmt.Sprintf("%s => %s", loc, file.Name()))
+						util.LogInfo("Downloading", fmt.Sprintf("%s => %s", loc, file.Name()))
 						// Get the data
 						resp, _ := http.Get(loc)
 						defer resp.Body.Close()
 						file, err := cache.Create(fileName)
 						if err != nil {
-							core.LogError("Internal", fmt.Sprintf("%s", err))
+							util.LogError("Internal", fmt.Sprintf("%s", err))
 							os.Exit(1)
 						}
-						io.Copy(file, resp.Body)
+						_, err = io.Copy(file, resp.Body)
+						if err != nil {
+							util.LogError("Internal", fmt.Sprintf("%s", err))
+							os.Exit(1)
+						}
 
 						defer file.Close()
 

@@ -3,6 +3,7 @@ package core
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/elsaland/elsa/util"
 	"testing"
 )
 
@@ -20,11 +21,10 @@ const testDiverseJSON = `{
 
 func expectPass(str string, t *testing.T) {
 	var result interface{}
-	json.Unmarshal([]byte(str), &result)
+	err := json.Unmarshal([]byte(str), &result)
+	util.Check(err)
 	prty, err := Marshal(result)
-	if err != nil {
-		t.Errorf("Console output tests failed")
-	}
+	util.Check(err)
 	fmt.Println(string(prty))
 }
 

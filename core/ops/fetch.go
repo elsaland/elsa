@@ -1,6 +1,7 @@
 package ops
 
 import (
+	"github.com/elsaland/elsa/util"
 	"log"
 
 	"github.com/elsaland/quickjs"
@@ -9,13 +10,9 @@ import (
 
 func Fetch(ctx *quickjs.Context, url quickjs.Value) quickjs.Value {
 	r, err := req.Get(url.String())
-	if err != nil {
-		log.Fatal(err)
-	}
+	util.Check(err)
 	log.Printf("%+v", r) // print info (try it, you may surprise)
 	resp, err := r.ToString()
-	if err != nil {
-		log.Fatal(err)
-	}
+	util.Check(err)
 	return ctx.String(resp)
 }

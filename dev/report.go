@@ -1,10 +1,10 @@
 package dev
 
 import (
-	"github.com/elsaland/elsa/core"
+	"github.com/elsaland/elsa/util"
 	"github.com/elsaland/quickjs"
 )
 
 func ReportDiagnostics(diagnostics quickjs.Value) {
-	core.LogError(diagnostics.String(), "")
+	util.LogError(diagnostics.String(), "")
 }

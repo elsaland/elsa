@@ -1,6 +1,8 @@
 package core
 
 import (
+	"fmt"
+	"github.com/elsaland/elsa/util"
 	"os"
 
 	"github.com/elsaland/elsa/cmd"
@@ -72,9 +74,9 @@ func ElsaSendNS(elsa *Elsa) func(ctx *quickjs.Context, this quickjs.Value, args 
 	}
 }
 
-func CheckFs(perms cmd.Perms) {
+func CheckFs(perms *cmd.Perms) {
 	if !perms.Fs {
-		LogError("Perms Error: ", "Filesystem access is blocked.")
+		util.LogError("Perms Error: ", "Filesystem access is blocked.")
 		os.Exit(1)
 	}
 }
@@ -82,6 +84,10 @@ func CheckFs(perms cmd.Perms) {
 func ElsaRecvNS(elsa *Elsa) func(ctx *quickjs.Context, this quickjs.Value, args []quickjs.Value) quickjs.Value {
 	return func(ctx *quickjs.Context, this quickjs.Value, args []quickjs.Value) quickjs.Value {
 		fn := args[0]
+		if elsa.Recv != nil {
+			ctx.ThrowError(fmt.Errorf("recv cannot be called more than once"))
+			return ctx.Null()
+		}
 		elsa.Recv = func(id quickjs.Value, val quickjs.Value) {
 			result := fn.Call(id, val)
 			defer result.Free()

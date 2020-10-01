@@ -2,6 +2,9 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/elsaland/elsa/module"
+	"github.com/elsaland/elsa/util"
+	"github.com/fatih/color"
 	"os"
 
 	"github.com/elsaland/elsa/packager"
@@ -13,12 +16,17 @@ type Perms struct {
 }
 
 type Elsa struct {
-	Run    func(file string, bundle string, flags Perms, args []string)
-	Dev    func(file string, bundle string, args []string)
-	Bundle func(file string) string
+	Run    func(file string, bundle string, args []string, config *module.Config, flags *Perms)
+	Dev    func(file string, bundle string, args []string, config *module.Config)
+	Bundle func(file string, config *module.Config) string
 }
 
 func Execute(elsa Elsa) {
+	config, err := module.GetConfig()
+	util.Check(err)
+
+	color.NoColor = config.Options.NoColor
+
 	var fsFlag bool
 
 	var rootCmd = &cobra.Command{
@@ -32,8 +40,8 @@ func Execute(elsa Elsa) {
 		Args:  cobra.MinimumNArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			if len(args) >= 0 {
-				bundle := elsa.Bundle(args[0])
-				elsa.Run(args[0], bundle, Perms{fsFlag}, args[1:])
+				bundle := elsa.Bundle(args[0], config)
+				elsa.Run(args[0], bundle, args[1:], config, &Perms{fsFlag})
 			}
 		},
 	}
@@ -47,20 +55,20 @@ func Execute(elsa Elsa) {
 		Args:  cobra.MinimumNArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			if len(args) >= 0 {
-				bundle := elsa.Bundle(args[0])
-				elsa.Dev(args[0], bundle, args[1:])
+				bundle := elsa.Bundle(args[0], config)
+				elsa.Dev(args[0], bundle, args[1:], config)
 			}
 		},
 	}
 
 	var bundleCmd = &cobra.Command{
-		Use:   "bundle [file]",
+		Use:   "bundler [file]",
 		Short: "Bundle your script to a single javascript file",
 		Long:  `Bundle your script to a single javascript file. It utilises esbuild for super fast bundling.`,
 		Args:  cobra.MinimumNArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			if len(args) >= 0 {
-				out := elsa.Bundle(args[0])
+				out := elsa.Bundle(args[0], config)
 				fmt.Println(out)
 			}
 		},

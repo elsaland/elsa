@@ -2,9 +2,8 @@ package ops
 
 import (
 	"encoding/json"
-	"fmt"
+	"github.com/elsaland/elsa/util"
 	"io"
-	"log"
 	"os"
 	"time"
 
@@ -14,7 +13,7 @@ import (
 )
 
 type FsDriver struct {
-	Perms cmd.Perms
+	Perms *cmd.Perms
 	Fs    afero.Fs
 }
 
@@ -22,42 +21,31 @@ var _ io.Reader = (*os.File)(nil)
 
 func (fs *FsDriver) ReadFile(ctx *quickjs.Context, path quickjs.Value) quickjs.Value {
 	data, err := afero.ReadFile(fs.Fs, path.String())
-	if err != nil {
-		log.Fatal(err)
-	}
+	util.Check(err)
 	return ctx.String(string(data))
 }
 
 func (fs *FsDriver) WriteFile(ctx *quickjs.Context, path quickjs.Value, content quickjs.Value) quickjs.Value {
 	err := afero.WriteFile(fs.Fs, path.String(), []byte(content.String()), 0777)
-	if err != nil {
-		log.Fatal(err)
-	}
+	util.Check(err)
 	return ctx.Bool(true)
 }
 
 func (fs *FsDriver) Exists(ctx *quickjs.Context, path quickjs.Value) quickjs.Value {
 	data, err := afero.Exists(fs.Fs, path.String())
-	if err != nil {
-		log.Fatal(err)
-	}
+	util.Check(err)
 	return ctx.Bool(data)
 }
 
 func (fs *FsDriver) DirExists(ctx *quickjs.Context, path quickjs.Value) quickjs.Value {
 	data, err := afero.DirExists(fs.Fs, path.String())
-	if err != nil {
-		log.Fatal(err)
-	}
+	util.Check(err)
 	return ctx.Bool(data)
 }
 
 func (fs *FsDriver) Cwd(ctx *quickjs.Context) quickjs.Value {
 	dir, err := os.Getwd()
-	if err != nil {
-		fmt.Println("%v", err)
-		os.Exit(1)
-	}
+	util.Check(err)
 	return ctx.String(dir)
 }
 
@@ -71,10 +59,7 @@ type FileInfo struct {
 
 func (fs *FsDriver) Stats(ctx *quickjs.Context, path quickjs.Value) quickjs.Value {
 	entry, err := fs.Fs.Stat(path.String())
-	if err != nil {
-		fmt.Println("%v", err)
-		os.Exit(1)
-	}
+	util.Check(err)
 	f := FileInfo{
 		Name:    entry.Name(),
 		Size:    entry.Size(),
@@ -83,28 +68,18 @@ func (fs *FsDriver) Stats(ctx *quickjs.Context, path quickjs.Value) quickjs.Valu
 		IsDir:   entry.IsDir(),
 	}
 	output, err := json.Marshal(f)
-	if err != nil {
-		log.Fatal(err)
-	}
+	util.Check(err)
 	return ctx.String(string(output))
 }
 
 func (fs *FsDriver) Remove(ctx *quickjs.Context, path quickjs.Value) quickjs.Value {
 	err := fs.Fs.Remove(path.String())
-	if err != nil {
-		fmt.Println("%v", err)
-		os.Exit(1)
-	}
+	util.Check(err)
 	return ctx.Bool(true)
 }
 
 func (fs *FsDriver) Mkdir(ctx *quickjs.Context, path quickjs.Value) quickjs.Value {
 	err := fs.Fs.Mkdir(path.String(), os.FileMode(0777))
-
-	if err != nil {
-		fmt.Printf("%v", err)
-		os.Exit(1)
-	}
-
+	util.Check(err)
 	return ctx.Bool(true)
 }
