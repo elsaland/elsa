@@ -8,7 +8,7 @@ console.log("Elsa 2");
 
 console.log("Elsa 3");
 
-console.log({a: {b: 1}});
+console.log({ a: { b: 1 } });
 
 const arrow = () => {
   return 1;

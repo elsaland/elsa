@@ -4,27 +4,27 @@ package core
 
 // FileSystem ops
 const (
-  FSWrite     = 1
-  FSRead      = 2
-  FSExists    = 3
-  FSDirExists = 4
-  FSCwd       = 5
-  FSStats     = 6
-  FSRemove    = 7
-  FSMkdir     = 9
+	FSWrite     = 1
+	FSRead      = 2
+	FSExists    = 3
+	FSDirExists = 4
+	FSCwd       = 5
+	FSStats     = 6
+	FSRemove    = 7
+	FSMkdir     = 9
 )
 
 // console binding ops
 const (
-  Log = 10
+	Log = 10
 )
 
 // plugin ops
 const (
-  Plugin = 15
+	Plugin = 15
 )
 
 // fetch ops
 const (
-  Fetch = 20
+	Fetch = 20
 )
