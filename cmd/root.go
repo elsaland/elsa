@@ -23,7 +23,14 @@ func Execute(elsa Elsa) {
 
 	var rootCmd = &cobra.Command{
 		Use:   "elsa [file]",
+		Args:  cobra.MinimumNArgs(1),
 		Short: "Elsa is a simple Javascript and Typescript runtime written in Go",
+		Run: func(cmd *cobra.Command, args []string) {
+			if len(args) > 0 {
+				bundle := elsa.Bundle(args[0])
+				elsa.Run(args[0], bundle, Perms{fsFlag}, args[1:])
+			}
+		},
 	}
 
 	var runCmd = &cobra.Command{
