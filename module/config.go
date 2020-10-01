@@ -1,8 +1,8 @@
 package module
 
 import (
-	"github.com/BurntSushi/toml"
 	"github.com/Netflix/go-env"
+	"github.com/pelletier/go-toml"
 	"io/ioutil"
 	"os"
 )
@@ -34,8 +34,7 @@ func GetConfig() (*Config, error) {
 		if err != nil {
 			return nil, err
 		}
-		source := string(buf)
-		_, err = toml.Decode(source, &cfg)
+		err = toml.Unmarshal(buf, &cfg)
 		if err != nil {
 			return nil, err
 		}

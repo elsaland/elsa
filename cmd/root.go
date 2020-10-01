@@ -25,7 +25,6 @@ func Execute(elsa Elsa) {
 	config, err := module.GetConfig()
 	util.Check(err)
 
-	fmt.Printf("%+v\n", config)
 	color.NoColor = config.Options.NoColor
 
 	var fsFlag bool

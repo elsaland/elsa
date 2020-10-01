@@ -5,4 +5,4 @@ authors = ["the elsaland team"]
 license = "MIT"
 
 [options]
-no_color = false
+no_color = true
