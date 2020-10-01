@@ -22,19 +22,26 @@ func PrepareRuntimeContext(cxt *quickjs.Context, jsruntime quickjs.Runtime, flag
 	globals.SetFunction("__send", ElsaSendNS(elsa))
 	globals.SetFunction("__recv", ElsaRecvNS(elsa))
 
-	__args := cxt.Array()
-	for i, arg := range args {
-		__arg := cxt.String(arg)
-		__args.SetByUint32(uint32(i), __arg)
-	}
-	globals.Set("__args", __args)
-
 	snap, _ := Asset("target/elsa.js")
 
 	k, err := cxt.Eval(string(snap))
 	Check(err)
 	defer k.Free()
 
+	ns := globals.Get("Elsa")
+	defer ns.Free()
+
+	__args := cxt.Array()
+	for i, arg := range args {
+		__arg := cxt.String(arg)
+		__args.SetByUint32(uint32(i), __arg)
+	}
+	ns.Set("args", __args)
+
+	result, err := cxt.EvalFile(bundle, source)
+	Check(err)
+	defer result.Free()
+  
 	for {
 		_, err = jsruntime.ExecutePendingJob()
 		if err == io.EOF {
