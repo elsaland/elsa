@@ -16,6 +16,8 @@ type bundleTestDesc struct {
 	category string
 }
 
+var config = &module.Config{}
+
 var TestDesc = []bundleTestDesc{
 	{
 		"Bundle no-import js module",
@@ -58,11 +60,11 @@ func TestBundle(t *testing.T) {
 				// therefore, we only check whether it didn't exit with a bad status code.
 				// TODO: we might want to do wildcard based assertion
 				if tst.category == "url" {
-					bundle := bundler.BundleModule(tst.path)
+					bundle := bundler.BundleModule(tst.path, config)
 					g.Assert(bundle)
 				} else {
 					// Remove newlines from the out data and bundle and assert
-					bundle := strings.ReplaceAll(bundler.BundleModule(tst.path), "\n", "")
+					bundle := strings.ReplaceAll(bundler.BundleModule(tst.path, config), "\n", "")
 					expected := strings.ReplaceAll(readOutData(tst.path), "\n", "")
 					g.Assert(bundle).Equal(expected)
 				}
