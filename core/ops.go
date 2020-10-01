@@ -11,6 +11,7 @@ const (
 	FSCwd       = 5
 	FSStats     = 6
 	FSRemove    = 7
+	FSMkdir     = 9
 )
 
 // console binding ops

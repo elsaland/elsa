@@ -13,12 +13,7 @@ type Elsa struct {
 	Recv  Recv
 }
 
-func Run(source string, bundle string, flags cmd.Perms, args []string) {
-	jsruntime := quickjs.NewRuntime()
-	defer jsruntime.Free()
-
-	cxt := jsruntime.NewContext()
-	defer cxt.Free()
+func PrepareRuntimeContext(cxt *quickjs.Context, jsruntime quickjs.Runtime, flags cmd.Perms, args []string) {
 
 	elsa := &Elsa{Perms: flags}
 
@@ -46,7 +41,7 @@ func Run(source string, bundle string, flags cmd.Perms, args []string) {
 	result, err := cxt.EvalFile(bundle, source)
 	Check(err)
 	defer result.Free()
-
+  
 	for {
 		_, err = jsruntime.ExecutePendingJob()
 		if err == io.EOF {
@@ -55,6 +50,19 @@ func Run(source string, bundle string, flags cmd.Perms, args []string) {
 		}
 		Check(err)
 	}
+
+}
+
+func Run(source string, bundle string, flags cmd.Perms, args []string) {
+	jsruntime := quickjs.NewRuntime()
+	defer jsruntime.Free()
+
+	cxt := jsruntime.NewContext()
+	defer cxt.Free()
+	PrepareRuntimeContext(cxt, jsruntime, flags, args)
+	result, err := cxt.EvalFile(bundle, source)
+	Check(err)
+	defer result.Free()
 
 	if result.IsException() {
 		err = cxt.Exception()

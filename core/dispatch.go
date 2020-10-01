@@ -61,6 +61,11 @@ func ElsaSendNS(elsa *Elsa) func(ctx *quickjs.Context, this quickjs.Value, args 
 			body := ops.Fetch(ctx, url)
 			elsa.Recv(one, body)
 			return ctx.Null()
+		case FSMkdir:
+			CheckFs(elsa.Perms)
+			file := args[1]
+			val := fs.Mkdir(ctx, file)
+			return val
 		default:
 			return ctx.Null()
 		}

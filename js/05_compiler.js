@@ -22,8 +22,11 @@ function getDiagnosticsForText(text) {
     getCanonicalFileName: (fileName) => fileName,
     getNewLine: () => "\n",
     getDefaultLibFileName: () => "/lib.es6.d.ts",
-    getSourceFile: (filePath) =>
-      files[filePath] != null ? files[filePath] : Elsa.readFile(filePath),
+    getSourceFile: (filePath) => {
+      return files[filePath] != null
+        ? files[filePath]
+        : Elsa.readFile(filePath);
+    },
     readFile: (filePath) =>
       filePath === dummyFilePath ? text : Elsa.readFile(filePath),
     useCaseSensitiveFileNames: () => true,

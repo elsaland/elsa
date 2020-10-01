@@ -6,16 +6,27 @@ import (
 	"github.com/elsaland/quickjs"
 )
 
-func TypeCheck(source string) {
+// AllowAll allow all flags when in development mode
+var AllowAll = cmd.Perms{
+	// Allow file system access
+	Fs: true,
+}
+
+// TypeCheck run the typechecker and report the diagnostics
+func TypeCheck(source string, args []string) {
+	// Callback function for reporting diagnostics to the user
 	a := func(val quickjs.Value) {
 		ReportDiagnostics(val)
 	}
-	Compile(source, a, cmd.Perms{
-		Fs: true,
-	})
+	// Trigger the compiler with the report callback and source
+	// allow all perms and specify os args
+	Compile(source, a, AllowAll, args)
 }
 
-func RunDev(source string, bundle string, flags cmd.Perms, args []string) {
-	TypeCheck(source)
-	core.Run(source, bundle, flags, args)
+// RunDev invoke typechecking and execute
+func RunDev(source string, bundle string, args []string) {
+	// Run the typchecker
+	TypeCheck(source, args)
+	// Execute bundled script into a quickJS runtime
+	core.Run(source, bundle, AllowAll, args)
 }
