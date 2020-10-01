@@ -21,6 +21,10 @@ type Elsa struct {
   Bundle func(file string, config *module.Config) string
 }
 
+type BundleOpts struct {
+	Minify bool
+}
+
 func Execute(elsa Elsa) {
   config, err := module.ConfigLoad()
   util.Check(err)
@@ -28,6 +32,7 @@ func Execute(elsa Elsa) {
   color.NoColor = config.Options.NoColor
 
   var fsFlag bool
+  var minifyFlag bool
 
   var rootCmd = &cobra.Command{
     Use:   "elsa [file]",
@@ -61,18 +66,21 @@ func Execute(elsa Elsa) {
     },
   }
 
+
   var bundleCmd = &cobra.Command{
-    Use:   "bundler [file]",
+    Use:   "bundle [file]",
     Short: "Bundle your script to a single javascript file",
-    Long:  `Bundle your script to a single javascript file. It utilises esbuild for super fast bundling.`,
+    Long:  `Bundle your script to a single javascript file. It utilizes esbuild for super fast bundling.`,
     Args:  cobra.MinimumNArgs(1),
     Run: func(cmd *cobra.Command, args []string) {
       if len(args) >= 0 {
-        out := elsa.Bundle(args[0], config)
-        fmt.Println(out)
-      }
+        out := elsa.Bundle(args[0], &BundleOpts{Minify: minifyFlag})
+            fmt.Println(out)
+        }
     },
-  }
+}
+
+bundleCmd.Flags().BoolVarP(&minifyFlag, "minify", "m", false, "Minify the output bundle")
 
   var pkgCmd = &cobra.Command{
     Use:   "pkg [file]",

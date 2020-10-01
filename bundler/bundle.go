@@ -11,63 +11,79 @@ import (
   "path"
   "path/filepath"
 
-  "github.com/asaskevich/govalidator"
-  "github.com/evanw/esbuild/pkg/api"
+	"github.com/asaskevich/govalidator"
+	"github.com/elsaland/elsa/cmd"
+	"github.com/elsaland/elsa/core"
+	"github.com/evanw/esbuild/pkg/api"
 )
 
 var cache = ElsaCache{os.TempDir()}
 
-func BundleModule(path string, config *module.Config) string {
-  bundle := api.Build(api.BuildOptions{
-    EntryPoints: []string{path},
-    Outfile:     "output.js",
-    Bundle:      true,
-    Target:      api.ESNext,
-    LogLevel:    api.LogLevelInfo,
-    Plugins: []func(api.Plugin){
+func BundleModule(source string, opts ...*cmd.BundleOpts) string {
+	var minify bool
 
-      func(plugin api.Plugin) {
-        plugin.SetName("url-loader")
-        plugin.AddResolver(api.ResolverOptions{Filter: "^https?://"},
-          func(args api.ResolverArgs) (api.ResolverResult, error) {
-            possibleCachePath := cache.UrlToPath(args.Path)
-            if cache.InCache(possibleCachePath) && cache.Exists(possibleCachePath) {
-              return api.ResolverResult{Path: possibleCachePath, Namespace: ""}, nil
-            }
-            // Get the data
-            f := BundleURL(args.Path)
-            return api.ResolverResult{Path: f, Namespace: ""}, nil
+	if len(opts) > 0 && opts[0].Minify {
+		minify = true
+	}
 
-          })
-      },
-    },
-  })
-  return string(bundle.OutputFiles[0].Contents[:])
+	bundle := api.Build(api.BuildOptions{
+		EntryPoints:       []string{source},
+		Outfile:           "output.js",
+		Bundle:            true,
+		Target:            api.ESNext,
+		LogLevel:          api.LogLevelInfo,
+		MinifyIdentifiers: minify,
+		MinifySyntax:      minify,
+		MinifyWhitespace:  minify,
+		Plugins: []func(api.Plugin){
+
+			func(plugin api.Plugin) {
+				plugin.SetName("url-loader")
+				plugin.AddResolver(api.ResolverOptions{Filter: "^https?://"},
+					func(args api.ResolverArgs) (api.ResolverResult, error) {
+						possibleCachePath := cache.UrlToPath(args.Path)
+						if cache.InCache(possibleCachePath) && cache.Exists(possibleCachePath) {
+							return api.ResolverResult{Path: possibleCachePath, Namespace: ""}, nil
+						}
+						// Get the data
+						f := BundleURL(args.Path, opts...)
+						return api.ResolverResult{Path: f, Namespace: ""}, nil
+
+					})
+			},
+		},
+	})
+	return string(bundle.OutputFiles[0].Contents[:])
 }
 
-func BundleURL(uri string) string {
-  resp, _ := http.Get(uri)
-  fileName := cache.BuildFileName(uri)
-  util.LogInfo("Downloading", fmt.Sprintf("%s => %s", uri, fileName))
-  defer resp.Body.Close()
-  file, err := cache.Create(fileName)
-  if err != nil {
-    util.LogError("Internal", fmt.Sprintf("%s", err))
-    os.Exit(1)
-  }
-  _, err = io.Copy(file, resp.Body)
-  if err != nil {
-    util.LogError("Internal", fmt.Sprintf("%s", err))
-    os.Exit(1)
-  }
-  defer file.Close()
-  api.Build(api.BuildOptions{
-    EntryPoints: []string{file.Name()},
-    Outfile:     "output.js",
-    Bundle:      true,
-    Target:      api.ES2015,
-    LogLevel:    api.LogLevelInfo,
-    Plugins: []func(api.Plugin){
+func BundleURL(uri string, opts ...*cmd.BundleOpts) string {
+	var minify bool
+
+	if len(opts) > 0 && opts[0].Minify {
+		minify = true
+	}
+
+	resp, _ := http.Get(uri)
+	fileName := cache.BuildFileName(uri)
+	core.LogInfo("Downloading", fmt.Sprintf("%s => %s", uri, fileName))
+	defer resp.Body.Close()
+	file, err := cache.Create(fileName)
+	if err != nil {
+		core.LogError("Internal", fmt.Sprintf("%s", err))
+		os.Exit(1)
+	}
+	io.Copy(file, resp.Body)
+	defer file.Close()
+	api.Build(api.BuildOptions{
+		EntryPoints:       []string{file.Name()},
+		Outfile:           "output.js",
+		Bundle:            true,
+		Target:            api.ES2015,
+		LogLevel:          api.LogLevelInfo,
+		MinifyIdentifiers: minify,
+		MinifyWhitespace:  minify,
+		MinifySyntax:      minify,
+		Plugins: []func(api.Plugin){
 
       func(plugin api.Plugin) {
         plugin.SetName("url-loader2")
