@@ -19,15 +19,15 @@ func ConsoleLog(ctx *quickjs.Context, value []quickjs.Value) quickjs.Value {
 	case "string":
 		fmt.Println(data.String())
 	case "function":
-		fmt.Println(color.New(color.FgCyan).SprintFunc()(data.String()))
+		fmt.Fprintln(color.Output, color.New(color.FgCyan).SprintFunc()(data.String()))
 	case "bigint":
-		fmt.Println(color.New(color.FgYellow).SprintFunc()(data.BigInt()))
+		fmt.Fprintln(color.Output, color.New(color.FgYellow).SprintFunc()(data.BigInt()))
 	case "number":
-		fmt.Println(color.New(color.FgYellow).SprintFunc()(data.Int32()))
+		fmt.Fprintln(color.Output, color.New(color.FgYellow).SprintFunc()(data.Int32()))
 	default:
 		json.Unmarshal([]byte(data.String()), &result)
 		prty, _ := f.Marshal(result)
-		fmt.Println(string(prty))
+		fmt.Fprintln(color.Output, string(prty))
 	}
 
 	return ctx.Null()
