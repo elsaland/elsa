@@ -10,6 +10,7 @@ require (
 	github.com/go-bindata/go-bindata v3.1.2+incompatible
 	github.com/imroc/req v0.3.0
 	github.com/logrusorgru/aurora v2.0.3+incompatible
+	github.com/mattn/go-colorable v0.1.4
 	github.com/spf13/afero v1.4.0
 	github.com/spf13/cobra v1.0.0
 	github.com/tdewolff/minify/v2 v2.9.5
