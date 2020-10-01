@@ -1,10 +1,10 @@
 package core
 
 import (
-	"encoding/json"
-	"fmt"
-	"github.com/elsaland/elsa/util"
-	"testing"
+  "encoding/json"
+  "fmt"
+  "github.com/elsaland/elsa/util"
+  "testing"
 )
 
 const testString = `"This is a string"`
@@ -20,12 +20,12 @@ const testDiverseJSON = `{
   }`
 
 func expectPass(str string, t *testing.T) {
-	var result interface{}
-	err := json.Unmarshal([]byte(str), &result)
-	util.Check(err)
-	prty, err := Marshal(result)
-	util.Check(err)
-	fmt.Println(string(prty))
+  var result interface{}
+  err := json.Unmarshal([]byte(str), &result)
+  util.Check(err)
+  prty, err := Marshal(result)
+  util.Check(err)
+  fmt.Println(string(prty))
 }
 
 func TestString(t *testing.T)      { expectPass(testString, t) }

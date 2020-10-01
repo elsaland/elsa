@@ -4,7 +4,8 @@
  *
  * @class EventEmitter Manages event registering and emitting.
  */
-function EventEmitter() {}
+function EventEmitter() {
+}
 
 /**
  * Finds the index of the listener for the event in its storage array.
@@ -143,9 +144,9 @@ EventEmitter.prototype.addListener = function addListener(evt, listener) {
         listenerIsWrapped
           ? listener
           : {
-              listener: listener,
-              once: false,
-            }
+            listener: listener,
+            once: false,
+          }
       );
     }
   }
