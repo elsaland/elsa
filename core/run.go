@@ -37,10 +37,6 @@ func PrepareRuntimeContext(cxt *quickjs.Context, jsruntime quickjs.Runtime, flag
 		__args.SetByUint32(uint32(i), __arg)
 	}
 	ns.Set("args", __args)
-
-	result, err := cxt.EvalFile(bundle, source)
-	Check(err)
-	defer result.Free()
   
 	for {
 		_, err = jsruntime.ExecutePendingJob()
@@ -50,7 +46,6 @@ func PrepareRuntimeContext(cxt *quickjs.Context, jsruntime quickjs.Runtime, flag
 		}
 		Check(err)
 	}
-
 }
 
 func Run(source string, bundle string, flags cmd.Perms, args []string) {
@@ -66,6 +61,15 @@ func Run(source string, bundle string, flags cmd.Perms, args []string) {
 
 	if result.IsException() {
 		err = cxt.Exception()
+		Check(err)
+	}
+  
+	for {
+		_, err = jsruntime.ExecutePendingJob()
+		if err == io.EOF {
+			err = nil
+			break
+		}
 		Check(err)
 	}
 }
