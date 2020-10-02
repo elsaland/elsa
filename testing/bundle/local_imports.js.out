@@ -1,6 +1,1 @@
-(() => {
-  // testing/bundle/export.js
-
-  // testing/bundle/local_imports.js
-})();
-
+(() => {})();

@@ -1,5 +1,5 @@
 (() => {
-  // testing/bundle/hello.ts
+  // bundle/hello.ts
   console.log(1);
 })();
 
