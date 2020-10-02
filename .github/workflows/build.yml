@@ -1,7 +1,9 @@
 name: Build
 
-on:
+on: 
   push:
+    branches:
+      - master
   pull_request:
 
 jobs:
@@ -35,6 +37,11 @@ jobs:
       - name: Build
         working-directory: ./src/github.com/elsaland/elsa
         run: go build -o elsa-${{ matrix.os }} .
+
+      - name: Test
+        working-directory: ./src/github.com/elsaland/elsa
+        if: startsWith(matrix.os,'ubuntu')
+        run: go test ./testing
 
       - name: Upload Elsa executables
         uses: actions/upload-artifact@v2

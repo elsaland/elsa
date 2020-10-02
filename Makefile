@@ -13,7 +13,7 @@ benchmark:
 	hyperfine 'deno run testing/bench/pi.js' './elsa run testing/bench/pi.js' 'node testing/bench/pi.js' -s full -r 100 --warmup 50 --export-json ./benchmarks/pi.json -i
 
 test:
-	go test
+	go test ./testing
 
 test-create-out:
 	./elsa bundle testing/bundle/local_imports.js >> testing/bundle/local_imports.js.out
