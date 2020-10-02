@@ -2,22 +2,20 @@ package cmd
 
 import (
 	"fmt"
+	"os"
+
+	"github.com/elsaland/elsa/core/options"
 	"github.com/elsaland/elsa/module"
 	"github.com/elsaland/elsa/util"
 	"github.com/fatih/color"
-	"os"
 
 	"github.com/elsaland/elsa/packager"
 	"github.com/spf13/cobra"
 )
 
-type Perms struct {
-	Fs bool
-}
-
 type Elsa struct {
-	Run    func(file string, bundle string, args []string, config *module.Config, flags *Perms)
-	Dev    func(file string, bundle string, args []string, config *module.Config)
+	Run    func(opt options.Options)
+	Dev    func(opt options.Options)
 	Bundle func(file string, minify bool, config *module.Config) string
 }
 
@@ -42,7 +40,17 @@ func Execute(elsa Elsa) {
 		Run: func(cmd *cobra.Command, args []string) {
 			if len(args) >= 0 {
 				bundle := elsa.Bundle(args[0], true, config)
-				elsa.Run(args[0], bundle, args[1:], config, &Perms{fsFlag})
+				env := options.Environment{
+					NoColor: config.Options.NoColor,
+					Args:    args[1:],
+				}
+				opt := options.Options{
+					SourceFile: args[0],
+					Source:     bundle,
+					Perms:      &options.Perms{fsFlag},
+					Env:        env,
+				}
+				elsa.Run(opt)
 			}
 		},
 	}
@@ -57,7 +65,17 @@ func Execute(elsa Elsa) {
 		Run: func(cmd *cobra.Command, args []string) {
 			if len(args) >= 0 {
 				bundle := elsa.Bundle(args[0], true, config)
-				elsa.Dev(args[0], bundle, args[1:], config)
+				env := options.Environment{
+					NoColor: config.Options.NoColor,
+					Args:    args[1:],
+				}
+				opt := options.Options{
+					SourceFile: args[0],
+					Source:     bundle,
+					Perms:      &options.Perms{fsFlag},
+					Env:        env,
+				}
+				elsa.Dev(opt)
 			}
 		},
 	}

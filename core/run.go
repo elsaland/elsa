@@ -1,23 +1,16 @@
 package core
 
 import (
-	"github.com/elsaland/elsa/module"
-	"github.com/elsaland/elsa/util"
-	"github.com/fatih/color"
 	"io"
 
-	"github.com/elsaland/elsa/cmd"
+	"github.com/elsaland/elsa/core/options"
+	"github.com/elsaland/elsa/util"
+
 	"github.com/elsaland/quickjs"
 )
 
-type Recv func(id quickjs.Value, val quickjs.Value)
-type Elsa struct {
-	Perms *cmd.Perms
-	Recv  Recv
-}
-
-func PrepareRuntimeContext(cxt *quickjs.Context, jsruntime quickjs.Runtime, args []string, flags *cmd.Perms) {
-	elsa := &Elsa{Perms: flags}
+func PrepareRuntimeContext(cxt *quickjs.Context, jsruntime quickjs.Runtime, args []string, flags *options.Perms) {
+	elsa := &options.Elsa{Perms: flags}
 
 	globals := cxt.Globals()
 
@@ -50,18 +43,17 @@ func PrepareRuntimeContext(cxt *quickjs.Context, jsruntime quickjs.Runtime, args
 	}
 }
 
-func Run(source string, bundle string, args []string, config *module.Config, flags *cmd.Perms) {
-	color.NoColor = config.Options.NoColor
-
+// Run create and dispatch a QuickJS runtime binded with Elsa's OPs configurable using options
+func Run(opt options.Options) {
 	jsruntime := quickjs.NewRuntime()
 	defer jsruntime.Free()
 
 	cxt := jsruntime.NewContext()
 	defer cxt.Free()
 
-	PrepareRuntimeContext(cxt, jsruntime, args, flags)
+	PrepareRuntimeContext(cxt, jsruntime, opt.Env.Args, opt.Perms)
 
-	result, err := cxt.EvalFile(bundle, source)
+	result, err := cxt.EvalFile(opt.Source, opt.SourceFile)
 	util.Check(err)
 	defer result.Free()
 
