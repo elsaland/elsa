@@ -1,6 +1,10 @@
 name: Build
 
-on: [push, pull_request]
+on: 
+  push:
+    branches:
+      - master
+  pull_request:
 
 jobs:
   build:
@@ -36,7 +40,7 @@ jobs:
 
       - name: Test
         working-directory: ./src/github.com/elsaland/elsa
-        if: ${{ matrix.os == "ubuntu-latest" }}
+        if: matrix.os == "ubuntu-latest"
         run: go test ./testing
 
       - name: Upload Elsa executables
