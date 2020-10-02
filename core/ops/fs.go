@@ -2,18 +2,19 @@ package ops
 
 import (
 	"encoding/json"
-	"github.com/elsaland/elsa/util"
 	"io"
 	"os"
 	"time"
 
-	"github.com/elsaland/elsa/cmd"
+	"github.com/elsaland/elsa/core/options"
+	"github.com/elsaland/elsa/util"
+
 	"github.com/elsaland/quickjs"
 	"github.com/spf13/afero"
 )
 
 type FsDriver struct {
-	Perms *cmd.Perms
+	Perms *options.Perms
 	Fs    afero.Fs
 }
 

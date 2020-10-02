@@ -3,8 +3,9 @@ package util
 import (
 	"errors"
 	"fmt"
-	"github.com/elsaland/quickjs"
 	"os"
+
+	"github.com/elsaland/quickjs"
 )
 
 func Check(err error) {

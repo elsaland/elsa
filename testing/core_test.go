@@ -3,8 +3,8 @@ package testing
 import (
 	"testing"
 
-	"github.com/elsaland/elsa/cmd"
 	"github.com/elsaland/elsa/core"
+	"github.com/elsaland/elsa/core/options"
 	"github.com/elsaland/elsa/module"
 	"github.com/elsaland/elsa/util"
 )
@@ -33,7 +33,17 @@ func TestCore(t *testing.T) {
 		// Passing Test
 		t.Run(tst.name, func(t *testing.T) {
 			// Run the test source with filename as test.js, default config and all perms
-			core.Run("test.js", tst.source, []string{}, config, &cmd.Perms{Fs: true})
+			env := options.Environment{
+				NoColor: config.Options.NoColor,
+				Args:    []string{},
+			}
+			opt := options.Options{
+				SourceFile: "test.js",
+				Source:     tst.source,
+				Perms:      &options.Perms{Fs: true},
+				Env:        env,
+			}
+			core.Run(opt)
 		})
 	}
 }

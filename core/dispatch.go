@@ -2,16 +2,17 @@ package core
 
 import (
 	"fmt"
-	"github.com/elsaland/elsa/util"
 	"os"
 
-	"github.com/elsaland/elsa/cmd"
+	"github.com/elsaland/elsa/util"
+
 	"github.com/elsaland/elsa/core/ops"
+	"github.com/elsaland/elsa/core/options"
 	"github.com/elsaland/quickjs"
 	"github.com/spf13/afero"
 )
 
-func ElsaSendNS(elsa *Elsa) func(ctx *quickjs.Context, this quickjs.Value, args []quickjs.Value) quickjs.Value {
+func ElsaSendNS(elsa *options.Elsa) func(ctx *quickjs.Context, this quickjs.Value, args []quickjs.Value) quickjs.Value {
 	var fs = ops.FsDriver{
 		Fs:    afero.NewOsFs(),
 		Perms: elsa.Perms,
@@ -74,14 +75,14 @@ func ElsaSendNS(elsa *Elsa) func(ctx *quickjs.Context, this quickjs.Value, args 
 	}
 }
 
-func CheckFs(perms *cmd.Perms) {
+func CheckFs(perms *options.Perms) {
 	if !perms.Fs {
 		util.LogError("Perms Error: ", "Filesystem access is blocked.")
 		os.Exit(1)
 	}
 }
 
-func ElsaRecvNS(elsa *Elsa) func(ctx *quickjs.Context, this quickjs.Value, args []quickjs.Value) quickjs.Value {
+func ElsaRecvNS(elsa *options.Elsa) func(ctx *quickjs.Context, this quickjs.Value, args []quickjs.Value) quickjs.Value {
 	return func(ctx *quickjs.Context, this quickjs.Value, args []quickjs.Value) quickjs.Value {
 		fn := args[0]
 		if elsa.Recv != nil {

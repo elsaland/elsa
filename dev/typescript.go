@@ -2,15 +2,16 @@ package dev
 
 import (
 	"fmt"
-	"github.com/elsaland/elsa/util"
 	"runtime"
 
-	"github.com/elsaland/elsa/cmd"
+	"github.com/elsaland/elsa/core/options"
+	"github.com/elsaland/elsa/util"
+
 	"github.com/elsaland/elsa/core"
 	"github.com/elsaland/quickjs"
 )
 
-func Compile(source string, fn func(val quickjs.Value), flags *cmd.Perms, args []string) {
+func Compile(source string, fn func(val quickjs.Value), flags *options.Perms, args []string) {
 	data, err := core.Asset("typescript/typescript.js")
 	if err != nil {
 		panic("Asset was not found.")

@@ -1,14 +1,13 @@
 package dev
 
 import (
-	"github.com/elsaland/elsa/cmd"
 	"github.com/elsaland/elsa/core"
-	"github.com/elsaland/elsa/module"
+	"github.com/elsaland/elsa/core/options"
 	"github.com/elsaland/quickjs"
 )
 
 // AllowAll allow all flags when in development mode
-var AllowAll = cmd.Perms{
+var AllowAll = options.Perms{
 	// Allow file system access
 	Fs: true,
 }
@@ -25,9 +24,9 @@ func TypeCheck(source string, args []string) {
 }
 
 // RunDev invoke typechecking and execute
-func RunDev(source string, bundle string, args []string, config *module.Config) {
+func RunDev(opt options.Options) {
 	// Run typechecking
-	TypeCheck(source, args)
+	TypeCheck(opt.Source, opt.Env.Args)
 	// Execute bundled script into a quickJS runtime
-	core.Run(source, bundle, args, config, &AllowAll)
+	core.Run(opt)
 }
