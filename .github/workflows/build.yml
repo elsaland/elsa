@@ -40,7 +40,7 @@ jobs:
 
       - name: Test
         working-directory: ./src/github.com/elsaland/elsa
-        if: matrix.os == "ubuntu-latest"
+        if: startsWith(matrix.os,'ubuntu')
         run: go test ./testing
 
       - name: Upload Elsa executables
