@@ -64,8 +64,8 @@ func TestBundle(t *testing.T) {
 				assert.NotNil(bundle)
 			} else {
 				// Remove newlines from the out data and bundle and assert
-				bundle := strings.ReplaceAll(bundler.BundleModule(tst.path, false, config), "\n", "")
-				expected := strings.ReplaceAll(readOutData(tst.path), "\n", "")
+				bundle := strings.ReplaceAll(strings.ReplaceAll(bundler.BundleModule(tst.path, false, config), "\n", ""), "\r", "")
+				expected := strings.ReplaceAll(strings.ReplaceAll(readOutData(tst.path), "\n", ""), "\r", "")
 
 				assert.Equal(bundle, expected)
 			}
