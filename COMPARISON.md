@@ -13,7 +13,7 @@ Benchmarks are available at `/benchmarks/`
 | Compiling to executable  | **Yes**           | No          | No (third party) |
 | Explicit imports         | Yes               | Yes         | No               |
 | Secure by default        | Yes               | Yes         | No               |
-| Binary size              | **~20mb** \*      | ~44mb \*    | ~68mb            |
+| Binary size              | **~12mb** \*      | ~44mb \*    | ~68mb            |
 
 \* Lacks data for `Intl` and `toLocaleString`
 

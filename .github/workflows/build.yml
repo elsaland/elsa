@@ -36,7 +36,7 @@ jobs:
 
       - name: Build
         working-directory: ./src/github.com/elsaland/elsa
-        run: go build -o elsa-${{ matrix.os }} .
+        run: go build --ldflags "-s -w" -o elsa-${{ matrix.os }} .
 
       - name: Test
         working-directory: ./src/github.com/elsaland/elsa
