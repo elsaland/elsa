@@ -2,14 +2,16 @@ package bundler
 
 import (
 	"fmt"
-	"github.com/elsaland/elsa/module"
-	"github.com/elsaland/elsa/util"
 	"io"
+	"log"
 	"net/http"
 	"net/url"
 	"os"
 	"path"
 	"path/filepath"
+
+	"github.com/elsaland/elsa/module"
+	"github.com/elsaland/elsa/util"
 
 	"github.com/asaskevich/govalidator"
 	"github.com/evanw/esbuild/pkg/api"
@@ -18,6 +20,12 @@ import (
 var cache = ElsaCache{os.TempDir()}
 
 func BundleModule(file string, minify bool, config *module.Config) string {
+	tsconfig := ""
+	dir := filepath.Dir(file)
+	tsconfigPath := path.Join(dir, "tsconfig.json")
+	if _, err := os.Stat(tsconfigPath); err == nil || !os.IsNotExist(err) {
+		tsconfig = tsconfigPath
+	}
 	bundle := api.Build(api.BuildOptions{
 		EntryPoints:       []string{file},
 		Outfile:           "output.js",
@@ -27,6 +35,7 @@ func BundleModule(file string, minify bool, config *module.Config) string {
 		MinifyIdentifiers: minify,
 		MinifySyntax:      minify,
 		MinifyWhitespace:  minify,
+		Tsconfig:          tsconfig,
 		Plugins: []func(api.Plugin){
 
 			func(plugin api.Plugin) {
@@ -45,6 +54,9 @@ func BundleModule(file string, minify bool, config *module.Config) string {
 			},
 		},
 	})
+	if bundle.Errors != nil {
+		BundlePanic(bundle)
+	}
 	return string(bundle.OutputFiles[0].Contents[:])
 }
 
@@ -60,7 +72,7 @@ func BundleURL(uri string, minify bool) string {
 	}
 	io.Copy(file, resp.Body)
 	defer file.Close()
-	api.Build(api.BuildOptions{
+	bundle := api.Build(api.BuildOptions{
 		EntryPoints:       []string{file.Name()},
 		Outfile:           "output.js",
 		Bundle:            true,
@@ -116,5 +128,16 @@ func BundleURL(uri string, minify bool) string {
 			},
 		},
 	})
+	if bundle.Errors != nil {
+		BundlePanic(bundle)
+	}
 	return file.Name()
+}
+
+func BundlePanic(bundle api.BuildResult) {
+	var errs string
+	for _, err := range bundle.Errors {
+		errs = errs + ", " + err.Text
+	}
+	log.Panicf("Errors during the bundle operation: %s\n", errs[1:])
 }
