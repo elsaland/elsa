@@ -14,6 +14,7 @@ type bundleTestDesc struct {
 	name     string
 	path     string
 	category string
+	minify   bool
 }
 
 var config = &module.Config{}
@@ -23,27 +24,43 @@ var TestDesc = []bundleTestDesc{
 		"Bundle no-import js module",
 		"bundle/basics.js",
 		"vanilla",
+		false,
 	},
 	{
 		"Bundle local js module",
 		"bundle/local_imports.js",
 		"es",
+		false,
 	},
 	{
 		"Bundle no-import ts module",
 		"bundle/hello.ts",
 		"ts",
+		false,
 	},
 	{
 		"Bundle URL import",
 		"bundle/url.ts",
 		"url",
+		false,
+	},
+	{
+		"Bundle minified",
+		"bundle/basics.js",
+		"vanilla",
+		true,
 	},
 }
 
 // utility method to read the expected output for a particular test file
-func readOutData(sourceFile string) string {
-	dat, e := ioutil.ReadFile(sourceFile + ".out")
+func readOutData(sourceFile string, minified bool) string {
+	path := sourceFile
+	if minified {
+		path += ".mini.out"
+	} else {
+		path += ".out"
+	}
+	dat, e := ioutil.ReadFile(path)
 	if e != nil {
 		panic(e)
 	}
@@ -51,6 +68,8 @@ func readOutData(sourceFile string) string {
 }
 
 func TestBundle(t *testing.T) {
+	r := strings.NewReplacer("\n", "", "\r", "")
+
 	for _, tst := range TestDesc {
 		// Passing Test
 		t.Run(tst.name, func(t *testing.T) {
@@ -63,11 +82,11 @@ func TestBundle(t *testing.T) {
 
 				assert.NotNil(bundle)
 			} else {
-				// Remove newlines from the out data and bundle and assert
-				bundle := strings.ReplaceAll(strings.ReplaceAll(bundler.BundleModule(tst.path, false, config), "\n", ""), "\r", "")
-				expected := strings.ReplaceAll(strings.ReplaceAll(readOutData(tst.path), "\n", ""), "\r", "")
+				bundle := bundler.BundleModule(tst.path, tst.minify, config)
+				expected := readOutData(tst.path, tst.minify)
 
-				assert.Equal(bundle, expected)
+				// Remove newlines from the out data and bundle and assert
+				assert.Equal(r.Replace(bundle), r.Replace(expected))
 			}
 		})
 	}
