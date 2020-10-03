@@ -12,11 +12,17 @@ import (
 	"github.com/spf13/afero"
 )
 
+// ElsaSendNS Native function corresponding to the Javascript global `__send`
+// It is binded with `__send` and accepts arguments including op ID
 func ElsaSendNS(elsa *options.Elsa) func(ctx *quickjs.Context, this quickjs.Value, args []quickjs.Value) quickjs.Value {
+	// Create a new file system driver
 	var fs = ops.FsDriver{
+		// NOTE: afero can also be used to create in-memory file system
+		// it can be a feature to provide in the future
 		Fs:    afero.NewOsFs(),
 		Perms: elsa.Perms,
 	}
+	// The returned function handles the op and execute corresponding native code
 	return func(ctx *quickjs.Context, this quickjs.Value, args []quickjs.Value) quickjs.Value {
 		switch args[0].Int32() {
 		case FSRead:
@@ -75,6 +81,7 @@ func ElsaSendNS(elsa *options.Elsa) func(ctx *quickjs.Context, this quickjs.Valu
 	}
 }
 
+// CheckFs utility to check whether file system access is avaliable or not
 func CheckFs(perms *options.Perms) {
 	if !perms.Fs {
 		util.LogError("Perms Error: ", "Filesystem access is blocked.")
@@ -82,7 +89,11 @@ func CheckFs(perms *options.Perms) {
 	}
 }
 
+// ElsaRecvNS Native function corresponding to the Javascript global `__recv`
+// It is binded with `__recv` and accepts arguments including recv ID of the async function
 func ElsaRecvNS(elsa *options.Elsa) func(ctx *quickjs.Context, this quickjs.Value, args []quickjs.Value) quickjs.Value {
+	// the returned function handles the __recv behaviour
+	// It is capable of calling the callback for a particular async op after it has finished
 	return func(ctx *quickjs.Context, this quickjs.Value, args []quickjs.Value) quickjs.Value {
 		fn := args[0]
 		if elsa.Recv != nil {
