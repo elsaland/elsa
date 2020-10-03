@@ -1,0 +1,1 @@
+(()=>{function o(){return"test"}console.log("Elsa 1");console.log("Elsa 2");console.log("Elsa 3");console.log({a:{b:1}});const l=()=>1;l();o();})();
