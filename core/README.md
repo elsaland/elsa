@@ -16,13 +16,11 @@ import (
 var source string: = "console.log(1)"
 
 func main() {
-
     env: = options.Environment {
         NoColor: false, // Set true to disable coloured output
         Args: os.Args[1: ],
     }
-
-        opt: = options.Options {
+    opt: = options.Options {
         SourceFile: "file.js",
         Source: source,
         Perms: & options.Perms {
@@ -30,8 +28,6 @@ func main() {
         },
         Env: env,
     }
-
-        core.Run(opt)
+    core.Run(opt)
 }
 ```
-

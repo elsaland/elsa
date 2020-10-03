@@ -4,10 +4,15 @@ import (
 	"github.com/elsaland/quickjs"
 )
 
+// Recv callback for an async op
 type Recv func(id quickjs.Value, val quickjs.Value)
+
+// Elsa represents general data for the runtime
 type Elsa struct {
+	// Permissions
 	Perms *Perms
-	Recv  Recv
+	// Async recv function
+	Recv Recv
 }
 
 // Environment configure the runtime environment
@@ -18,7 +23,9 @@ type Environment struct {
 	Args []string
 }
 
+// Perms permissions avaiable for Elsa
 type Perms struct {
+	// File system access
 	Fs bool
 }
 

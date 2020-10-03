@@ -10,7 +10,7 @@ import (
 )
 
 // PrepareRuntimeContext prepare the runtime and context with Elsa's internal ops
-// injects `__send` and `__recv` global dispatch functions into runtime 
+// injects `__send` and `__recv` global dispatch functions into runtime
 func PrepareRuntimeContext(cxt *quickjs.Context, jsruntime quickjs.Runtime, args []string, flags *options.Perms) {
 	// Assign perms
 	elsa := &options.Elsa{Perms: flags}
@@ -58,7 +58,7 @@ func Run(opt options.Options) {
 	cxt := jsruntime.NewContext()
 	defer cxt.Free()
 
-	// Prepare runtime and context with Elsa namespace 
+	// Prepare runtime and context with Elsa namespace
 	PrepareRuntimeContext(cxt, jsruntime, opt.Env.Args, opt.Perms)
 
 	// Evalutate the source
