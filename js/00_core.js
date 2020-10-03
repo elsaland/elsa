@@ -11,6 +11,7 @@ const __ops = {
   Fetch: 20,
   Log: 10,
   Plugin: 15,
+  FSMkdir: 9,
 };
 
 ((window) => {
@@ -73,6 +74,9 @@ const __ops = {
 
   Object.assign(window, {
     __sendAsync,
+<<<<<<< HEAD
     __sendEvent
+=======
+>>>>>>> master
   });
 })(globalThis);

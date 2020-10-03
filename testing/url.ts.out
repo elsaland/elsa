@@ -1,9 +1,0 @@
-(() => {
-  // url-loader:/tmp/mod.ts309977918
-  function hello(name) {
-    console.log(`Hi ${name}!`);
-  }
-
-  // testdata/url.ts
-  hello("Elsa");
-})();

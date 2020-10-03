@@ -2,6 +2,8 @@ name: Build
 
 on:
   push:
+    branches:
+      - master
   pull_request:
 
 jobs:
@@ -22,24 +24,8 @@ jobs:
           submodules: true
           path: "./src/github.com/elsaland/elsa"
 
-      - name: Setup node (for benchmarks)
-        uses: actions/setup-node@v1
-        with:
-          node-version: 14.x
-
       - name: Setup go
         uses: actions/setup-go@v2
-
-      - name: Setup deno (for benchmarks)
-        uses: denolib/setup-deno@v2
-        with:
-          deno-version: v1.3.3
-
-      - name: Install hyperfine (for benchmarks)
-        if: startsWith(matrix.os, 'ubuntu')
-        run: |
-          wget https://github.com/sharkdp/hyperfine/releases/download/v1.10.0/hyperfine_1.10.0_amd64.deb
-          sudo dpkg -i hyperfine_1.10.0_amd64.deb
 
       - name: Install go-bindata
         run: go get github.com/go-bindata/go-bindata
@@ -50,35 +36,15 @@ jobs:
 
       - name: Build
         working-directory: ./src/github.com/elsaland/elsa
-        run: go build -o elsa-${{ matrix.os }} .
+        run: go build --ldflags "-s -w" -o elsa-${{ matrix.os }} .
 
-      - name: Benchmarks
+      - name: Test
         working-directory: ./src/github.com/elsaland/elsa
-        if: startsWith(matrix.os, 'ubuntu')
-        run: |
-          make build
-          make benchmark
-
-      - name: Commit benchmarks
-        if: startsWith(matrix.os, 'ubuntu') && github.ref == 'refs/heads/master' && github.event_name == 'push'
-        working-directory: ./src/github.com/elsaland/elsa
-        # TODO: Elsa bot for pushing benchmarks
-        run: |
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          git add ./benchmarks
-          git commit -am "chores(auto): update benchmarks"
-          git push
+        if: startsWith(matrix.os,'ubuntu')
+        run: go test ./testing
 
       - name: Upload Elsa executables
         uses: actions/upload-artifact@v2
         with:
           name: elsa-${{ matrix.os }}
           path: ./src/github.com/elsaland/elsa/elsa-${{ matrix.os }}
-
-      - name: Upload benchmark data
-        uses: actions/upload-artifact@v2
-        if: startsWith(matrix.os, 'ubuntu')
-        with:
-          name: benchmark-data
-          path: ./src/github.com/elsaland/elsa/benchmarks

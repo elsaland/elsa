@@ -7,12 +7,14 @@ Benchmarks are available at `/benchmarks/`
 | Language                 | Go                | Rust        | C++              |
 | JS engine                | **Quickjs**       | V8          | V8               |
 | Bundler                  | Yes               | Yes         | No               |
-| URL imports              | Yes               | Yes         | No               |
+| HTTP imports             | Yes               | Yes         | No               |
 | Browser APIs             | Yes               | Yes         | No               |
 | In-built package manager | No                | No          | Yes              |
 | Compiling to executable  | **Yes**           | No          | No (third party) |
 | Explicit imports         | Yes               | Yes         | No               |
 | Secure by default        | Yes               | Yes         | No               |
-| Binary size              | **~20mb**         | ~44mb       | ~68mb            |
+| Binary size              | **~12mb** \*      | ~44mb \*    | ~68mb            |
+
+\* Lacks data for `Intl` and `toLocaleString`
 
 > The list is not complete and there is more to add, feel free to open a PR for the same.

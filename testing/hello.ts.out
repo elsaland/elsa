@@ -1,4 +1,0 @@
-(() => {
-  // testdata/hello.ts
-  console.log(1);
-})();

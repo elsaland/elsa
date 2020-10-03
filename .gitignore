@@ -4,6 +4,7 @@
 
 # testing files
 output.js
+benchmarks
 
 # executable
 elsa
