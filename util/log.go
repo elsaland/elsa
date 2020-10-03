@@ -6,9 +6,9 @@ import (
 )
 
 func LogError(scope, format string, a ...interface{}) {
-	fmt.Fprintf(color.Output, "%s: %s", color.New(color.FgRed, color.Bold).Sprint(scope), fmt.Sprintf(format, a))
+	fmt.Fprintf(color.Output, "%s: %s\n", color.New(color.FgRed, color.Bold).Sprint(scope), fmt.Sprintf(format, a...))
 }
 
 func LogInfo(scope, format string, a ...interface{}) {
-	fmt.Fprintf(color.Output, "%s: %s", color.New(color.FgGreen, color.Bold).Sprint(scope), fmt.Sprintf(format, a))
+	fmt.Fprintf(color.Output, "%s: %s\n", color.New(color.FgGreen, color.Bold).Sprint(scope), fmt.Sprintf(format, a...))
 }
