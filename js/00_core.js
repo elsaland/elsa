@@ -74,9 +74,6 @@ const __ops = {
 
   Object.assign(window, {
     __sendAsync,
-<<<<<<< HEAD
     __sendEvent
-=======
->>>>>>> master
   });
 })(globalThis);
