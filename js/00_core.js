@@ -19,61 +19,44 @@ const __ops = {
   let ee = new EventEmitter();
   let promiseTable = {};
   let promiseNextId = 1;
-  let eventNextId = 1;
   function init() {
     if (initialized) return;
     initialized = true;
     globalThis.__recv(__recvAsync);
   }
 
-  function initIter() {
-    if (initialized) return;
-    initialized = true;
-    globalThis.__recv(function(id, val) {
-      if (!id) return;
-      ee.emitEvent(id, [val])
-    });
-  }
-
   function __recvAsync(id, val) {
     if (!id) return;
     promiseTable[id].resolve(val);
   }
-  
-  async function __sendEvent(op, cb, ...args) {
-    initIter();
-    const id = eventNextId++;
-    ee.defineEvent(id);
-    ee.addListener(id, (v) => {
-      cb(v);
-    });
-    globalThis.__send(op, ...[id, ...args]);
-  }
 
-  async function __sendAsync(op, ...args) {
+  async function __sendAsync(op, cb, ...args) {
     init();
     const id = promiseNextId++;
+    if (typeof cb == "function") {
+      promiseTable[id] = { resolve: cb };
+      globalThis.__send(op, ...[id, ...args]);
+    } else {
+      let resolve, reject;
+      const promise = new Promise((resolve_, reject_) => {
+        resolve = resolve_;
+        reject = reject_;
+      });
+      promise.resolve = resolve;
+      promise.reject = reject;
 
-    let resolve, reject;
-    const promise = new Promise((resolve_, reject_) => {
-      resolve = resolve_;
-      reject = reject_;
-    });
-    promise.resolve = resolve;
-    promise.reject = reject;
+      promiseTable[id] = promise;
 
-    promiseTable[id] = promise;
+      globalThis.__send(op, ...[id, ...args]);
 
-    globalThis.__send(op, ...[id, ...args]);
-
-    const res = await promise;
-    if (res.ok) return res.ok;
-    else if (res.err) return res.err;
-    else throw new Error("Unknown error");
+      const res = await promise;
+      if (res.ok) return res.ok;
+      else if (res.err) return res.err;
+      else throw new Error("Unknown error");
+    }
   }
 
   Object.assign(window, {
     __sendAsync,
-    __sendEvent
   });
 })(globalThis);
