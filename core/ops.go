@@ -28,3 +28,8 @@ const (
 const (
 	Fetch = 20
 )
+
+// timers ops
+const (
+	Timers = 25
+)
