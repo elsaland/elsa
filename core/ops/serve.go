@@ -15,7 +15,7 @@ import (
 func Serve(ctx *quickjs.Context, cb func(val quickjs.Value) quickjs.Value, id quickjs.Value, host quickjs.Value) {
 	// Create a new channel for http requests
 	jobs := make(chan *http.Request, 100)
-	response := make(chan string, 100)
+	response := make(chan Response, 100)
 	// Create a wait group
 	var wg sync.WaitGroup
 	wg.Add(1)
@@ -24,7 +24,8 @@ func Serve(ctx *quickjs.Context, cb func(val quickjs.Value) quickjs.Value, id qu
 		http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 			jobs <- r
 			str := <-response
-			io.WriteString(w, str)
+			// w.WriteHeader(str.Status)
+			io.WriteString(w, str.Body)
 		})
 		http.ListenAndServe(host.String(), nil)
 		// Wait for server to end and close channel
@@ -51,10 +52,22 @@ func Serve(ctx *quickjs.Context, cb func(val quickjs.Value) quickjs.Value, id qu
 			RequestURI:       a.RequestURI,
 		})
 		// Trigger callback with quickjs value.
-		response <- cb(ctx.String(string(resp))).String()
+		rw := cb(ctx.String(string(resp))).String()
+		var rsp Response
+		json.Unmarshal([]byte(rw), &rsp)
+		response <- rsp
+
 	}
 	// Wait
 	wg.Wait()
+}
+
+// Response response returned by callback from js
+type Response struct {
+	// Status code
+	Status int32
+	// Body of the response
+	Body string
 }
 
 type Request struct {

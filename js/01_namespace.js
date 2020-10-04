@@ -15,7 +15,7 @@ globalThis.Elsa = {
     globalThis.__sendAsync(
       __ops.Serve,
       function (data) {
-        return cb(JSON.parse(data));
+        return JSON.stringify(cb(JSON.parse(data)));
       },
       host
     );
