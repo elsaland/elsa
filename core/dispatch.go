@@ -76,12 +76,12 @@ func ElsaSendNS(elsa *options.Elsa) func(ctx *quickjs.Context, this quickjs.Valu
 		case Serve:
 			id := args[1]
 			url := args[2]
-			cb := func(res quickjs.Value) {
+			cb := func(res quickjs.Value) quickjs.Value {
 				obj := ctx.Object()
 				defer obj.Free()
 				obj.Set("ok", res)
 
-				elsa.Recv(id, res)
+				return elsa.Recv(id, res)
 			}
 			ops.Serve(ctx, cb, id, url)
 			return ctx.Null()
@@ -115,9 +115,10 @@ func ElsaRecvNS(elsa *options.Elsa) func(ctx *quickjs.Context, this quickjs.Valu
 			ctx.ThrowError(fmt.Errorf("recv cannot be called more than once"))
 			return ctx.Null()
 		}
-		elsa.Recv = func(id quickjs.Value, val quickjs.Value) {
+		elsa.Recv = func(id quickjs.Value, val quickjs.Value) quickjs.Value {
 			result := fn.Call(id, val)
 			defer result.Free()
+			return result
 		}
 		return ctx.Null()
 	}

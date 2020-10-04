@@ -27,7 +27,7 @@ const __ops = {
 
   function __recvAsync(id, val) {
     if (!id) return;
-    promiseTable[id].resolve(val);
+    return promiseTable[id].resolve(val);
   }
 
   async function __sendAsync(op, cb, ...args) {

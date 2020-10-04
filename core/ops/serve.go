@@ -2,7 +2,7 @@ package ops
 
 import (
 	"encoding/json"
-	"fmt"
+	"io"
 	"net/http"
 	"net/url"
 	"sync"
@@ -12,17 +12,19 @@ import (
 
 // Serve HTTP server op. A server is spawned in a goroutine and communicates the request struct via
 // channels. Requests are marshal into JSON and callback function is called.
-func Serve(ctx *quickjs.Context, cb func(val quickjs.Value), id quickjs.Value, host quickjs.Value) {
+func Serve(ctx *quickjs.Context, cb func(val quickjs.Value) quickjs.Value, id quickjs.Value, host quickjs.Value) {
 	// Create a new channel for http requests
 	jobs := make(chan *http.Request, 100)
+	response := make(chan string, 100)
 	// Create a wait group
 	var wg sync.WaitGroup
 	wg.Add(1)
 	// Run the http server in a goroutine and channel the response
 	go func() {
 		http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-			fmt.Fprintf(w, "Hello, %s!", r.URL.Path[1:])
 			jobs <- r
+			str := <-response
+			io.WriteString(w, str)
 		})
 		http.ListenAndServe(host.String(), nil)
 		// Wait for server to end and close channel
@@ -49,7 +51,7 @@ func Serve(ctx *quickjs.Context, cb func(val quickjs.Value), id quickjs.Value, h
 			RequestURI:       a.RequestURI,
 		})
 		// Trigger callback with quickjs value.
-		cb(ctx.String(string(resp)))
+		response <- cb(ctx.String(string(resp))).String()
 	}
 	// Wait
 	wg.Wait()

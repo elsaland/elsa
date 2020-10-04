@@ -5,7 +5,7 @@ import (
 )
 
 // Recv callback for an async op
-type Recv func(id quickjs.Value, val quickjs.Value)
+type Recv func(id quickjs.Value, val quickjs.Value) quickjs.Value
 
 // Elsa represents general data for the runtime
 type Elsa struct {
