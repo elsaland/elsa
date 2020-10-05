@@ -3,6 +3,7 @@ package ops
 import (
 	"encoding/json"
 	"io"
+	"log"
 	"net/http"
 	"net/url"
 	"sync"
@@ -12,7 +13,7 @@ import (
 
 // Serve HTTP server op. A server is spawned in a goroutine and communicates the request struct via
 // channels. Requests are marshal into JSON and callback function is called.
-func Serve(ctx *quickjs.Context, cb func(val quickjs.Value) quickjs.Value, id quickjs.Value, host quickjs.Value) {
+func Serve(ctx *quickjs.Context, cb func(val quickjs.Value) string, id quickjs.Value, host quickjs.Value) {
 	// Create a new channel for http requests
 	jobs := make(chan *http.Request, 100)
 	response := make(chan Response, 100)
@@ -24,7 +25,7 @@ func Serve(ctx *quickjs.Context, cb func(val quickjs.Value) quickjs.Value, id qu
 		http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 			jobs <- r
 			str := <-response
-			// w.WriteHeader(str.Status)
+			w.WriteHeader(int(str.Status))
 			io.WriteString(w, str.Body)
 		})
 		http.ListenAndServe(host.String(), nil)
@@ -52,9 +53,12 @@ func Serve(ctx *quickjs.Context, cb func(val quickjs.Value) quickjs.Value, id qu
 			RequestURI:       a.RequestURI,
 		})
 		// Trigger callback with quickjs value.
-		rw := cb(ctx.String(string(resp))).String()
+		rw := cb(ctx.String(string(resp)))
 		var rsp Response
-		json.Unmarshal([]byte(rw), &rsp)
+		e := json.Unmarshal([]byte(rw), &rsp)
+		if e != nil {
+			log.Fatal(e)
+		}
 		response <- rsp
 
 	}
