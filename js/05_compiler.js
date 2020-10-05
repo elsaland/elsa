@@ -1,3 +1,4 @@
+// Copyright 2020 elsa.land authors. All rights reserved. MIT license.
 var ee = new EventEmitter();
 ee.defineEvents(["typecheck"]);
 ee.addListener("typecheck", (x) => {

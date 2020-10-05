@@ -1,3 +1,4 @@
+// Copyright 2020 elsa.land authors. All rights reserved. MIT license.
 globalThis.Elsa = {
   readFile: (arg) => {
     return globalThis.__send(__ops.FSRead, arg);
