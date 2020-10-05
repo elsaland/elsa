@@ -76,12 +76,12 @@ func ElsaSendNS(elsa *options.Elsa) func(ctx *quickjs.Context, this quickjs.Valu
 		case Serve:
 			id := args[1]
 			url := args[2]
-			cb := func(res quickjs.Value) quickjs.Value {
+			cb := func(res quickjs.Value) string {
 				obj := ctx.Object()
 				defer obj.Free()
 				obj.Set("ok", res)
-
-				return elsa.Recv(id, res)
+				rtrn := elsa.Recv(id, res)
+				return rtrn.String()
 			}
 			ops.Serve(ctx, cb, id, url)
 			return ctx.Null()
@@ -117,7 +117,7 @@ func ElsaRecvNS(elsa *options.Elsa) func(ctx *quickjs.Context, this quickjs.Valu
 		}
 		elsa.Recv = func(id quickjs.Value, val quickjs.Value) quickjs.Value {
 			result := fn.Call(id, val)
-			defer result.Free()
+			// defer result.Free()
 			return result
 		}
 		return ctx.Null()
