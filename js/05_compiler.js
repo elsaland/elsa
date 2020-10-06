@@ -44,7 +44,6 @@ function typeCheck(file, source) {
   const files = { [dummyFilePath]: textAst, "/lib.es6.d.ts": dtsAST };
   const host = {
     fileExists: (filePath) => { 
-      console.log(`fileExists: ${filePath}`);
       return files[filePath] != null || Elsa.exists(filePath) 
     },
     directoryExists: (dirPath) => dirPath === "/",
@@ -54,14 +53,12 @@ function typeCheck(file, source) {
     getNewLine: () => "\n",
     getDefaultLibFileName: () => "/lib.es6.d.ts",
     getSourceFile: (filePath) => {
-      console.log(`getsourcefile: ${filePath}`);
       if(files[filePath] != null) return files[filePath]
       else {
         return ts.createSourceFile(filePath, Elsa.readFile(filePath), ts.ScriptTarget.ES6);
       };
     },
     readFile: (filePath) => {
-      console.log(`readFile: ${filePath}`);
      return filePath === dummyFilePath ? text : Elsa.readFile(filePath)
     },
     useCaseSensitiveFileNames: () => true,
@@ -107,10 +104,12 @@ function resolveModuleNames(
   containingFile
  ) {
   const resolvedModules = [];
-  console.log(moduleNames)
   for (const moduleName of moduleNames) {
-      console.log(join(containingFile, "..", moduleName))
-      resolvedModules.push({ resolvedFileName: join(containingFile, "..", moduleName) });
+      let fileName = join(containingFile, "..", moduleName)
+      if (moduleName.startsWith("https://")) {
+        fileName = moduleName.replace("https://", "/tmp/")
+      }
+      resolvedModules.push({ resolvedFileName: fileName });
   }
   return resolvedModules;
 }
