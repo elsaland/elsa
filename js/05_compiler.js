@@ -30,21 +30,25 @@ const IGNORED_DIAGNOSTICS = [
   7016,
 ];
 
-const options = {allowNonTsExtensions: true};
+const options = { allowNonTsExtensions: true };
 
 function typeCheck(file, source) {
   const dummyFilePath = file;
-  const textAst = ts.createSourceFile(dummyFilePath, source, ts.ScriptTarget.ES6);
+  const textAst = ts.createSourceFile(
+    dummyFilePath,
+    source,
+    ts.ScriptTarget.ES6
+  );
   const dtsAST = ts.createSourceFile(
     "/lib.es6.d.ts",
     Asset("typescript/lib.es6.d.ts"),
     ts.ScriptTarget.ES6
   );
-  
+
   const files = { [dummyFilePath]: textAst, "/lib.es6.d.ts": dtsAST };
   const host = {
-    fileExists: (filePath) => { 
-      return files[filePath] != null || Elsa.exists(filePath) 
+    fileExists: (filePath) => {
+      return files[filePath] != null || Elsa.exists(filePath);
     },
     directoryExists: (dirPath) => dirPath === "/",
     getCurrentDirectory: () => Elsa.cwd(),
@@ -53,17 +57,21 @@ function typeCheck(file, source) {
     getNewLine: () => "\n",
     getDefaultLibFileName: () => "/lib.es6.d.ts",
     getSourceFile: (filePath) => {
-      if(files[filePath] != null) return files[filePath]
+      if (files[filePath] != null) return files[filePath];
       else {
-        return ts.createSourceFile(filePath, Elsa.readFile(filePath), ts.ScriptTarget.ES6);
-      };
+        return ts.createSourceFile(
+          filePath,
+          Elsa.readFile(filePath),
+          ts.ScriptTarget.ES6
+        );
+      }
     },
     readFile: (filePath) => {
-     return filePath === dummyFilePath ? text : Elsa.readFile(filePath)
+      return filePath === dummyFilePath ? text : Elsa.readFile(filePath);
     },
     useCaseSensitiveFileNames: () => true,
     writeFile: () => {},
-    resolveModuleNames
+    resolveModuleNames,
   };
   const program = ts.createProgram({
     options,
@@ -72,7 +80,10 @@ function typeCheck(file, source) {
   });
   let diags = "";
   ts.getPreEmitDiagnostics(program).forEach((diagnostic) => {
-    if (diagnostic.code == 5023 || IGNORED_DIAGNOSTICS.includes(diagnostic.code)) {
+    if (
+      diagnostic.code == 5023 ||
+      IGNORED_DIAGNOSTICS.includes(diagnostic.code)
+    ) {
       return;
     }
     if (diagnostic.file) {
@@ -97,19 +108,16 @@ function typeCheck(file, source) {
     }
   });
   Report(diags);
-};
+}
 
-function resolveModuleNames(
-  moduleNames,
-  containingFile
- ) {
+function resolveModuleNames(moduleNames, containingFile) {
   const resolvedModules = [];
   for (const moduleName of moduleNames) {
-      let fileName = join(containingFile, "..", moduleName)
-      if (moduleName.startsWith("https://")) {
-        fileName = moduleName.replace("https://", "/tmp/")
-      }
-      resolvedModules.push({ resolvedFileName: fileName });
+    let fileName = join(containingFile, "..", moduleName);
+    if (moduleName.startsWith("https://")) {
+      fileName = moduleName.replace("https://", "/tmp/");
+    }
+    resolvedModules.push({ resolvedFileName: fileName });
   }
   return resolvedModules;
 }

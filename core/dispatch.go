@@ -45,10 +45,10 @@ func ElsaSendNS(elsa *options.Elsa) func(ctx *quickjs.Context, this quickjs.Valu
 			CheckFs(elsa.Perms)
 			val := fs.Cwd(ctx)
 			return val
-		case FSStats:
+		case FSStat:
 			CheckFs(elsa.Perms)
 			file := args[1]
-			val := fs.Stats(ctx, file)
+			val := fs.Stat(ctx, file)
 			return val
 		case FSRemove:
 			CheckFs(elsa.Perms)

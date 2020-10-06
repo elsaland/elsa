@@ -9,8 +9,8 @@ globalThis.Elsa = {
   exists: (arg) => {
     return globalThis.__send(__ops.FSExists, arg);
   },
-  stats: (arg) => {
-    return JSON.parse(globalThis.__send(__ops.FSStats, arg));
+  stat: (arg) => {
+    return JSON.parse(globalThis.__send(__ops.FSStat, arg));
   },
   serve: async function (host, cb) {
     globalThis.__sendAsync(
