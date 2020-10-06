@@ -6,64 +6,60 @@ import (
 	"log"
 	"net/http"
 	"net/url"
-	"sync"
 
 	"github.com/elsaland/quickjs"
 )
 
-// Serve HTTP server op. A server is spawned in a goroutine and communicates the request struct via
-// channels. Requests are marshal into JSON and callback function is called.
-func Serve(ctx *quickjs.Context, cb func(val quickjs.Value) string, id quickjs.Value, host quickjs.Value) {
-	// Create a new channel for http requests
-	jobs := make(chan *http.Request, 100)
-	response := make(chan Response, 100)
-	// Create a wait group
-	var wg sync.WaitGroup
-	wg.Add(1)
-	// Run the http server in a goroutine and channel the response
+// Serve listens for HTTP requests to host and calls callback sequentially on
+// every request.
+func Serve(ctx *quickjs.Context, callback func(request quickjs.Value) (response string),
+	id quickjs.Value, host quickjs.Value) {
+	var (
+		reqs  = make(chan *http.Request)
+		resps = make(chan Response)
+		errch = make(chan error, 1)
+	)
 	go func() {
 		http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-			jobs <- r
-			str := <-response
-			w.WriteHeader(int(str.Status))
-			io.WriteString(w, str.Body)
+			reqs <- r
+			resp := <-resps
+			w.WriteHeader(int(resp.Status))
+			io.WriteString(w, resp.Body)
 		})
-		http.ListenAndServe(host.String(), nil)
-		// Wait for server to end and close channel
-		defer wg.Done()
-		close(jobs)
+		errch <- http.ListenAndServe(host.String(), nil)
+		close(reqs)
 	}()
-	// Listen to channel for requests
 	for {
-		a := <-jobs
-		// Marhshal request
-		resp, _ := json.Marshal(Request{
-			Method:           a.Method,
-			URL:              a.URL,
-			Proto:            a.Proto,
-			ProtoMajor:       a.ProtoMajor,
-			Header:           a.Header,
-			ContentLength:    a.ContentLength,
-			TransferEncoding: a.TransferEncoding,
-			Close:            a.Close,
-			Host:             a.Host,
-			Form:             a.Form,
-			PostForm:         a.PostForm,
-			RemoteAddr:       a.RemoteAddr,
-			RequestURI:       a.RequestURI,
-		})
-		// Trigger callback with quickjs value.
-		rw := cb(ctx.String(string(resp)))
-		var rsp Response
-		e := json.Unmarshal([]byte(rw), &rsp)
-		if e != nil {
-			log.Fatal(e)
+		select {
+		case <-errch:
+			// TODO: throw the error as an exception to the JS script
+			// see https://github.com/elsaland/elsa/issues/75
+			break
+		case req := <-reqs:
+			reqjson, _ := json.Marshal(Request{
+				Method:           req.Method,
+				URL:              req.URL,
+				Proto:            req.Proto,
+				ProtoMajor:       req.ProtoMajor,
+				Header:           req.Header,
+				ContentLength:    req.ContentLength,
+				TransferEncoding: req.TransferEncoding,
+				Close:            req.Close,
+				Host:             req.Host,
+				Form:             req.Form,
+				PostForm:         req.PostForm,
+				RemoteAddr:       req.RemoteAddr,
+				RequestURI:       req.RequestURI,
+			})
+			respjson := callback(ctx.String(string(reqjson)))
+			var resp Response
+			err := json.Unmarshal([]byte(respjson), &resp)
+			if err != nil {
+				log.Fatal(err)
+			}
+			resps <- resp
 		}
-		response <- rsp
-
 	}
-	// Wait
-	wg.Wait()
 }
 
 // Response response returned by callback from js
