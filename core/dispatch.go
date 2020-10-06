@@ -65,6 +65,7 @@ func ElsaSendNS(elsa *options.Elsa) func(ctx *quickjs.Context, this quickjs.Valu
 			defer val.Free()
 			return val
 		case Fetch:
+			CheckNet(elsa.Perms)
 			one := args[1]
 			url := args[2]
 			body := ops.Fetch(ctx, url)
@@ -100,6 +101,14 @@ func ElsaSendNS(elsa *options.Elsa) func(ctx *quickjs.Context, this quickjs.Valu
 func CheckFs(perms *options.Perms) {
 	if !perms.Fs {
 		util.LogError("Perms Error: ", "Filesystem access is blocked.")
+		os.Exit(1)
+	}
+}
+
+// CheckNet utility to check whether net access is avaliable or not
+func CheckNet(perms *options.Perms) {
+	if !perms.Net {
+		util.LogError("Perms Error: ", "Net is blocked.")
 		os.Exit(1)
 	}
 }

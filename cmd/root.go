@@ -27,6 +27,7 @@ func Execute(elsa Elsa) {
 	color.NoColor = config.Options.NoColor
 
 	var fsFlag bool
+	var netFlag bool
 	var minifyFlag bool
 
 	var rootCmd = &cobra.Command{
@@ -48,7 +49,7 @@ func Execute(elsa Elsa) {
 				opt := options.Options{
 					SourceFile: args[0],
 					Source:     bundle,
-					Perms:      &options.Perms{fsFlag},
+					Perms:      &options.Perms{fsFlag, netFlag},
 					Env:        env,
 				}
 				elsa.Run(opt)
@@ -57,6 +58,7 @@ func Execute(elsa Elsa) {
 	}
 
 	runCmd.Flags().BoolVar(&fsFlag, "fs", false, "Allow file system access")
+	runCmd.Flags().BoolVar(&netFlag, "net", false, "Allow net access")
 
 	var devCmd = &cobra.Command{
 		Use:   "dev [file]",
@@ -73,7 +75,7 @@ func Execute(elsa Elsa) {
 				opt := options.Options{
 					SourceFile: args[0],
 					Source:     bundle,
-					Perms:      &options.Perms{fsFlag},
+					Perms:      &options.Perms{fsFlag, netFlag},
 					Env:        env,
 				}
 				og, _ := ioutil.ReadFile(args[0])
