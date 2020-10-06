@@ -14,26 +14,33 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// Elsa functions expected to be passed into cmd
 type Elsa struct {
 	Run    func(opt options.Options)
 	Dev    func(og string, opt options.Options)
 	Bundle func(file string, minify bool, config *module.Config) string
 }
 
+// Execute start the CLI
 func Execute(elsa Elsa) {
+	// TODO: need to come to a concrete conclusion
+	// Load mod.toml (if exists)
 	config, err := module.ConfigLoad()
 	util.Check(err)
 
 	color.NoColor = config.Options.NoColor
 
 	var fsFlag bool
+	var netFlag bool
 	var minifyFlag bool
 
+	// Rool command
 	var rootCmd = &cobra.Command{
 		Use:   "elsa [file]",
 		Short: "Elsa is a simple Javascript and Typescript runtime written in Go",
 	}
 
+	// Run subcommand
 	var runCmd = &cobra.Command{
 		Use:   "run [file]",
 		Short: "Run a Javascript and Typescript source file",
@@ -48,7 +55,7 @@ func Execute(elsa Elsa) {
 				opt := options.Options{
 					SourceFile: args[0],
 					Source:     bundle,
-					Perms:      &options.Perms{fsFlag},
+					Perms:      &options.Perms{fsFlag, netFlag},
 					Env:        env,
 				}
 				elsa.Run(opt)
@@ -56,8 +63,11 @@ func Execute(elsa Elsa) {
 		},
 	}
 
+	// --fs and --net flags
 	runCmd.Flags().BoolVar(&fsFlag, "fs", false, "Allow file system access")
+	runCmd.Flags().BoolVar(&netFlag, "net", false, "Allow net access")
 
+	// dev subcommand to run script in development mode
 	var devCmd = &cobra.Command{
 		Use:   "dev [file]",
 		Short: "Run a script in development mode.",
@@ -73,7 +83,7 @@ func Execute(elsa Elsa) {
 				opt := options.Options{
 					SourceFile: args[0],
 					Source:     bundle,
-					Perms:      &options.Perms{fsFlag},
+					Perms:      &options.Perms{fsFlag, netFlag},
 					Env:        env,
 				}
 				og, _ := ioutil.ReadFile(args[0])
@@ -82,6 +92,7 @@ func Execute(elsa Elsa) {
 		},
 	}
 
+	// bundle subcommand to bundle a source file
 	var bundleCmd = &cobra.Command{
 		Use:   "bundle [file]",
 		Short: "Bundle your script to a single javascript file",
@@ -95,8 +106,10 @@ func Execute(elsa Elsa) {
 		},
 	}
 
+	// --minify flag for bundling
 	bundleCmd.Flags().BoolVarP(&minifyFlag, "minify", "m", false, "Minify the output bundle")
 
+	// pkg subcommand for trigger the packager
 	var pkgCmd = &cobra.Command{
 		Use:   "pkg [file]",
 		Short: "Package your script to a standalone executable.",
@@ -109,8 +122,10 @@ func Execute(elsa Elsa) {
 		},
 	}
 
+	// Add subcommands to root command
 	rootCmd.AddCommand(bundleCmd, runCmd, pkgCmd, devCmd)
 
+	// Execute! :)
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
