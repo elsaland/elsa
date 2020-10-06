@@ -11,13 +11,9 @@ import (
 	"github.com/elsaland/quickjs"
 )
 
-func Compile(source string, fn func(val quickjs.Value), flags *options.Perms, args []string) {
+func Compile(source string, sourceFile string, fn func(val quickjs.Value), flags *options.Perms, args []string) {
 	data, err := core.Asset("typescript/typescript.js")
 	if err != nil {
-		panic("Asset was not found.")
-	}
-	dts, er := core.Asset("typescript/lib.es6.d.ts")
-	if er != nil {
 		panic("Asset was not found.")
 	}
 
@@ -36,16 +32,20 @@ func Compile(source string, fn func(val quickjs.Value), flags *options.Perms, ar
 		return ctx.Null()
 	}
 	d := func(ctx *quickjs.Context, this quickjs.Value, args []quickjs.Value) quickjs.Value {
-		return ctx.String(string(dts))
+		asset, er := core.Asset(args[0].String())
+		if er != nil {
+			panic("Asset was not found.")
+		}
+		return ctx.String(string(asset))
 	}
-	globals.Set("__report", context.Function(report))
-	globals.Set("__getDTS", context.Function(d))
-	bundle := string(data) + jsCheck(source)
+	globals.Set("Report", context.Function(report))
+	globals.Set("Asset", context.Function(d))
+	bundle := string(data) + jsCheck(source, sourceFile)
 	result, err := context.Eval(bundle)
 	util.Check(err)
 	defer result.Free()
 }
 
-func jsCheck(source string) string {
-	return fmt.Sprintf("ee.emitEvent('typecheck', [`%s`]);", source)
+func jsCheck(source, sourceFile string) string {
+	return fmt.Sprintf("typeCheck(`%s`, `%s`);", sourceFile, source)
 }

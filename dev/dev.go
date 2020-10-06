@@ -13,20 +13,20 @@ var AllowAll = options.Perms{
 }
 
 // TypeCheck run typechecking and report the diagnostics
-func TypeCheck(source string, args []string) {
+func TypeCheck(source string, sourceFile string, args []string) {
 	// Callback function for reporting diagnostics to the user
 	a := func(val quickjs.Value) {
 		ReportDiagnostics(val)
 	}
 	// Trigger the compiler with the report callback and source
 	// allow all perms and specify os args
-	Compile(source, a, &AllowAll, args)
+	Compile(source, sourceFile, a, &AllowAll, args)
 }
 
 // RunDev invoke typechecking and execute
-func RunDev(opt options.Options) {
+func RunDev(og string, opt options.Options) {
 	// Run typechecking
-	TypeCheck(opt.Source, opt.Env.Args)
+	TypeCheck(og, opt.SourceFile, opt.Env.Args)
 	// Execute bundled script into a quickJS runtime
 	core.Run(opt)
 }
