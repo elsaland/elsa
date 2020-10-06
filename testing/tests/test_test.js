@@ -1,12 +1,4 @@
-function add(a, b) {
-  return a + b;
-}
-
-function eq(a, b) {
-  if (a !== b) {
-    throw new Error(`Assertion failed: ${a} !== ${b}`);
-  }
-}
+import { add, eq } from "./utils.ts";
 
 Elsa.tests({
   "adds numbers": function () {
@@ -18,7 +10,7 @@ Elsa.tests({
     eq(-2, add(2, -4));
   },
 
-  "add fail": function () {
+  "add fails": function () {
     eq(2, add(2, 1));
   },
 });
