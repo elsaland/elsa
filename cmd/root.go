@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"io/ioutil"
 	"os"
 
 	"github.com/elsaland/elsa/core/options"
@@ -15,7 +16,7 @@ import (
 
 type Elsa struct {
 	Run    func(opt options.Options)
-	Dev    func(opt options.Options)
+	Dev    func(og string, opt options.Options)
 	Bundle func(file string, minify bool, config *module.Config) string
 }
 
@@ -75,7 +76,8 @@ func Execute(elsa Elsa) {
 					Perms:      &options.Perms{fsFlag},
 					Env:        env,
 				}
-				elsa.Dev(opt)
+				og, _ := ioutil.ReadFile(args[0])
+				elsa.Dev(string(og), opt)
 			}
 		},
 	}

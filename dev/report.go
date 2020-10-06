@@ -1,10 +1,11 @@
 package dev
 
 import (
-	"github.com/elsaland/elsa/util"
+	"fmt"
+
 	"github.com/elsaland/quickjs"
 )
 
 func ReportDiagnostics(diagnostics quickjs.Value) {
-	util.LogError(diagnostics.String(), "")
+	fmt.Println(diagnostics.String(), "")
 }
