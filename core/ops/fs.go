@@ -58,7 +58,7 @@ type FileInfo struct {
 	IsDir   bool
 }
 
-func (fs *FsDriver) Stats(ctx *quickjs.Context, path quickjs.Value) quickjs.Value {
+func (fs *FsDriver) Stat(ctx *quickjs.Context, path quickjs.Value) quickjs.Value {
 	entry, err := fs.Fs.Stat(path.String())
 	util.Check(err)
 	f := FileInfo{

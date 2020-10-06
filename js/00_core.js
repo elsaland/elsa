@@ -5,7 +5,7 @@ const __ops = {
   FSExists: 3,
   FSDirExists: 4,
   FSCwd: 5,
-  FSStats: 6,
+  FSStat: 6,
   Serve: 25,
   FSRemove: 7,
   Fetch: 20,
