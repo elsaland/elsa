@@ -93,7 +93,8 @@ export class Sha1 {
             blocks[i >> 2] |= (0x80 | ((code >> 6) & 0x3f)) << SHIFT[i++ & 3];
             blocks[i >> 2] |= (0x80 | (code & 0x3f)) << SHIFT[i++ & 3];
           } else {
-            code = 0x10000 +
+            code =
+              0x10000 +
               (((code & 0x3ff) << 10) | (msg.charCodeAt(++index) & 0x3ff));
             blocks[i >> 2] |= (0xf0 | (code >> 18)) << SHIFT[i++ & 3];
             blocks[i >> 2] |= (0x80 | ((code >> 12) & 0x3f)) << SHIFT[i++ & 3];
