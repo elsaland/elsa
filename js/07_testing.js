@@ -4,10 +4,10 @@ Elsa.tests = function (tests) {
     let testAction = tests[testName];
     try {
       testAction();
-      console.log(`Test: ${testName} OK`);
+      console.log(`TEST ${testName} ... OK`);
     } catch (e) {
       failures++;
-      console.error(`Test: ${testName} FAILED ${e}`);
+      console.error(`TEST ${testName} ... FAILED ${e}`);
       console.error(e.stack);
     }
   }
