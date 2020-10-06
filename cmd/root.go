@@ -3,7 +3,9 @@ package cmd
 import (
 	"fmt"
 	"io/ioutil"
+	"log"
 	"os"
+	"path/filepath"
 
 	"github.com/elsaland/elsa/core/options"
 	"github.com/elsaland/elsa/module"
@@ -122,12 +124,56 @@ func Execute(elsa Elsa) {
 		},
 	}
 
+	// test subcommand to run test files
+	var testCmd = &cobra.Command{
+		Use:   "test",
+		Short: "Run tests for your Elsa scripts.",
+		Long:  `Run tests for your Elsa scripts. All files matching *_test.js are run.`,
+		Run: func(cmd *cobra.Command, args []string) {
+			env := options.Environment{
+				NoColor: config.Options.NoColor,
+				Args:    args,
+			}
+			opt := options.Options{
+				Perms: &options.Perms{fsFlag, netFlag},
+				Env:   env,
+			}
+			tests := CollectTests()
+			for _, test := range tests {
+				opt.SourceFile = test
+				bundle := elsa.Bundle(test, true, config)
+				opt.Source = bundle
+				elsa.Run(opt)
+			}
+		},
+	}
+
 	// Add subcommands to root command
-	rootCmd.AddCommand(bundleCmd, runCmd, pkgCmd, devCmd)
+	rootCmd.AddCommand(bundleCmd, runCmd, pkgCmd, devCmd, testCmd)
 
 	// Execute! :)
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
+}
+
+func CollectTests() []string {
+	var testFiles []string
+	e := filepath.Walk(".", func(path string, info os.FileInfo, err error) error {
+		if err == nil {
+			matched, err := filepath.Match("*_test.js", info.Name())
+			if err != nil {
+				return nil
+			}
+			if matched {
+				testFiles = append(testFiles, path)
+			}
+		}
+		return nil
+	})
+	if e != nil {
+		log.Fatal(e)
+	}
+	return testFiles
 }

@@ -3,7 +3,6 @@ package bundler
 import (
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 	"net/url"
 	"os"
@@ -55,7 +54,7 @@ func BundleModule(file string, minify bool, config *module.Config) string {
 		},
 	})
 	if bundle.Errors != nil {
-		BundlePanic(bundle)
+		os.Exit(1)
 	}
 	return string(bundle.OutputFiles[0].Contents[:])
 }
@@ -129,15 +128,7 @@ func BundleURL(uri string, minify bool) string {
 		},
 	})
 	if bundle.Errors != nil {
-		BundlePanic(bundle)
+		os.Exit(1)
 	}
 	return file.Name()
-}
-
-func BundlePanic(bundle api.BuildResult) {
-	var errs string
-	for _, err := range bundle.Errors {
-		errs = errs + ", " + err.Text
-	}
-	log.Panicf("Errors during the bundle operation: %s\n", errs[1:])
 }
