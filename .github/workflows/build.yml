@@ -27,6 +27,9 @@ jobs:
       - name: Setup go
         uses: actions/setup-go@v2
 
+      - name: Print go env
+        run: go env
+
       - name: Install go-bindata
         run: go get github.com/go-bindata/go-bindata
 
