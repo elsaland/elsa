@@ -2,6 +2,10 @@ build:
 	go run ./bootstrap
 	go build -o elsa .
 
+release:
+	go run ./bootstrap
+	go build --ldflags "-s -w" -o elsa .
+
 benchmark:
 	# console benchmarks
 	hyperfine './elsa run ./testing/web/console.js' 'deno run ./testing/web/console.js' 'node ./testing/console.js' -s full -r 100 --warmup 50 --export-json ./benchmarks/console.json
@@ -31,5 +35,8 @@ fmt:
 check-fmt:
 	gofmt -l .
 	prettier --check .
+
+minify-typescript:
+	terser --compress --mangle -o ./typescript/typescript.js -- ./typescript/typescript.js
 
 .PHONY: build benchmark clean-cache fmt check-fmt
