@@ -151,6 +151,10 @@ func Execute(elsa Elsa) {
 		},
 	}
 
+	// --net and --fs perms
+	testCmd.Flags().BoolVar(&fsFlag, "fs", false, "Allow file system access")
+	testCmd.Flags().BoolVar(&netFlag, "net", false, "Allow net access")
+
 	// Add subcommands to root command
 	rootCmd.AddCommand(bundleCmd, runCmd, pkgCmd, devCmd, testCmd)
 
