@@ -45,10 +45,10 @@ func ElsaSendNS(elsa *options.Elsa) func(ctx *quickjs.Context, this quickjs.Valu
 			CheckFs(elsa.Perms)
 			val := fs.Cwd(ctx)
 			return val
-		case FSStats:
+		case FSStat:
 			CheckFs(elsa.Perms)
 			file := args[1]
-			val := fs.Stats(ctx, file)
+			val := fs.Stat(ctx, file)
 			return val
 		case FSRemove:
 			CheckFs(elsa.Perms)
@@ -68,10 +68,26 @@ func ElsaSendNS(elsa *options.Elsa) func(ctx *quickjs.Context, this quickjs.Valu
 			defer val.Free()
 			return val
 		case Fetch:
+			CheckNet(elsa.Perms)
 			one := args[1]
 			url := args[2]
 			body := ops.Fetch(ctx, url)
-			elsa.Recv(one, body)
+			obj := ctx.Object()
+			defer obj.Free()
+			obj.Set("ok", body)
+			elsa.Recv(one, obj)
+			return ctx.Null()
+		case Serve:
+			id := args[1]
+			url := args[2]
+			cb := func(res quickjs.Value) string {
+				obj := ctx.Object()
+				defer obj.Free()
+				obj.Set("ok", res)
+				rtrn := elsa.Recv(id, res)
+				return rtrn.String()
+			}
+			ops.Serve(ctx, cb, id, url)
 			return ctx.Null()
 		case FSMkdir:
 			CheckFs(elsa.Perms)
@@ -92,6 +108,14 @@ func CheckFs(perms *options.Perms) {
 	}
 }
 
+// CheckNet utility to check whether net access is avaliable or not
+func CheckNet(perms *options.Perms) {
+	if !perms.Net {
+		util.LogError("Perms Error: ", "Net is blocked.")
+		os.Exit(1)
+	}
+}
+
 // ElsaRecvNS Native function corresponding to the Javascript global `__recv`
 // It is binded with `__recv` and accepts arguments including recv ID of the async function
 func ElsaRecvNS(elsa *options.Elsa) func(ctx *quickjs.Context, this quickjs.Value, args []quickjs.Value) quickjs.Value {
@@ -103,9 +127,10 @@ func ElsaRecvNS(elsa *options.Elsa) func(ctx *quickjs.Context, this quickjs.Valu
 			ctx.ThrowError(fmt.Errorf("recv cannot be called more than once"))
 			return ctx.Null()
 		}
-		elsa.Recv = func(id quickjs.Value, val quickjs.Value) {
+		elsa.Recv = func(id quickjs.Value, val quickjs.Value) quickjs.Value {
 			result := fn.Call(id, val)
-			defer result.Free()
+			// defer result.Free()
+			return result
 		}
 		return ctx.Null()
 	}

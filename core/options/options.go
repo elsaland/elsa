@@ -5,7 +5,7 @@ import (
 )
 
 // Recv callback for an async op
-type Recv func(id quickjs.Value, val quickjs.Value)
+type Recv func(id quickjs.Value, val quickjs.Value) quickjs.Value
 
 // Elsa represents general data for the runtime
 type Elsa struct {
@@ -21,12 +21,16 @@ type Environment struct {
 	NoColor bool
 	// Command-line args to pass into Elsa.args
 	Args []string
+	// Whether to run tests associated with `Elsa.tests()`
+	RunTests bool
 }
 
 // Perms permissions avaiable for Elsa
 type Perms struct {
 	// File system access
 	Fs bool
+	// Net access
+	Net bool
 }
 
 // Options options for dispatching a new Elsa + QuickJS runtime

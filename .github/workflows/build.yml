@@ -27,6 +27,9 @@ jobs:
       - name: Setup go
         uses: actions/setup-go@v2
 
+      - name: Print go env
+        run: go env
+
       - name: Install go-bindata
         run: go get github.com/go-bindata/go-bindata
 
@@ -41,7 +44,9 @@ jobs:
       - name: Test
         working-directory: ./src/github.com/elsaland/elsa
         if: startsWith(matrix.os,'ubuntu')
-        run: go test ./testing
+        run: |
+          go test ./testing
+          ./elsa-${{ matrix.os }} test --fs --net
 
       - name: Upload Elsa executables
         uses: actions/upload-artifact@v2

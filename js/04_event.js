@@ -1,3 +1,5 @@
+// Copyright 2020 elsa.land authors. All rights reserved. MIT license.
+
 /**
  * Class for managing events.
  * Can be extended to provide event functionality in other classes.

@@ -9,7 +9,8 @@ const (
 	FSExists    = 3
 	FSDirExists = 4
 	FSCwd       = 5
-	FSStats     = 6
+	Serve       = 25
+	FSStat      = 6
 	FSRemove    = 7
 	FSMkdir     = 9
 )

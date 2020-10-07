@@ -1,3 +1,4 @@
+// Copyright 2020 elsa.land authors. All rights reserved. MIT license.
 globalThis.Elsa = {
   readFile: (arg) => {
     return globalThis.__send(__ops.FSRead, arg);
@@ -8,8 +9,17 @@ globalThis.Elsa = {
   exists: (arg) => {
     return globalThis.__send(__ops.FSExists, arg);
   },
-  stats: (arg) => {
-    return JSON.parse(globalThis.__send(__ops.FSStats, arg));
+  stat: (arg) => {
+    return JSON.parse(globalThis.__send(__ops.FSStat, arg));
+  },
+  serve: async function (host, cb) {
+    globalThis.__sendAsync(
+      __ops.Serve,
+      function (data) {
+        return JSON.stringify(cb(JSON.parse(data)));
+      },
+      host
+    );
   },
   remove: (arg) => {
     return globalThis.__send(__ops.FSRemove, arg);

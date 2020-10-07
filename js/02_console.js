@@ -1,3 +1,4 @@
+// Copyright 2020 elsa.land authors. All rights reserved. MIT license.
 // DOM console bindings
 globalThis.console = {
   trace: (...args) => {
