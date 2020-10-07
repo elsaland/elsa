@@ -8,6 +8,8 @@ benchmarks
 
 # executable
 elsa
+# executable on windows
+elsa.exe
 
 # build cache
 data.go
