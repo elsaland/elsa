@@ -46,7 +46,7 @@ jobs:
         if: startsWith(matrix.os,'ubuntu')
         run: |
           go test ./testing
-          ./elsa test --fs --net
+          ./elsa-${{ matrix.os }} test --fs --net
 
       - name: Upload Elsa executables
         uses: actions/upload-artifact@v2
