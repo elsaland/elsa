@@ -78,35 +78,11 @@ function typeCheck(file, source) {
     rootNames: [dummyFilePath],
     host,
   });
-  let diags = "";
-  ts.getPreEmitDiagnostics(program).forEach((diagnostic) => {
-    if (
-      diagnostic.code == 5023 ||
-      IGNORED_DIAGNOSTICS.includes(diagnostic.code)
-    ) {
-      return;
-    }
-    if (diagnostic.file) {
-      let { line, character } = diagnostic.file.getLineAndCharacterOfPosition(
-        diagnostic.start
-      );
-      let message = ts.flattenDiagnosticMessageText(
-        diagnostic.messageText,
-        "\n"
-      );
-      diags +=
-        diagnostic.file.fileName +
-        " " +
-        (line + 1) +
-        ", " +
-        (character + 1) +
-        ": " +
-        message +
-        "\n";
-    } else {
-      diags += ts.flattenDiagnosticMessageText(diagnostic.messageText, "\n");
-    }
+  
+  let diag = ts.getPreEmitDiagnostics(program).filter(function({ code }) {
+    return code != 5023 && !IGNORED_DIAGNOSTICS.includes(code)
   });
+  let diags = ts.formatDiagnosticsWithColorAndContext(diag, host)
   Report(diags);
 }
 
