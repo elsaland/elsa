@@ -1,5 +1,13 @@
 Elsa.tests = function (tests) {
+  // Run tests only when mode is `test`
+  // Will not run when running a script
+  if (Elsa.mode !== "test") return;
+
+  // Keep track for failures
   let failures = 0;
+  // Loop through tests and run the function passed.
+  // It basically `try...catch`'s the run and determines its failure.
+  // No additional helper utilities are provided.
   let passed = 0;
   const startTestTime = Date.now();
 
