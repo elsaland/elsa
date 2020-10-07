@@ -51,8 +51,9 @@ func Execute(elsa Elsa) {
 			if len(args) >= 0 {
 				bundle := elsa.Bundle(args[0], true, config)
 				env := options.Environment{
-					NoColor: config.Options.NoColor,
-					Args:    args[1:],
+					NoColor:  config.Options.NoColor,
+					Args:     args[1:],
+					RunTests: false,
 				}
 				opt := options.Options{
 					SourceFile: args[0],
@@ -79,8 +80,9 @@ func Execute(elsa Elsa) {
 			if len(args) >= 0 {
 				bundle := elsa.Bundle(args[0], true, config)
 				env := options.Environment{
-					NoColor: config.Options.NoColor,
-					Args:    args[1:],
+					NoColor:  config.Options.NoColor,
+					Args:     args[1:],
+					RunTests: false,
 				}
 				opt := options.Options{
 					SourceFile: args[0],
@@ -131,8 +133,9 @@ func Execute(elsa Elsa) {
 		Long:  `Run tests for your Elsa scripts. All files matching *_test.js are run.`,
 		Run: func(cmd *cobra.Command, args []string) {
 			env := options.Environment{
-				NoColor: config.Options.NoColor,
-				Args:    args,
+				NoColor:  config.Options.NoColor,
+				Args:     args,
+				RunTests: true,
 			}
 			opt := options.Options{
 				Perms: &options.Perms{fsFlag, netFlag},

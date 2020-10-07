@@ -11,7 +11,7 @@ import (
 
 // PrepareRuntimeContext prepare the runtime and context with Elsa's internal ops
 // injects `__send` and `__recv` global dispatch functions into runtime
-func PrepareRuntimeContext(cxt *quickjs.Context, jsruntime quickjs.Runtime, args []string, flags *options.Perms) {
+func PrepareRuntimeContext(cxt *quickjs.Context, jsruntime quickjs.Runtime, args []string, flags *options.Perms, mode string) {
 	// Assign perms
 	elsa := &options.Elsa{Perms: flags}
 
@@ -30,13 +30,15 @@ func PrepareRuntimeContext(cxt *quickjs.Context, jsruntime quickjs.Runtime, args
 	ns := globals.Get("Elsa")
 	defer ns.Free()
 	// Assign `Elsa.args` with the os args
-	__args := cxt.Array()
+	_Args := cxt.Array()
 	for i, arg := range args {
-		__arg := cxt.String(arg)
-		__args.SetByUint32(uint32(i), __arg)
+		_Arg := cxt.String(arg)
+		_Args.SetByUint32(uint32(i), _Arg)
 	}
-	ns.Set("args", __args)
-
+	ns.Set("args", _Args)
+	// Assing `Elsa.mode` with current environment mode
+	_Mode := cxt.String(mode)
+	ns.Set("mode", _Mode)
 	// Runtime check to execute async jobs
 	for {
 		_, err = jsruntime.ExecutePendingJob()
@@ -58,8 +60,15 @@ func Run(opt options.Options) {
 	cxt := jsruntime.NewContext()
 	defer cxt.Free()
 
+	// mode is not configurable directly and is to be determined based on RunTests
+	// defaults to `run`
+	mode := "run"
+	if opt.Env.RunTests {
+		mode = "test"
+	}
+
 	// Prepare runtime and context with Elsa namespace
-	PrepareRuntimeContext(cxt, jsruntime, opt.Env.Args, opt.Perms)
+	PrepareRuntimeContext(cxt, jsruntime, opt.Env.Args, opt.Perms, mode)
 
 	// Evalutate the source
 	result, err := cxt.EvalFile(opt.Source, opt.SourceFile)

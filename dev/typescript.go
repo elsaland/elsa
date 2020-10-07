@@ -24,7 +24,7 @@ func Compile(source string, sourceFile string, fn func(val quickjs.Value), flags
 	context := jsruntime.NewContext()
 	defer context.Free()
 
-	core.PrepareRuntimeContext(context, jsruntime, args, flags)
+	core.PrepareRuntimeContext(context, jsruntime, args, flags, "dev")
 
 	globals := context.Globals()
 	report := func(ctx *quickjs.Context, this quickjs.Value, args []quickjs.Value) quickjs.Value {
