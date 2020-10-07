@@ -169,11 +169,12 @@ func CollectTests() []string {
 	var testFiles []string
 	e := filepath.Walk(".", func(path string, info os.FileInfo, err error) error {
 		if err == nil {
-			matched, err := filepath.Match("*_test.js", info.Name())
+			matchedJS, err := filepath.Match("*_test.js", info.Name())
+			matchedTS, err := filepath.Match("*_test.ts", info.Name())
 			if err != nil {
 				return nil
 			}
-			if matched {
+			if matchedJS || matchedTS {
 				testFiles = append(testFiles, path)
 			}
 		}
