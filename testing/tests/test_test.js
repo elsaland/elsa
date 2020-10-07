@@ -9,8 +9,4 @@ Elsa.tests({
   "subtracts numbers": function () {
     eq(-2, add(2, -4));
   },
-
-  "add fails": function () {
-    eq(2, add(2, 1));
-  },
 });
