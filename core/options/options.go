@@ -21,6 +21,8 @@ type Environment struct {
 	NoColor bool
 	// Command-line args to pass into Elsa.args
 	Args []string
+	// Whether to run tests associated with `Elsa.tests()`
+	RunTests bool
 }
 
 // Perms permissions avaiable for Elsa
