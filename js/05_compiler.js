@@ -78,11 +78,11 @@ function typeCheck(file, source) {
     rootNames: [dummyFilePath],
     host,
   });
-  
-  let diag = ts.getPreEmitDiagnostics(program).filter(function({ code }) {
-    return code != 5023 && !IGNORED_DIAGNOSTICS.includes(code)
+
+  let diag = ts.getPreEmitDiagnostics(program).filter(function ({ code }) {
+    return code != 5023 && !IGNORED_DIAGNOSTICS.includes(code);
   });
-  let diags = ts.formatDiagnosticsWithColorAndContext(diag, host)
+  let diags = ts.formatDiagnosticsWithColorAndContext(diag, host);
   Report(diags);
 }
 
