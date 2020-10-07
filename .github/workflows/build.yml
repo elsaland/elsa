@@ -44,7 +44,9 @@ jobs:
       - name: Test
         working-directory: ./src/github.com/elsaland/elsa
         if: startsWith(matrix.os,'ubuntu')
-        run: go test ./testing
+        run: |
+          go test ./testing
+          ./elsa-${{ matrix.os }} test --fs --net
 
       - name: Upload Elsa executables
         uses: actions/upload-artifact@v2

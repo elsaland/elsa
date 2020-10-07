@@ -18,6 +18,7 @@ benchmark:
 
 test:
 	go test ./testing
+	./elsa test --fs --net
 
 test-create-out:
 	./elsa bundle testing/bundle/local_imports.js >> testing/bundle/local_imports.js.out
