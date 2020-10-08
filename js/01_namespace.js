@@ -33,4 +33,12 @@ globalThis.Elsa = {
   mkdir: (arg) => {
     return globalThis.__send(__ops.FSMkdir, arg);
   },
+  env: {
+    get: (arg) => {
+      return globalThis.__send(__ops.Env, arg);
+    },
+    set: (env, val) => {
+      return globalThis.__send(__ops.Env, env, val);
+    },
+  },
 };

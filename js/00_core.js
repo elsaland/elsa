@@ -12,6 +12,7 @@ const __ops = {
   Log: 10,
   Plugin: 15,
   FSMkdir: 9,
+  Env: 11
 };
 
 ((window) => {

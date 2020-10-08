@@ -91,6 +91,9 @@ func ElsaSendNS(elsa *options.Elsa) func(ctx *quickjs.Context, this quickjs.Valu
 			file := args[1]
 			val := fs.Mkdir(ctx, file)
 			return val
+		case Env:
+			val := ops.Env(ctx, args)
+			return val
 		default:
 			return ctx.Null()
 		}
