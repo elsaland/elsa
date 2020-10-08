@@ -12,7 +12,7 @@ import (
 	"github.com/spf13/afero"
 )
 
-// ElsaSendNS Native function corresponding to the Javascript global `__send`
+// ElsaSendNS Native function corresponding to the JavaScript global `__send`
 // It is binded with `__send` and accepts arguments including op ID
 func ElsaSendNS(elsa *options.Elsa) func(ctx *quickjs.Context, this quickjs.Value, args []quickjs.Value) quickjs.Value {
 	// Create a new file system driver
@@ -116,7 +116,7 @@ func CheckNet(perms *options.Perms) {
 	}
 }
 
-// ElsaRecvNS Native function corresponding to the Javascript global `__recv`
+// ElsaRecvNS Native function corresponding to the JavaScript global `__recv`
 // It is binded with `__recv` and accepts arguments including recv ID of the async function
 func ElsaRecvNS(elsa *options.Elsa) func(ctx *quickjs.Context, this quickjs.Value, args []quickjs.Value) quickjs.Value {
 	// the returned function handles the __recv behaviour

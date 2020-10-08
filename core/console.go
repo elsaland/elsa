@@ -14,7 +14,7 @@ var f = NewFormatter()
 // ConsoleLog console.log bindings to quickjs engine
 func ConsoleLog(ctx *quickjs.Context, value []quickjs.Value) quickjs.Value {
 	data := value[2]
-	// dataType is the javascript type of the data => `typeof arg`
+	// dataType is the JavaScript type of the data => `typeof arg`
 	dataType := value[1].String()
 	var result interface{}
 	switch dataType {

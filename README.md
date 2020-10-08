@@ -4,7 +4,7 @@
 
 <img align="right" src=assets/logo.svg height="120px">
 
-Elsa is a _minimal_, _fast_ and _secure_ runtime for Javascript and Typescript written in Go, leveraging the power from [QuickJS](https://bellard.org/quickjs/).
+Elsa is a _minimal_, _fast_ and _secure_ runtime for JavaScript and TypeScript written in Go, leveraging the power from [QuickJS](https://bellard.org/quickjs/).
 
 ### Features
 
@@ -63,7 +63,7 @@ Start by creating an issue about your feature or bug! Then, create a PR and we'l
 
 **Why choose QuickJS over V8?**
 
-QuickJS is a small and embeddable Javascript engine but it lacks V8's JIT for fast JavaScript execution. Although, it doesn't mean you cannot use Elsa on backends and CPU intensive tasks.
+QuickJS is a small and embeddable JavaScript engine but it lacks V8's JIT for fast JavaScript execution. Although, it doesn't mean you cannot use Elsa on backends and CPU intensive tasks.
 
 QuickJS has a better startup time than V8 so it would be a strong alternative for CLI apps and short-lived runs.
 
