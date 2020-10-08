@@ -57,6 +57,9 @@ func ElsaSendNS(elsa *options.Elsa) func(ctx *quickjs.Context, this quickjs.Valu
 			return val
 		case Log:
 			return ConsoleLog(ctx, args)
+		case Timers:
+			timeout := args[1].Int64()
+			return SetTimeout(ctx, timeout)
 		case Plugin:
 			plugin := args[1].String()
 			input := args[2].String()
