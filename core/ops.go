@@ -29,3 +29,8 @@ const (
 const (
 	Fetch = 20
 )
+
+// env ops
+const (
+	Env = 11
+)
