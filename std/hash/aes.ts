@@ -18,7 +18,7 @@
 type BitSize = "128" | "192" | "256";
 
 /**
- * implementation of AES ( Advanced Encryption Standard ) in typescript
+ * implementation of AES ( Advanced Encryption Standard ) in TypeScript
  */
 
 export class AES {

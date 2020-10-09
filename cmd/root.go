@@ -39,13 +39,13 @@ func Execute(elsa Elsa) {
 	// Rool command
 	var rootCmd = &cobra.Command{
 		Use:   "elsa [file]",
-		Short: "Elsa is a simple Javascript and Typescript runtime written in Go",
+		Short: "Elsa is a simple JavaScript and TypeScript runtime written in Go",
 	}
 
 	// Run subcommand
 	var runCmd = &cobra.Command{
 		Use:   "run [file]",
-		Short: "Run a Javascript and Typescript source file",
+		Short: "Run a JavaScript and TypeScript source file",
 		Args:  cobra.MinimumNArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			if len(args) >= 0 {
@@ -74,7 +74,7 @@ func Execute(elsa Elsa) {
 	var devCmd = &cobra.Command{
 		Use:   "dev [file]",
 		Short: "Run a script in development mode.",
-		Long:  `Run a script in development mode. It enables type-checking using the inbuilt typescript compiler.`,
+		Long:  `Run a script in development mode. It enables type-checking using the inbuilt TypeScript compiler.`,
 		Args:  cobra.MinimumNArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			if len(args) >= 0 {
@@ -99,8 +99,8 @@ func Execute(elsa Elsa) {
 	// bundle subcommand to bundle a source file
 	var bundleCmd = &cobra.Command{
 		Use:   "bundle [file]",
-		Short: "Bundle your script to a single javascript file",
-		Long:  `Bundle your script to a single javascript file. It utilizes esbuild for super fast bundling.`,
+		Short: "Bundle your script to a single JavaScript file",
+		Long:  `Bundle your script to a single JavaScript file. It utilizes esbuild for super fast bundling.`,
 		Args:  cobra.MinimumNArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			if len(args) >= 0 {

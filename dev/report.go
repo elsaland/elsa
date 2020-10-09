@@ -6,7 +6,7 @@ import (
 	"github.com/elsaland/quickjs"
 )
 
-// ReportDiagnostics report typescript diagnostics
+// ReportDiagnostics report TypeScript diagnostics
 func ReportDiagnostics(diagnostics quickjs.Value) {
 	diag := diagnostics.String()
 	if diag != "" {
