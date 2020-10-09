@@ -32,5 +32,5 @@ const (
 
 // timers ops
 const (
-	Timers = 25
+	Timers = 30
 )

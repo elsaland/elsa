@@ -3,6 +3,7 @@ package core
 import (
 	"fmt"
 	"os"
+	"sync"
 
 	"github.com/elsaland/elsa/util"
 
@@ -14,7 +15,7 @@ import (
 
 // ElsaSendNS Native function corresponding to the Javascript global `__send`
 // It is binded with `__send` and accepts arguments including op ID
-func ElsaSendNS(elsa *options.Elsa) func(ctx *quickjs.Context, this quickjs.Value, args []quickjs.Value) quickjs.Value {
+func ElsaSendNS(elsa *options.Elsa, wg *sync.WaitGroup) func(ctx *quickjs.Context, this quickjs.Value, args []quickjs.Value) quickjs.Value {
 	// Create a new file system driver
 	var fs = ops.FsDriver{
 		// NOTE: afero can also be used to create in-memory file system
@@ -58,8 +59,18 @@ func ElsaSendNS(elsa *options.Elsa) func(ctx *quickjs.Context, this quickjs.Valu
 		case Log:
 			return ConsoleLog(ctx, args)
 		case Timers:
-			timeout := args[1].Int64()
-			return SetTimeout(ctx, timeout)
+			timeout := args[2]
+			one := args[1]
+			cb := func() {
+				defer wg.Done()
+				obj := ctx.Object()
+				defer obj.Free()
+				obj.Set("ok", ctx.Bool(true))
+				elsa.Recv(one, obj)
+			}
+			wg.Add(1)
+			ops.SetTimeout(ctx, timeout.Int64(), cb, wg)
+			return ctx.Null()
 		case Plugin:
 			plugin := args[1].String()
 			input := args[2].String()

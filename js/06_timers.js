@@ -1,3 +1,3 @@
 globalThis.setTimeout = (fn, ms) => {
-  globalThis.__send(__ops.Timers, ms);
+  globalThis.__sendAsync(__ops.Timers, fn, ms)
 };

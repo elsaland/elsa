@@ -3,6 +3,7 @@ package dev
 import (
 	"fmt"
 	"runtime"
+	"sync"
 
 	"github.com/elsaland/elsa/core/options"
 	"github.com/elsaland/elsa/util"
@@ -23,8 +24,8 @@ func Compile(source string, sourceFile string, fn func(val quickjs.Value), flags
 
 	context := jsruntime.NewContext()
 	defer context.Free()
-
-	core.PrepareRuntimeContext(context, jsruntime, args, flags, "dev")
+	var wg sync.WaitGroup
+	core.PrepareRuntimeContext(context, jsruntime, &wg, args, flags, "dev")
 
 	globals := context.Globals()
 	report := func(ctx *quickjs.Context, this quickjs.Value, args []quickjs.Value) quickjs.Value {
@@ -44,6 +45,7 @@ func Compile(source string, sourceFile string, fn func(val quickjs.Value), flags
 	result, err := context.Eval(bundle)
 	util.Check(err)
 	defer result.Free()
+	wg.Wait()
 }
 
 func jsCheck(source, sourceFile string) string {

@@ -2,6 +2,7 @@ package core
 
 import (
 	"io"
+	"sync"
 
 	"github.com/elsaland/elsa/core/options"
 	"github.com/elsaland/elsa/util"
@@ -11,13 +12,13 @@ import (
 
 // PrepareRuntimeContext prepare the runtime and context with Elsa's internal ops
 // injects `__send` and `__recv` global dispatch functions into runtime
-func PrepareRuntimeContext(cxt *quickjs.Context, jsruntime quickjs.Runtime, args []string, flags *options.Perms, mode string) {
+func PrepareRuntimeContext(cxt *quickjs.Context, jsruntime quickjs.Runtime, wg *sync.WaitGroup, args []string, flags *options.Perms, mode string) {
 	// Assign perms
 	elsa := &options.Elsa{Perms: flags}
 
 	globals := cxt.Globals()
 	// Attach send & recv global ops
-	globals.SetFunction("__send", ElsaSendNS(elsa))
+	globals.SetFunction("__send", ElsaSendNS(elsa, wg))
 	globals.SetFunction("__recv", ElsaRecvNS(elsa))
 
 	// Prepare runtime context with namespace and client op code
@@ -52,6 +53,8 @@ func PrepareRuntimeContext(cxt *quickjs.Context, jsruntime quickjs.Runtime, args
 
 // Run create and dispatch a QuickJS runtime binded with Elsa's OPs configurable using options
 func Run(opt options.Options) {
+	var wg sync.WaitGroup
+
 	// Create a new quickJS runtime
 	jsruntime := quickjs.NewRuntime()
 	defer jsruntime.Free()
@@ -68,10 +71,14 @@ func Run(opt options.Options) {
 	}
 
 	// Prepare runtime and context with Elsa namespace
-	PrepareRuntimeContext(cxt, jsruntime, opt.Env.Args, opt.Perms, mode)
+	PrepareRuntimeContext(cxt, jsruntime, &wg, opt.Env.Args, opt.Perms, mode)
 
 	// Evalutate the source
-	result, err := cxt.EvalFile(opt.Source, opt.SourceFile)
+	result, err := func() (quickjs.Value, error) {
+		result, err := cxt.EvalFile(opt.Source, opt.SourceFile)
+		wg.Wait()
+		return result, err
+	}()
 	util.Check(err)
 	defer result.Free()
 
@@ -80,7 +87,7 @@ func Run(opt options.Options) {
 		err = cxt.Exception()
 		util.Check(err)
 	}
-
+	//	wg.Wait()
 	for {
 		_, err = jsruntime.ExecutePendingJob()
 		if err == io.EOF {
