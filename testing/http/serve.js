@@ -1,5 +1,6 @@
 function handler(req) {
-  console.log(`Method: ${req.Method}\nPath: ${req.URL.Path}`);
+  console.log(req);
+  console.log(`Method: ${req.Method}\nPath: ${req.Path}`);
   return { body: "Hello from Elsa :)", status: 200 };
 }
 
