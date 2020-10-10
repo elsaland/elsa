@@ -35,6 +35,7 @@ func Execute(elsa Elsa) {
 	var fsFlag bool
 	var netFlag bool
 	var minifyFlag bool
+	var envFlag bool
 
 	// Rool command
 	var rootCmd = &cobra.Command{
@@ -58,7 +59,7 @@ func Execute(elsa Elsa) {
 				opt := options.Options{
 					SourceFile: args[0],
 					Source:     bundle,
-					Perms:      &options.Perms{fsFlag, netFlag},
+					Perms:      &options.Perms{fsFlag, netFlag, envFlag},
 					Env:        env,
 				}
 				elsa.Run(opt)
@@ -66,9 +67,10 @@ func Execute(elsa Elsa) {
 		},
 	}
 
-	// --fs and --net flags
+	// --fs,--net, --env flags
 	runCmd.Flags().BoolVar(&fsFlag, "fs", false, "Allow file system access")
 	runCmd.Flags().BoolVar(&netFlag, "net", false, "Allow net access")
+	runCmd.Flags().BoolVar(&envFlag, "env", false, "Allow Environment Variables access")
 
 	// dev subcommand to run script in development mode
 	var devCmd = &cobra.Command{
@@ -87,7 +89,7 @@ func Execute(elsa Elsa) {
 				opt := options.Options{
 					SourceFile: args[0],
 					Source:     bundle,
-					Perms:      &options.Perms{fsFlag, netFlag},
+					Perms:      &options.Perms{fsFlag, netFlag, envFlag},
 					Env:        env,
 				}
 				og, _ := ioutil.ReadFile(args[0])
@@ -138,7 +140,7 @@ func Execute(elsa Elsa) {
 				RunTests: true,
 			}
 			opt := options.Options{
-				Perms: &options.Perms{fsFlag, netFlag},
+				Perms: &options.Perms{fsFlag, netFlag, envFlag},
 				Env:   env,
 			}
 			tests := CollectTests()
@@ -151,10 +153,10 @@ func Execute(elsa Elsa) {
 		},
 	}
 
-	// --net and --fs perms
+	// --net, --fs, --env perms
 	testCmd.Flags().BoolVar(&fsFlag, "fs", false, "Allow file system access")
 	testCmd.Flags().BoolVar(&netFlag, "net", false, "Allow net access")
-
+	testCmd.Flags().BoolVar(&envFlag, "env", false, "Allow Environment Variables access")
 	// Add subcommands to root command
 	rootCmd.AddCommand(bundleCmd, runCmd, pkgCmd, devCmd, testCmd)
 

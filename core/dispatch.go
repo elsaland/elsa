@@ -92,6 +92,7 @@ func ElsaSendNS(elsa *options.Elsa) func(ctx *quickjs.Context, this quickjs.Valu
 			val := fs.Mkdir(ctx, file)
 			return val
 		case Env:
+			CheckEnv(elsa.Perms)
 			val := ops.Env(ctx, args)
 			return val
 		default:
@@ -112,6 +113,13 @@ func CheckFs(perms *options.Perms) {
 func CheckNet(perms *options.Perms) {
 	if !perms.Net {
 		util.LogError("Perms Error: ", "Net is blocked.")
+		os.Exit(1)
+	}
+}
+
+func CheckEnv(perms *options.Perms) {
+	if !perms.Env {
+		util.LogError("Perms Error: ", "Environment Variables is blocked.")
 		os.Exit(1)
 	}
 }
