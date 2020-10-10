@@ -31,6 +31,8 @@ type Perms struct {
 	Fs bool
 	// Net access
 	Net bool
+	// Env access
+	Env bool
 }
 
 // Options options for dispatching a new Elsa + QuickJS runtime

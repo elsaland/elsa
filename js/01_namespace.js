@@ -40,5 +40,8 @@ globalThis.Elsa = {
     set: (env, val) => {
       return globalThis.__send(__ops.Env, env, val);
     },
+    toObject: () => {
+      return JSON.parse(globalThis.__send(__ops.Env, true));
+    },
   },
 };
