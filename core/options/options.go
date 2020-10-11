@@ -25,7 +25,7 @@ type Environment struct {
 	RunTests bool
 }
 
-// Perms permissions avaiable for Elsa
+// Perms permissions available for Elsa
 type Perms struct {
 	// File system access
 	Fs bool
@@ -43,6 +43,6 @@ type Options struct {
 	Source string
 	// Permission
 	Perms *Perms
-	// Configure Enviornment
+	// Configure Environment
 	Env Environment
 }
