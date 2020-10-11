@@ -70,7 +70,7 @@ func Run(opt options.Options) {
 	// Prepare runtime and context with Elsa namespace
 	PrepareRuntimeContext(cxt, jsruntime, opt.Env.Args, opt.Perms, mode)
 
-	// Evalutate the source
+	// Evaluate the source
 	result, err := cxt.EvalFile(opt.Source, opt.SourceFile)
 	util.Check(err)
 	defer result.Free()

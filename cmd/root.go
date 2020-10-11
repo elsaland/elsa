@@ -37,7 +37,7 @@ func Execute(elsa Elsa) {
 	var minifyFlag bool
 	var envFlag bool
 
-	// Rool command
+	// Root command
 	var rootCmd = &cobra.Command{
 		Use:   "elsa [file]",
 		Short: "Elsa is a simple JavaScript and TypeScript runtime written in Go",
@@ -167,16 +167,29 @@ func Execute(elsa Elsa) {
 	}
 }
 
+// match test files
+func matchedFiles(name string) bool {
+	matchedJS, err := filepath.Match("*_test.js", name)
+	matchedTS, err := filepath.Match("*_test.ts", name)
+	matchedJSTest, err := filepath.Match("*.test.js", name)
+	matchedTSTest, err := filepath.Match("*.test.ts", name)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return (matchedJS || matchedTS || matchedTSTest || matchedJSTest)
+}
+
+// CollectTests files
 func CollectTests() []string {
 	var testFiles []string
 	e := filepath.Walk(".", func(path string, info os.FileInfo, err error) error {
 		if err == nil {
-			matchedJS, err := filepath.Match("*_test.js", info.Name())
-			matchedTS, err := filepath.Match("*_test.ts", info.Name())
 			if err != nil {
 				return nil
 			}
-			if matchedJS || matchedTS {
+			if matchedFiles(info.Name()) {
 				testFiles = append(testFiles, path)
 			}
 		}
