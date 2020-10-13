@@ -16,12 +16,6 @@ Elsa is a _minimal_, _fast_ and _secure_ runtime for JavaScript and TypeScript w
 - Bundle your script into a single file.
 - Create a standalone executable for your bundles.
 
-### Coming up
-
-- HTTP server, more Web APIs
-- Easy installation scripts
-- Standard modules
-
 ### Install
 
 Not yet released, [build from source](#build-from-source) instead.
@@ -60,6 +54,24 @@ Start by creating an issue about your feature or bug! Then, create a PR and we'l
 - [Esbuild](https://github.com/evanw/esbuild/) - by [Evan Wallace](https://github.com/evanw)
 
 ### FAQs
+
+**Where to use Elsa and where not to...**
+
+Elsa is small and embeddable into Go programs, using Quickjs as the backend comes with certain pros and cons -
+
+PROS: 
+ * Suitable for CLI applications and shipping them as an executable
+ * Native bindings to system level APIs (webview, etc)
+ * Hosting discord bots on your raspberry pie :wink:
+ * Embeddable inside your Go programs.
+ * General purpose scripting
+
+CONS:
+
+* Slower runtime execution than Node and Deno
+* Slower backends
+* Double GC 
+
 
 **Why choose QuickJS over V8?**
 
