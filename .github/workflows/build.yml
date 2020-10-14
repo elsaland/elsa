@@ -23,7 +23,12 @@ jobs:
         with:
           submodules: true
           path: "./src/github.com/elsaland/elsa"
-
+      
+      - name: Code Style check
+        run: |
+          npx prettier -c .
+          gofmt -l -w .
+      
       - name: Setup go
         uses: actions/setup-go@v2
 
