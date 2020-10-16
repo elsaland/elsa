@@ -34,3 +34,5 @@ const (
 const (
 	Timers = 30
 )
+
+const Wait = 40

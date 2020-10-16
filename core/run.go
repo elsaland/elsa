@@ -74,11 +74,8 @@ func Run(opt options.Options) {
 	PrepareRuntimeContext(cxt, jsruntime, &wg, opt.Env.Args, opt.Perms, mode)
 
 	// Evalutate the source
-	result, err := func() (quickjs.Value, error) {
-		result, err := cxt.EvalFile(opt.Source, opt.SourceFile)
-		wg.Wait()
-		return result, err
-	}()
+	result, err := cxt.EvalFile(opt.Source, opt.SourceFile)
+
 	util.Check(err)
 	defer result.Free()
 

@@ -1,6 +1,8 @@
 package ops
 
 import (
+	"fmt"
+	"runtime"
 	"sync"
 	"time"
 
@@ -9,12 +11,10 @@ import (
 
 //setTimeout bindings to quickjs engine
 func SetTimeout(ctx *quickjs.Context, timeout int64, cb func(), wg *sync.WaitGroup) {
-	go func() {
-		time.Sleep(time.Millisecond * time.Duration(timeout))
-		RunThread(func() {
-			CallNonBlock(func() {
-				cb()
-			})
-		})
-	}()
+	defer runtime.UnlockOSThread()
+	time.AfterFunc(time.Millisecond*time.Duration(timeout), func() {
+		defer wg.Done()
+		cb()
+		fmt.Println(2)
+	})
 }

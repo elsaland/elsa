@@ -62,7 +62,6 @@ func ElsaSendNS(elsa *options.Elsa, wg *sync.WaitGroup) func(ctx *quickjs.Contex
 			timeout := args[2]
 			one := args[1]
 			cb := func() {
-				defer wg.Done()
 				obj := ctx.Object()
 				defer obj.Free()
 				obj.Set("ok", ctx.Bool(true))
@@ -105,6 +104,12 @@ func ElsaSendNS(elsa *options.Elsa, wg *sync.WaitGroup) func(ctx *quickjs.Contex
 			file := args[1]
 			val := fs.Mkdir(ctx, file)
 			return val
+		case Wait:
+			fmt.Println(1)
+			id := args[1]
+			wg.Wait()
+			elsa.Recv(id, ctx.Null())
+			return ctx.Null()
 		default:
 			return ctx.Null()
 		}
