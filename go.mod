@@ -14,6 +14,7 @@ require (
 	github.com/imroc/req v0.3.0
 	github.com/klauspost/compress v1.11.1 // indirect
 	github.com/lithdew/quickjs v0.0.0-20200714182134-aaa42285c9d2
+	github.com/mitchellh/go-homedir v1.1.0
 	github.com/pelletier/go-toml v1.2.0
 	github.com/spf13/afero v1.4.0
 	github.com/spf13/cobra v1.0.0

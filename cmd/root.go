@@ -5,16 +5,23 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"path"
 	"path/filepath"
+	"runtime"
 
 	"github.com/elsaland/elsa/core/options"
 	"github.com/elsaland/elsa/module"
 	"github.com/elsaland/elsa/util"
 	"github.com/fatih/color"
+	"github.com/mitchellh/go-homedir"
 
 	"github.com/elsaland/elsa/packager"
 	"github.com/spf13/cobra"
 )
+
+var homeDir, _ = homedir.Dir()
+
+var installSite = path.Join(homeDir, "./.elsa/")
 
 // Elsa functions expected to be passed into cmd
 type Elsa struct {
@@ -36,6 +43,7 @@ func Execute(elsa Elsa) {
 	var netFlag bool
 	var minifyFlag bool
 	var envFlag bool
+	var installName string
 
 	// Root command
 	var rootCmd = &cobra.Command{
@@ -157,14 +165,44 @@ func Execute(elsa Elsa) {
 	testCmd.Flags().BoolVar(&fsFlag, "fs", false, "Allow file system access")
 	testCmd.Flags().BoolVar(&netFlag, "net", false, "Allow net access")
 	testCmd.Flags().BoolVar(&envFlag, "env", false, "Allow Environment Variables access")
+
+	// install subcommand to bundle and shebang to PATH env
+	var installCmd = &cobra.Command{
+		Use:   "install",
+		Short: "Install an Elsa module.",
+		Long:  `Install an Elsa module.`,
+		Run: func(cmd *cobra.Command, args []string) {
+			if len(args) >= 0 {
+				out := elsa.Bundle(args[0], true, config)
+				bundleLoc := path.Join(os.TempDir(), installName+".js")
+				err := ioutil.WriteFile(bundleLoc, []byte(out), 0777)
+				err = ioutil.WriteFile(path.Join(installSite, installName), []byte(shebang(bundleLoc)), 0777)
+				if err != nil {
+					panic(err)
+				}
+				fmt.Println("Installation complete.")
+			}
+		},
+	}
+	installCmd.Flags().StringVar(&installName, "name", "00", "Executable name of the installed script")
 	// Add subcommands to root command
-	rootCmd.AddCommand(bundleCmd, runCmd, pkgCmd, devCmd, testCmd)
+	rootCmd.AddCommand(bundleCmd, runCmd, pkgCmd, devCmd, testCmd, installCmd)
 
 	// Execute! :)
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
+}
+
+func shebang(loc string) string {
+	exec := `
+	#!/bin/sh
+	elsa "run" "%s" "$@"`
+	if runtime.GOOS == "windows" {
+		exec = `elsa "run" "%s" "$@"`
+	}
+	return fmt.Sprintf(exec, loc)
 }
 
 // match test files
