@@ -7,6 +7,7 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"runtime"
 
 	"github.com/elsaland/elsa/core/options"
 	"github.com/elsaland/elsa/module"
@@ -189,10 +190,13 @@ func Execute(elsa Elsa) {
 }
 
 func shebang(loc string) string {
-	return fmt.Sprintf(`
+	exec := `
 	#!/bin/sh
-	elsa "run" "%s" "$@"
-	`, loc)
+	elsa "run" "%s" "$@"`
+	if runtime.GOOS != "windows" {
+		exec = `elsa "run" "%s" "$@"`
+	}
+	return fmt.Sprintf(exec, loc)
 }
 
 // match test files
