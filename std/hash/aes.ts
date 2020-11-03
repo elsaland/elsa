@@ -386,7 +386,7 @@ export class AES {
     return s; // see asmaes.sourceforge.net/rijndael/rijndaelImplementation.pdf
   }
 
-  private static mixColumns(s: any, _Nb: any) {
+  private static mixColumns(s: any) {
     for (let c = 0; c < 4; c++) {
       const a = new Array(4); // 'a' is a copy of the current column from 's'
       const b = new Array(4); // 'b' is a•{02} in GF(2^8)
