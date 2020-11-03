@@ -31,10 +31,7 @@ func (cache *ElsaCache) UrlToPath(url string) string {
 }
 
 func (cache *ElsaCache) InCache(path string) bool {
-	if strings.HasPrefix(path, cache.dir) {
-		return true
-	}
-	return false
+	return strings.HasPrefix(path, cache.dir)
 }
 
 func (cache *ElsaCache) Exists(path string) bool {
