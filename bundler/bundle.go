@@ -56,7 +56,7 @@ func BundleModule(file string, minify bool, config *module.Config) string {
 	if bundle.Errors != nil {
 		os.Exit(1)
 	}
-	return string(bundle.OutputFiles[0].Contents[:])
+	return string(bundle.OutputFiles[0].Contents)
 }
 
 func BundleURL(uri string, minify bool) string {
