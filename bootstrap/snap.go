@@ -38,7 +38,7 @@ func main() {
 
 		finalSource += buf.String() + "\n"
 	}
-	os.Mkdir("target", 0777)
+	os.Mkdir("target", 0750)
 	ioutil.WriteFile(filepath.Join("target", "elsa.js"), []byte(finalSource), 0644)
 	cmd := exec.Command("go", binCmd...)
 	log.Printf("Running command and waiting for it to finish...")
