@@ -6,7 +6,7 @@
  *
  * @class EventEmitter Manages event registering and emitting.
  */
-function EventEmitter() {}
+// function EventEmitter() {}
 
 /**
  * Finds the index of the listener for the event in its storage array.
