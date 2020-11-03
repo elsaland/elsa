@@ -101,7 +101,13 @@ func BundleURL(uri string, minify bool) string {
 							return api.ResolverResult{Path: bundle, Namespace: ""}, nil
 						}
 						base, err := url.Parse(uri)
+						if err != nil {
+							panic(err)
+						}
 						pth, err := url.Parse(args.Path)
+						if err != nil {
+							panic(err)
+						}
 						loc := base.ResolveReference(pth).String()
 						fileName := cache.BuildFileName(loc)
 						util.LogInfo("Downloading", fmt.Sprintf("%s => %s", loc, file.Name()))
