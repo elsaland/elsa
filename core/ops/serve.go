@@ -24,7 +24,10 @@ func Serve(ctx *quickjs.Context, callback func(request quickjs.Value) (response 
 			reqs <- ctx
 			resp := <-resps
 			ctx.SetStatusCode(int(resp.Status))
-			ctx.Write([]byte(resp.Body))
+			_, err := ctx.Write([]byte(resp.Body))
+			if err != nil {
+				log.Fatalf("%v", err)
+			}
 		}
 		errch <- fasthttp.ListenAndServe(host.String(), httpHandler)
 		close(reqs)
