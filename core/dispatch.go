@@ -95,6 +95,11 @@ func ElsaSendNS(elsa *options.Elsa) func(ctx *quickjs.Context, this quickjs.Valu
 			CheckEnv(elsa.Perms)
 			val := ops.Env(ctx, args)
 			return val
+		case FSWalk:
+			CheckFs(elsa.Perms)
+			file := args[1]
+			val := fs.Walk(ctx, file)
+			return val
 		default:
 			return ctx.Null()
 		}

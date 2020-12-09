@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"io"
 	"os"
+	"path/filepath"
 	"time"
 
 	"github.com/elsaland/elsa/core/options"
@@ -83,4 +84,46 @@ func (fs *FsDriver) Mkdir(ctx *quickjs.Context, path quickjs.Value) quickjs.Valu
 	err := fs.Fs.Mkdir(path.String(), os.FileMode(0777))
 	util.Check(err)
 	return ctx.Bool(true)
+}
+
+type walkFs struct {
+	Name    string
+	Size    int64
+	Mode    os.FileMode
+	ModTime time.Time
+	IsDir   bool
+	Path    string
+}
+
+func (fs *FsDriver) Walk(ctx *quickjs.Context, pathDir quickjs.Value) quickjs.Value {
+
+	var files []walkFs
+
+	err := filepath.Walk(pathDir.String(), func(path string, info os.FileInfo, err error) error {
+
+		data := walkFs{
+			Name:    info.Name(),
+			Size:    info.Size(),
+			Mode:    info.Mode(),
+			ModTime: info.ModTime(),
+			IsDir:   info.IsDir(),
+			Path:    path,
+		}
+
+		if err != nil {
+			util.Check(err)
+		}
+
+		files = append(files, data)
+
+		return nil
+	})
+
+	if err != nil {
+		util.Check(err)
+	}
+
+	output, err := json.Marshal(files)
+	util.Check(err)
+	return ctx.String(string(output))
 }
