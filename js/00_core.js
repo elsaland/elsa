@@ -13,6 +13,7 @@ const __ops = {
   Plugin: 15,
   FSMkdir: 9,
   Env: 11,
+  Walk: 14
 };
 
 ((window) => {

@@ -44,4 +44,11 @@ globalThis.Elsa = {
       return JSON.parse(globalThis.__send(__ops.Env, true));
     },
   },
+  *walk(path) {
+    const files = JSON.parse(globalThis.__send(__ops.Walk, path));
+
+    for (const file of files) {
+      yield file
+    }
+  },
 };

@@ -13,6 +13,7 @@ const (
 	FSStat      = 6
 	FSRemove    = 7
 	FSMkdir     = 9
+	FSWalk      = 14
 )
 
 // console binding ops
