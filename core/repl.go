@@ -9,6 +9,7 @@ import (
 	"github.com/elsaland/quickjs"
 )
 
+// Repl implementation
 func Repl() {
 	stringToEval := ""
 	fmt.Println("Elsa REPL")
@@ -18,13 +19,14 @@ func Repl() {
 		fmt.Print("> ")
 		reader := bufio.NewReader(os.Stdin)
 		text, _ := reader.ReadString('\n')
-		stringToEval += text
 
-		fmt.Println(Eval(stringToEval))
+		fmt.Println(Eval(text, &stringToEval))
+		stringToEval += ";undefined;"
 	}
 }
 
-func Eval(text string) string {
+// Eval js from string
+func Eval(text string, buffer *string) string {
 	// repl close function
 	closeEval := func(ctx *quickjs.Context, this quickjs.Value, args []quickjs.Value) quickjs.Value {
 		os.Exit(1)
@@ -42,20 +44,27 @@ func Eval(text string) string {
 
 	globalsEval.Set("close", evalContext.Function(closeEval))
 
-	result, err := evalContext.Eval(text)
-	check(err)
+	result, err := evalContext.Eval(*buffer + text)
+	saveBuffer := check(err)
+
+	if saveBuffer {
+		*buffer += fmt.Sprintf(";undefined; %s", text)
+	}
+
 	defer result.Free()
 
 	return result.String()
 }
 
 // check errors without exit
-func check(err error) {
+func check(err error) bool {
 	if err != nil {
 		var evalErr *quickjs.Error
 		if errors.As(err, &evalErr) {
 			fmt.Println(evalErr.Cause)
 			fmt.Println(evalErr.Stack)
+			return false
 		}
 	}
+	return true
 }
