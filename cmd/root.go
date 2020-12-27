@@ -73,8 +73,7 @@ func Execute(elsa Elsa) {
 					Perms:      &options.Perms{fsFlag, netFlag, envFlag},
 					Env:        env,
 				}
-				og, _ := ioutil.ReadFile(args[0])
-				elsa.Dev(string(og), opt)
+				elsa.Run(opt)
 			}
 		},
 	}
