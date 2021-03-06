@@ -48,7 +48,7 @@ globalThis.Elsa = {
     const files = JSON.parse(globalThis.__send(__ops.Walk, path));
 
     for (const file of files) {
-      yield file
+      yield file;
     }
   },
 };
