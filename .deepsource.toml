@@ -4,7 +4,7 @@ test_patterns = ["testing/**"]
 
 exclude_patterns = [
     "typescript/**",
-    "assets/**"
+    "assets/**" 
 ]
 
 [[analyzers]]
