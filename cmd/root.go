@@ -9,13 +9,13 @@ import (
 	"path/filepath"
 	"runtime"
 
+	"github.com/elsaland/elsa/core"
 	"github.com/elsaland/elsa/core/options"
 	"github.com/elsaland/elsa/module"
+	"github.com/elsaland/elsa/packager"
 	"github.com/elsaland/elsa/util"
 	"github.com/fatih/color"
 	"github.com/mitchellh/go-homedir"
-
-	"github.com/elsaland/elsa/packager"
 	"github.com/spf13/cobra"
 )
 
@@ -47,8 +47,11 @@ func Execute(elsa Elsa) {
 
 	// Root command
 	var rootCmd = &cobra.Command{
-		Use:   "elsa [file]",
-		Short: "Elsa is a simple JavaScript and TypeScript runtime written in Go",
+		Use:   "",
+		Short: "",
+		Run: func(cmd *cobra.Command, args []string) {
+			core.Repl()
+		},
 	}
 
 	// Run subcommand
@@ -97,8 +100,12 @@ func Execute(elsa Elsa) {
 				opt := options.Options{
 					SourceFile: args[0],
 					Source:     bundle,
-					Perms:      &options.Perms{fsFlag, netFlag, envFlag},
-					Env:        env,
+					Perms: &options.Perms{
+						Fs:  true,
+						Env: true,
+						Net: true,
+					},
+					Env: env,
 				}
 				og, _ := ioutil.ReadFile(args[0])
 				elsa.Dev(string(og), opt)
