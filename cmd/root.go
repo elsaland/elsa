@@ -183,6 +183,9 @@ func Execute(elsa Elsa) {
 				out := elsa.Bundle(args[0], true, config)
 				bundleLoc := path.Join(os.TempDir(), installName+".js")
 				err := ioutil.WriteFile(bundleLoc, []byte(out), 0777)
+				if err != nil {
+					panic(err)
+				}
 				scriptFile := path.Join(installSite, installName)
 
 				// add .cmd in script for windows

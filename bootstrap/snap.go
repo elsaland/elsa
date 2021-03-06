@@ -38,10 +38,16 @@ func main() {
 
 		finalSource += buf.String() + "\n"
 	}
-	os.Mkdir("target", 0777)
-	ioutil.WriteFile(filepath.Join("target", "elsa.js"), []byte(finalSource), 0644)
+	err := os.Mkdir("target", 0750)
+	if err != nil {
+		log.Fatalf("Error in making directory - %v", err)
+	}
+	err = ioutil.WriteFile(filepath.Join("target", "elsa.js"), []byte(finalSource), 0644)
+	if err != nil {
+		log.Fatalf("Error writing file %v", err)
+	}
 	cmd := exec.Command("go", binCmd...)
 	log.Printf("Running command and waiting for it to finish...")
-	err := cmd.Run()
+	err = cmd.Run()
 	log.Printf("Command finished with error: %v", err)
 }

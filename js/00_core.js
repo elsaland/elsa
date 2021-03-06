@@ -13,12 +13,11 @@ const __ops = {
   Plugin: 15,
   FSMkdir: 9,
   Env: 11,
-  Walk: 14
+  Walk: 14,
 };
 
 ((window) => {
   let initialized = false;
-  let ee = new EventEmitter();
   let promiseTable = {};
   let promiseNextId = 1;
   function init() {

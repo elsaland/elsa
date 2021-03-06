@@ -31,10 +31,7 @@ func (cache *ElsaCache) UrlToPath(url string) string {
 }
 
 func (cache *ElsaCache) InCache(path string) bool {
-	if strings.HasPrefix(path, cache.dir) {
-		return true
-	}
-	return false
+	return strings.HasPrefix(path, cache.dir)
 }
 
 func (cache *ElsaCache) Exists(path string) bool {
@@ -45,7 +42,7 @@ func (cache *ElsaCache) Exists(path string) bool {
 }
 
 func (cache *ElsaCache) Create(p string) (*os.File, error) {
-	if err := os.MkdirAll(filepath.Dir(p), 0770); err != nil {
+	if err := os.MkdirAll(filepath.Dir(p), 0750); err != nil {
 		return nil, err
 	}
 	return os.Create(p)
