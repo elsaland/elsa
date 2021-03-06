@@ -18,7 +18,6 @@ const __ops = {
 
 ((window) => {
   let initialized = false;
-  let ee = new EventEmitter();
   let promiseTable = {};
   let promiseNextId = 1;
   function init() {

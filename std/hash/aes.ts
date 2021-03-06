@@ -334,7 +334,7 @@ export class AES {
 
     // initialize first Nk words of expanded key with cipher key
     for (let i = 0; i < Nk; i++) {
-      let r = [key[4 * i], key[4 * i + 1], key[4 * i + 2], key[4 * i + 3]];
+      const r = [key[4 * i], key[4 * i + 1], key[4 * i + 2], key[4 * i + 3]];
       w[i] = r;
     }
 
@@ -374,7 +374,7 @@ export class AES {
   }
 
   private static shiftRows(s: any, Nb: any) {
-    let t = new Array(4);
+    const t = new Array(4);
     for (let r = 1; r < 4; r++) {
       for (let c = 0; c < 4; c++) {
         t[c] = s[r][(c + r) % Nb];
@@ -386,10 +386,10 @@ export class AES {
     return s; // see asmaes.sourceforge.net/rijndael/rijndaelImplementation.pdf
   }
 
-  private static mixColumns(s: any, _Nb: any) {
+  private static mixColumns(s: any) {
     for (let c = 0; c < 4; c++) {
-      let a = new Array(4); // 'a' is a copy of the current column from 's'
-      let b = new Array(4); // 'b' is a•{02} in GF(2^8)
+      const a = new Array(4); // 'a' is a copy of the current column from 's'
+      const b = new Array(4); // 'b' is a•{02} in GF(2^8)
       for (let i = 0; i < 4; i++) {
         a[i] = s[i][c];
         b[i] = s[i][c] & 0x80 ? (s[i][c] << 1) ^ 0x011b : s[i][c] << 1;

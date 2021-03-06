@@ -59,7 +59,7 @@ EventEmitter.prototype.getListeners = function getListeners(evt) {
   if (evt instanceof RegExp) {
     response = {};
     for (key in events) {
-      if (events.hasOwnProperty(key) && evt.test(key)) {
+      if (Object.hasOwnProperty(events, key) && evt.test(key)) {
         response[key] = events[key];
       }
     }
@@ -138,7 +138,7 @@ EventEmitter.prototype.addListener = function addListener(evt, listener) {
 
   for (key in listeners) {
     if (
-      listeners.hasOwnProperty(key) &&
+      Object.hasOwnProperty(listeners, key) &&
       indexOfListener(listeners[key], listener) === -1
     ) {
       listeners[key].push(
@@ -222,7 +222,7 @@ EventEmitter.prototype.removeListener = function removeListener(evt, listener) {
   var key;
 
   for (key in listeners) {
-    if (listeners.hasOwnProperty(key)) {
+    if (Object.hasOwnProperty(listeners, key)) {
       index = indexOfListener(listeners[key], listener);
 
       if (index !== -1) {
@@ -297,7 +297,7 @@ EventEmitter.prototype.manipulateListeners = function manipulateListeners(
   // If evt is an object then pass each of its properties to this method
   if (typeof evt === "object" && !(evt instanceof RegExp)) {
     for (i in evt) {
-      if (evt.hasOwnProperty(i) && (value = evt[i])) {
+      if (Object.hasOwnProperty(evt, i) && (value = evt[i])) {
         // Pass the single listener straight through to the singular method
         if (typeof value === "function") {
           single.call(this, i, value);
@@ -341,7 +341,7 @@ EventEmitter.prototype.removeEvent = function removeEvent(evt) {
   } else if (evt instanceof RegExp) {
     // Remove all events matching the regex.
     for (key in events) {
-      if (events.hasOwnProperty(key) && evt.test(key)) {
+      if (Object.hasOwnProperty(events, key) && evt.test(key)) {
         delete events[key];
       }
     }
@@ -381,7 +381,7 @@ EventEmitter.prototype.emitEvent = function emitEvent(evt, args) {
   var response;
 
   for (key in listenersMap) {
-    if (listenersMap.hasOwnProperty(key)) {
+    if (Object.hasOwnProperty(listenersMap, key)) {
       listeners = listenersMap[key].slice(0);
 
       for (i = 0; i < listeners.length; i++) {

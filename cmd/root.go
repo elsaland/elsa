@@ -176,10 +176,13 @@ func Execute(elsa Elsa) {
 				out := elsa.Bundle(args[0], true, config)
 				bundleLoc := path.Join(os.TempDir(), installName+".js")
 				err := ioutil.WriteFile(bundleLoc, []byte(out), 0777)
+				if err != nil {
+					panic(err)
+				}
 				scriptFile := path.Join(installSite, installName)
 
 				// add .cmd in script for windows
-				isWindows(&scriptFile, scriptFile + ".cmd")
+				isWindows(&scriptFile, scriptFile+".cmd")
 				err = ioutil.WriteFile(scriptFile, []byte(shebang(bundleLoc)), 0777)
 				if err != nil {
 					panic(err)
@@ -211,7 +214,7 @@ func shebang(loc string) string {
 
 // replace a string if it is windows
 func isWindows(toChange *string, replacement string) {
-	if (runtime.GOOS == "windows") {
+	if runtime.GOOS == "windows" {
 		*toChange = replacement
 	}
 }

@@ -28,7 +28,7 @@ export function deepEqual(a: any, b: any) {
     keys = keys.filter(function (value, index, self) {
       return self.indexOf(value) === index;
     });
-    for (let p of keys) {
+    for (const p of keys) {
       if (typeof a[p] === "object" && typeof b[p] === "object") {
         if (!deepEqual(a[p], b[p])) {
           return false;

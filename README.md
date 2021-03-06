@@ -59,19 +59,19 @@ Start by creating an issue about your feature or bug! Then, create a PR and we'l
 
 Elsa is small and embeddable into Go programs, using Quickjs as the backend comes with certain pros and cons -
 
-PROS: 
- * Suitable for CLI applications and shipping them as an executable
- * Native bindings to system level APIs (webview, etc)
- * Hosting discord bots on your raspberry pie :wink:
- * Embeddable inside your Go programs.
- * General purpose scripting
+PROS:
+
+- Suitable for CLI applications and shipping them as an executable
+- Native bindings to system level APIs (webview, etc)
+- Hosting discord bots on your raspberry pie :wink:
+- Embeddable inside your Go programs.
+- General purpose scripting
 
 CONS:
 
-* Slower runtime execution than Node and Deno
-* Slower backends
-* Double GC 
-
+- Slower runtime execution than Node and Deno
+- Slower backends
+- Double GC
 
 **Why choose QuickJS over V8?**
 

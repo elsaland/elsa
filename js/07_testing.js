@@ -12,7 +12,7 @@ Elsa.tests = function (tests) {
   const startTestTime = Date.now();
 
   const red = "\u001b[31m";
-  const gree = "\u001b[32m";
+  const green = "\u001b[32m";
   const reset = "\u001b[0m";
   const gray = "\u001b[38;5;8m";
   const greenBG = "\u001b[42m";
