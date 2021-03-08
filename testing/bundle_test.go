@@ -68,6 +68,8 @@ func readOutData(sourceFile string, minified bool) string {
 }
 
 func TestBundle(t *testing.T) {
+	// Start the local test server in a seperate goroutine.
+	go StartTestServer()
 	r := strings.NewReplacer("\n", "", "\r", "")
 
 	for _, tst := range TestDesc {

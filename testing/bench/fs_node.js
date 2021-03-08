@@ -1,5 +1,5 @@
 const fs = require("fs");
 
-fs.readFile("main.go", "utf8", function (errif (err) throw err;) {
+fs.readFile("main.go", "utf8", function (err) {
   if (err) throw err;
 });
