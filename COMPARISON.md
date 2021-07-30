@@ -10,7 +10,7 @@ Benchmarks are available at `/benchmarks/`
 | HTTP imports             | Yes               | Yes         | No               |
 | Browser APIs             | Yes               | Yes         | No               |
 | In-built package manager | No                | No          | Yes              |
-| Compiling to executable  | **Yes**           | No          | No (third party) |
+| Compiling to executable  | **Yes**           | Yes         | No (third party) |
 | Explicit imports         | Yes               | Yes         | No               |
 | Secure by default        | Yes               | Yes         | No               |
 | Binary size              | **~12mb** \*      | ~44mb \*    | ~68mb            |
