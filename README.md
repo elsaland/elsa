@@ -63,7 +63,7 @@ PROS:
 
 - Suitable for CLI applications and shipping them as an executable
 - Native bindings to system level APIs (webview, etc)
-- Hosting discord bots on your raspberry pie :wink:
+- Hosting discord bots on your raspberry pi
 - Embeddable inside your Go programs.
 - General purpose scripting
 
