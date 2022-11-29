@@ -1,10 +1,9 @@
 package core
 
 import (
-	"io"
-
 	"github.com/elsaland/elsa/core/options"
 	"github.com/elsaland/elsa/util"
+	"io"
 
 	"github.com/elsaland/quickjs"
 )

@@ -1,14 +1,11 @@
 ## Comparison
 
-Benchmarks are available at `/benchmarks/`
-
 | Features                 | Elsa (unreleased) | Deno v1.3.3 | Node.js v14.4.0  |
 | ------------------------ | ----------------- | ----------- | ---------------- |
 | Language                 | Go                | Rust        | C++              |
 | JS engine                | **Quickjs**       | V8          | V8               |
 | Bundler                  | Yes               | Yes         | No               |
 | HTTP imports             | Yes               | Yes         | No               |
-| Browser APIs             | Yes               | Yes         | No               |
 | In-built package manager | No                | No          | Yes              |
 | Compiling to executable  | **Yes**           | Yes         | No (third party) |
 | Explicit imports         | Yes               | Yes         | No               |
